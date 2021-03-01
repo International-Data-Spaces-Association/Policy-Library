@@ -308,6 +308,10 @@ public class PatternUtil {
 						Condition systemConstraint = new Condition(conditionType, LeftOperand.SYSTEM, Operator.EQ, rightOperand, "");
 						ruleConstraint.add(systemConstraint);
 						break;
+					case APPLICATION:
+						Condition applicationConstraint = new Condition(conditionType, LeftOperand.APPLICATION, Operator.EQ, rightOperand, "");
+						ruleConstraint.add(applicationConstraint);
+						break;
 					case EVENT:
 						Condition eventConstraint = new Condition(conditionType, LeftOperand.EVENT, Operator.EQ, rightOperand, "");
 						ruleConstraint.add(eventConstraint);

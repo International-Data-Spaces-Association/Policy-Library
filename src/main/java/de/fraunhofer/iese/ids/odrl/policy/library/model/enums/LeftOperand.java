@@ -14,6 +14,8 @@ public enum LeftOperand {
 
     SYSTEM("system", "ids:system"),
 
+    APPLICATION("application","ids:application"),
+
     EVENT("event", "ids:event"),
 
     ENCODING("encoding", "ids:encoding"),
