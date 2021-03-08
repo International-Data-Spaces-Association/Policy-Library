@@ -48,8 +48,8 @@ public class Condition {
 
   return  !rightOperand.toString().isEmpty() ?"{    \r\n" +
           "        \"@type\":\"ids:Constraint\",  \n" +
-          "        \"ids:leftOperand\": \""+ leftOperand.getIdsLeftOperand() +"\",  \n" +
-          "        \"ids:operator\": \""+ operator.getOdrlOp() +"\",  \n" +
+          "        \"ids:leftOperand\": { \"@id\": \""+ leftOperand.getIdsLeftOperand() +"\"},  \n" +
+          "        \"ids:operator\": { \"@id\": \""+ operator.getOdrlOp() +"\"},  \n" +
           "        \"ids:rightOperand\": { " + rightOperand.toString() +
           "        }" +
           replaceWithBlock +

@@ -295,49 +295,50 @@ public class PatternUtil {
 			for (Map conditionMap : ruleConstraintList) {
 				LeftOperand leftOperand = getLeftOperand(conditionMap);
 				RightOperandId rightOperandId = getRightOperandId(conditionMap);
+				Operator op = getOperator(conditionMap);
 				String rightOperandValue = getRightOperandValue(conditionMap);
 				RightOperandType rightOperandType = getRightOperandType(conditionMap);
 				RightOperand rightOperand = new RightOperand(rightOperandId, rightOperandValue, rightOperandType);
 
 				switch (leftOperand) {
 					case PURPOSE:
-						Condition purposeConstraint = new Condition(conditionType, LeftOperand.PURPOSE, Operator.EQ, rightOperand, "");
+						Condition purposeConstraint = new Condition(conditionType, LeftOperand.PURPOSE, op, rightOperand, "");
 						ruleConstraint.add(purposeConstraint);
 						break;
 					case SYSTEM:
-						Condition systemConstraint = new Condition(conditionType, LeftOperand.SYSTEM, Operator.EQ, rightOperand, "");
+						Condition systemConstraint = new Condition(conditionType, LeftOperand.SYSTEM, op, rightOperand, "");
 						ruleConstraint.add(systemConstraint);
 						break;
 					case APPLICATION:
-						Condition applicationConstraint = new Condition(conditionType, LeftOperand.APPLICATION, Operator.EQ, rightOperand, "");
+						Condition applicationConstraint = new Condition(conditionType, LeftOperand.APPLICATION, op, rightOperand, "");
 						ruleConstraint.add(applicationConstraint);
 						break;
 					case EVENT:
-						Condition eventConstraint = new Condition(conditionType, LeftOperand.EVENT, Operator.EQ, rightOperand, "");
+						Condition eventConstraint = new Condition(conditionType, LeftOperand.EVENT, op, rightOperand, "");
 						ruleConstraint.add(eventConstraint);
 						break;
 					case COUNT:
-						Condition countConstraint = new Condition(conditionType, LeftOperand.COUNT, Operator.EQ, rightOperand, "");
+						Condition countConstraint = new Condition(conditionType, LeftOperand.COUNT, op, rightOperand, "");
 						ruleConstraint.add(countConstraint);
 						break;
 					case ENCODING:
-						Condition encodingConstraint = new Condition(conditionType, LeftOperand.ENCODING, Operator.EQ, rightOperand, "");
+						Condition encodingConstraint = new Condition(conditionType, LeftOperand.ENCODING, op, rightOperand, "");
 						ruleConstraint.add(encodingConstraint);
 						break;
 					case LOG_LEVEL:
-						Condition logLevelConstraint = new Condition(conditionType, LeftOperand.LOG_LEVEL, Operator.EQ, rightOperand, "");
+						Condition logLevelConstraint = new Condition(conditionType, LeftOperand.LOG_LEVEL, op, rightOperand, "");
 						ruleConstraint.add(logLevelConstraint);
 						break;
 					case NOTIFICATION_LEVEL:
-						Condition notificationLevelConstraint = new Condition(conditionType, LeftOperand.NOTIFICATION_LEVEL, Operator.EQ, rightOperand, "");
+						Condition notificationLevelConstraint = new Condition(conditionType, LeftOperand.NOTIFICATION_LEVEL, op, rightOperand, "");
 						ruleConstraint.add(notificationLevelConstraint);
 						break;
 					case ARTIFACT_STATE:
-						Condition artifactStateConstraint = new Condition(conditionType, LeftOperand.ARTIFACT_STATE, Operator.EQUALS, rightOperand, "");
+						Condition artifactStateConstraint = new Condition(conditionType, LeftOperand.ARTIFACT_STATE, op, rightOperand, "");
 						ruleConstraint.add(artifactStateConstraint);
 						break;
 					case DATE_TIME:
-						Condition datetimeConstraint = new Condition(conditionType, LeftOperand.DATE_TIME, Operator.EQ, rightOperand, "");
+						Condition datetimeConstraint = new Condition(conditionType, LeftOperand.DATE_TIME, op, rightOperand, "");
 						ruleConstraint.add(datetimeConstraint);
 						break;
 					case POLICY_EVALUATION_TIME:
@@ -349,7 +350,7 @@ public class PatternUtil {
 						timeIntervalEntities.add(beginEntity);
 						timeIntervalEntities.add(endEntity);
 						RightOperand timeIntervalRightOperand =new RightOperand(timeIntervalEntities, RightOperandType.INTERVAL);
-						Condition timeIntervalCondition = new Condition(conditionType, LeftOperand.POLICY_EVALUATION_TIME, Operator.EQ, timeIntervalRightOperand, "");
+						Condition timeIntervalCondition = new Condition(conditionType, LeftOperand.POLICY_EVALUATION_TIME, op, timeIntervalRightOperand, "");
 						ruleConstraint.add(timeIntervalCondition);
 						break;
 					case DELAY:
@@ -359,7 +360,7 @@ public class PatternUtil {
 						ArrayList<RightOperandEntity> delayPeriodEntities = new ArrayList<>();
 						delayPeriodEntities.add(dEntity);
 						RightOperand delayPeriodRightOperand =new RightOperand(delayPeriodEntities, RightOperandType.DURATIONENTITY);
-						Condition delayPeriodConstraint = new Condition(conditionType, LeftOperand.DELAY, Operator.LTEQ, delayPeriodRightOperand, "");
+						Condition delayPeriodConstraint = new Condition(conditionType, LeftOperand.DELAY, op, delayPeriodRightOperand, "");
 						ruleConstraint.add(delayPeriodConstraint);
 						break;
 					case ELAPSED_TIME:
@@ -374,15 +375,15 @@ public class PatternUtil {
 							elapsedTimeEntities.add(bEntity);
 						}
 						RightOperand elapsedTimeRightOperand =new RightOperand(elapsedTimeEntities, RightOperandType.DURATIONENTITY);
-						Condition elapsedTimeConstraint = new Condition(conditionType, LeftOperand.ELAPSED_TIME, Operator.LTEQ, elapsedTimeRightOperand, "");
+						Condition elapsedTimeConstraint = new Condition(conditionType, LeftOperand.ELAPSED_TIME, op, elapsedTimeRightOperand, "");
 						ruleConstraint.add(elapsedTimeConstraint);
 						break;
 					case RECIPIENT:
-						Condition recipientConstraint = new Condition(conditionType, LeftOperand.RECIPIENT, Operator.EQUALS, rightOperand, "");
+						Condition recipientConstraint = new Condition(conditionType, LeftOperand.RECIPIENT, op, rightOperand, "");
 						ruleConstraint.add(recipientConstraint);
 						break;
 					case MODIFICATIONMETHOD:
-						Condition modificationMethodRefinement = new Condition(conditionType, LeftOperand.MODIFICATIONMETHOD, Operator.EQ, rightOperand, "");
+						Condition modificationMethodRefinement = new Condition(conditionType, LeftOperand.MODIFICATIONMETHOD, op, rightOperand, "");
 						// add jsonPath
 						modificationMethodRefinement.setJsonPath(getValue(conditionMap, "ids:jsonPath"));
 						// add replaceWith parameter
@@ -393,25 +394,25 @@ public class PatternUtil {
 						ruleConstraint.add(modificationMethodRefinement);
 						break;
 					case PAY_AMOUNT:
-						Condition paymentConstraint = new Condition(conditionType, LeftOperand.PAY_AMOUNT, Operator.EQ, rightOperand, "");
+						Condition paymentConstraint = new Condition(conditionType, LeftOperand.PAY_AMOUNT, op, rightOperand, "");
 						paymentConstraint.setContract(getValue(conditionMap, "ids:contract"));
 						paymentConstraint.setUnit(getValue(conditionMap, "ids:unit"));
 						ruleConstraint.add(paymentConstraint);
 						break;
 					case ABSOLUTESPATIALPOSITION:
-						Condition absoluteSpatialPositionConstraint = new Condition(conditionType, LeftOperand.ABSOLUTESPATIALPOSITION, Operator.EQ, rightOperand, "");
+						Condition absoluteSpatialPositionConstraint = new Condition(conditionType, LeftOperand.ABSOLUTESPATIALPOSITION, op, rightOperand, "");
 						ruleConstraint.add(absoluteSpatialPositionConstraint);
 						break;
 					case SYSTEM_DEVICE:
-						Condition systemDeviceRefinement = new Condition(conditionType, LeftOperand.SYSTEM_DEVICE, Operator.EQ, rightOperand, "");
+						Condition systemDeviceRefinement = new Condition(conditionType, LeftOperand.SYSTEM_DEVICE, op, rightOperand, "");
 						ruleConstraint.add(systemDeviceRefinement);
 						break;
 					case INFORMEDPARTY:
-						Condition informedPartyRefinement = new Condition(conditionType, LeftOperand.INFORMEDPARTY, Operator.EQ, rightOperand, "");
+						Condition informedPartyRefinement = new Condition(conditionType, LeftOperand.INFORMEDPARTY, op, rightOperand, "");
 						ruleConstraint.add(informedPartyRefinement);
 						break;
 					case TARGET_POLICY:
-						Condition thirdPartyRefinement = new Condition(conditionType, LeftOperand.TARGET_POLICY, Operator.EQ, rightOperand, "");
+						Condition thirdPartyRefinement = new Condition(conditionType, LeftOperand.TARGET_POLICY, op, rightOperand, "");
 						ruleConstraint.add(thirdPartyRefinement);
 						break;
 				default:
@@ -456,15 +457,24 @@ public class PatternUtil {
 	}
 
 	public static LeftOperand getLeftOperand(Map conditionMap) {
-		return isNotNull (conditionMap) && isNotNull(getValue(conditionMap, "ids:leftOperand")) ? LeftOperand.valueOf(removeIdsOrXsdTag(getValue(conditionMap, "ids:leftOperand"))): null;
-	}
+		try {
+			return isNotNull(conditionMap) && isNotNull(getValue(conditionMap, "ids:leftOperand")) ? LeftOperand.valueOf(removeIdsOrXsdTag(getValue(conditionMap, "ids:leftOperand"))) : null;
+		}catch (Exception e){
+			Map leftOperandMap = (Map) conditionMap.get("ids:leftOperand");
+			return isNotNull (conditionMap) && isNotNull(leftOperandMap) && isNotNull(getValue(leftOperandMap, "@id")) ? LeftOperand.valueOf(removeIdsOrXsdTag(getValue(leftOperandMap, "@id"))): null;
+		}
+		}
 
 /*	public static String getPartyFunctionValue (Map dutyMap, PartyFunction partyFunction) {
 		return isNotNull (dutyMap)? dutyMap.get(partyFunction.getIdsPartyFunction()).toString(): "";
 	}*/
-
 	public static Operator getOperator(Map conditionMap) {
-		return isNotNull (conditionMap)? Operator.valueOf(getValue(conditionMap, "ids:operator").toUpperCase()): null;
+		try {
+			return isNotNull (conditionMap)? Operator.valueOf(removeIdsOrXsdTag(getValue(conditionMap, "ids:operator"))): null;
+		}catch (Exception e){
+			Map operatorMap = (Map) conditionMap.get("ids:operator");
+			return isNotNull (conditionMap) && isNotNull(operatorMap)? Operator.valueOf(removeIdsOrXsdTag(getValue(operatorMap, "@id"))): null;
+		}
 	}
 
 	public static IntervalCondition getIntervalOperator(Map conditionMap) {
