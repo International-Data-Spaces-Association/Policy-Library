@@ -18,7 +18,6 @@ public class OdrlPolicy implements IPolicy {
  URI profile;
  URI policyId;
  PolicyType type;
- URI target;
  Party consumer;
  Party provider;
  boolean providerSide;
@@ -29,11 +28,10 @@ public class OdrlPolicy implements IPolicy {
   this.provider = new Party(PartyType.PROVIDER, URI.create("http://example.com/party/my-party"));
  }
 
- public OdrlPolicy(URI policyId, PolicyType type, URI target, Party consumer, boolean providerSide) {
+ public OdrlPolicy(URI policyId, PolicyType type, Party consumer, boolean providerSide) {
   this.profile = URI.create("http://example.com/ids-profile");
   this.policyId = policyId;
   this.type = type;
-  this.target = target;
   this.consumer = consumer;
   this.provider = new Party(PartyType.PROVIDER, URI.create("http://example.com/party/my-party"));
   this.providerSide = providerSide;
@@ -49,9 +47,6 @@ public class OdrlPolicy implements IPolicy {
           "  \"@type\": \"" + this.type.getStringRepresentation() +"\",    \r\n" +
           "  \"@id\": \"" + this.policyId.toString() +"\",    \r\n" +
           "  \"profile\": \""+ this.profile.toString() +"\",    \r\n" +
-          "  \"ids:target\": {\n" +
-          "      \"@id\":\"" + this.target.toString() + "\"\n" +
-          "   },    \r\n" +
           getProviderBlock() +
           getConsumerBlock() +
           getRulesBlock() +

@@ -1,6 +1,7 @@
 package de.fraunhofer.iese.ids.odrl.policy.library.model;
 
 
+import java.net.URI;
 import java.util.ArrayList;
 
 import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.RuleType;
@@ -10,6 +11,7 @@ import lombok.Data;
 @Data
 public class Rule {
  RuleType type;
+ URI target;
  Action action;
  ArrayList<Condition> constraints;
  ArrayList<Rule> preduties;
@@ -20,6 +22,14 @@ public class Rule {
 
  }
 
+ public Rule(RuleType type,URI target, Action action)
+ {
+  this.type = type;
+  this.target = target;
+  this.action = action;
+ }
+
+ // to create a duty rule
  public Rule(RuleType type, Action action)
  {
   this.type = type;
@@ -44,6 +54,11 @@ public class Rule {
   if(this.type.equals(RuleType.POSTDUTY) || this.type.equals(RuleType.PREDUTY))
   {
    return           "      \"@type\":\"ids:Duty\",  \n" ;
+  }else if(target != null){
+   //only return the target
+   return  "      \"ids:target\": {\n" +
+           "          \"@id\":\"" + this.target.toString() + "\"\n" +
+           "       },    \r\n";
   }
   return "";
  }

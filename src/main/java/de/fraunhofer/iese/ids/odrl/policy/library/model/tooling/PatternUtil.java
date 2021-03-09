@@ -33,11 +33,6 @@ public class PatternUtil {
 
 			PolicyType policyType = getPolicyType(map);
 
-			// get target
-			Map target = getMap(map, "ids:target");
-			String targetId = getValue(target, "@id");
-			URI targetURI = URI.create(targetId);
-
 			Party provider = null;
 			if(!isEmpty(getValue(map, "ids:provider")))
 			{
@@ -60,7 +55,6 @@ public class PatternUtil {
 				OdrlPolicy policy = addDetails(map);
 				if(null != policy) {
 					policy.setProviderSide(providerSide);
-					policy.setTarget(targetURI);
 					policy.setPolicyId(pidUri);
 					policy.setType(policyType);
 					policy.setProvider(provider);
@@ -154,6 +148,11 @@ public class PatternUtil {
 		RuleType ruleType = getRuleType(map);
 		Map ruleMap = getRuleMap(map, ruleType);
 
+		// get target
+		Map target = getMap(ruleMap, "ids:target");
+		String targetId = getValue(target, "@id");
+		URI targetURI = URI.create(targetId);
+
 		ActionType action = getAction(ruleMap);
         Map ruleActionMap = getMap(ruleMap, "ids:action");
 
@@ -178,6 +177,8 @@ public class PatternUtil {
 		{
 			Rule rule = new Rule();
 			rule.setType(ruleType);
+
+			rule.setTarget(targetURI);
 
 			Action ruleAction = new Action(action);
 

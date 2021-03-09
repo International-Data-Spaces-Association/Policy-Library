@@ -20,9 +20,6 @@ public interface IPolicy {
 	public PolicyType getType();
 	public void setType(PolicyType type);
 
-	public URI getTarget();
-	public void setTarget(URI target);
-
 	public Party getConsumer();
 	public void setConsumer(Party consumer);
 	
