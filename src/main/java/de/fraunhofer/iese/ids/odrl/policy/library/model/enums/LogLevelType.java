@@ -2,13 +2,13 @@ package de.fraunhofer.iese.ids.odrl.policy.library.model.enums;
 
 public enum LogLevelType {
 
-    OFF("idsc:OFF"),
+/*    OFF("idsc:OFF"),
 
     ALL("idsc:ALL"),
 
     INFO_LEVEL("idsc:INFO_LEVEL"),
 
-    DEBUG_LEVEL("idsc:DEBUG_LEVEL"),
+    DEBUG_LEVEL("idsc:DEBUG_LEVEL"),*/
 
     ON_DENY("idsc:LOG_ON_DENY"),
 
