@@ -8,6 +8,8 @@ public enum Operator {
 
  SAME_AS("equals", "idsc:SAME_AS"),
 
+ DEFINES_AS("equals", "idsc:DEFINES_AS"),
+
  // Arithmetic operators
  EQ("equals", "idsc:EQ"),
 

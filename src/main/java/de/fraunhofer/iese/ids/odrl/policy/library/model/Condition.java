@@ -64,10 +64,10 @@ public class Condition {
  }
 
  private String getPIPBlock() {
-  if(this.leftOperand != null)
+  if(this.leftOperand != null && !this.operator.equals(Operator.DEFINES_AS))
   {
    return ", \n"+
-           "        \"ids:pipEndpoint\": { \"@id\": \"https//pip.com/" + this.leftOperand.toString().toLowerCase() + "\" }";
+           "        \"ids:pipEndpoint\": { \"@id\": \"https//example.com/pip/" + this.leftOperand.toString().toLowerCase() + "\" }";
 
   }
   return "";

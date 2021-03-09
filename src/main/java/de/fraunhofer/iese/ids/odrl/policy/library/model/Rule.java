@@ -54,7 +54,7 @@ public class Rule {
    if(this.action != null)
    {
     return ", \n"+
-            "        \"ids:pxpEndpoint\": { \"@id\": \"https//pxp.com/" + this.action.getType().toString().toLowerCase() + "\" }";
+            "        \"ids:pxpEndpoint\": { \"@id\": \"https//example.com/pxp/" + this.action.getType().toString().toLowerCase() + "\" }";
 
    }
   }
