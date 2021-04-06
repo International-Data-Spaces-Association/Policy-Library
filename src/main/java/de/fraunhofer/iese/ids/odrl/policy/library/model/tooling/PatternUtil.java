@@ -314,6 +314,10 @@ public class PatternUtil {
 						Condition applicationConstraint = new Condition(conditionType, LeftOperand.APPLICATION, op, rightOperand, "");
 						ruleConstraint.add(applicationConstraint);
 						break;
+					case CONNECTOR:
+						Condition connectorConstraint = new Condition(conditionType, LeftOperand.CONNECTOR, op, rightOperand, "");
+						ruleConstraint.add(connectorConstraint);
+						break;
 					case EVENT:
 						Condition eventConstraint = new Condition(conditionType, LeftOperand.EVENT, op, rightOperand, "");
 						ruleConstraint.add(eventConstraint);

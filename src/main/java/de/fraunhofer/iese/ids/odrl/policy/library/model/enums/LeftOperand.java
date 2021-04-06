@@ -16,6 +16,8 @@ public enum LeftOperand {
 
     APPLICATION("application","ids:application"),
 
+    CONNECTOR("connector", "idsc:connector"),
+
     EVENT("event", "ids:event"),
 
     ENCODING("encoding", "ids:encoding"),
