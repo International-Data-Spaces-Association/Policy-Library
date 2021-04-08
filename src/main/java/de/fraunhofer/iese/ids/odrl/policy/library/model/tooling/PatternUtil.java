@@ -318,6 +318,14 @@ public class PatternUtil {
 						Condition connectorConstraint = new Condition(conditionType, LeftOperand.CONNECTOR, op, rightOperand, "");
 						ruleConstraint.add(connectorConstraint);
 						break;
+					case STATE:
+						Condition stateConstraint = new Condition(conditionType, LeftOperand.STATE, op, rightOperand, "");
+						ruleConstraint.add(stateConstraint);
+						break;
+					case ROLE:
+						Condition roleConstraint = new Condition(conditionType, LeftOperand.ROLE, op, rightOperand, "");
+						ruleConstraint.add(roleConstraint);
+						break;
 					case EVENT:
 						Condition eventConstraint = new Condition(conditionType, LeftOperand.EVENT, op, rightOperand, "");
 						ruleConstraint.add(eventConstraint);

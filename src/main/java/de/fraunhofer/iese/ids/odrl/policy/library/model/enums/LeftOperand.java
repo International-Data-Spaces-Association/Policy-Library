@@ -18,9 +18,13 @@ public enum LeftOperand {
 
     CONNECTOR("connector", "idsc:connector"),
 
+    ROLE("role","idsc:role"),
+
     EVENT("event", "ids:event"),
 
     ENCODING("encoding", "ids:encoding"),
+
+    STATE("state","idsc:STATE"),
 
     ARTIFACT_STATE("artifactState", "idsc:ARTIFACT_STATE"),
 

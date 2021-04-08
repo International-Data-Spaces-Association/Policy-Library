@@ -10,6 +10,8 @@ public enum Operator {
 
  DEFINES_AS("equals", "idsc:DEFINES_AS"),
 
+HAS_MEMBERSHIP("equals", "idsc:HAS_MEMBERSHIP"),
+
  // Arithmetic operators
  EQ("equals", "idsc:EQ"),
 
