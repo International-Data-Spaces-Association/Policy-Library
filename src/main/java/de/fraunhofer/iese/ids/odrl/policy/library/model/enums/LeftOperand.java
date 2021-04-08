@@ -18,6 +18,8 @@ public enum LeftOperand {
 
     CONNECTOR("connector", "idsc:connector"),
 
+    SECURITY_LEVEL("securityLevel","idsc:SECURITY_LEVEL"),
+
     ROLE("role","idsc:role"),
 
     EVENT("event", "ids:event"),

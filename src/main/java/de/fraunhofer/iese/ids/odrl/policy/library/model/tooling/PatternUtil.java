@@ -322,6 +322,10 @@ public class PatternUtil {
 						Condition stateConstraint = new Condition(conditionType, LeftOperand.STATE, op, rightOperand, "");
 						ruleConstraint.add(stateConstraint);
 						break;
+					case SECURITY_LEVEL:
+						Condition securityLevelConstraint = new Condition(conditionType, LeftOperand.SECURITY_LEVEL, op, rightOperand, "");
+						ruleConstraint.add(securityLevelConstraint);
+						break;
 					case ROLE:
 						Condition roleConstraint = new Condition(conditionType, LeftOperand.ROLE, op, rightOperand, "");
 						ruleConstraint.add(roleConstraint);
