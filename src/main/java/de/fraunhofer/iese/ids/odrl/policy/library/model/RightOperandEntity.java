@@ -13,7 +13,6 @@ public class RightOperandEntity {
  EntityType entityType;
  String value;
  RightOperandType dataType;
- TimeUnit timeUnit;
 
  public RightOperandEntity()
  {

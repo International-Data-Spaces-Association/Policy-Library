@@ -8,6 +8,8 @@ public enum RightOperandType {
 
     INTERVAL("ids:interval"),
 
+    INSTANT("ids:instant"),
+
     DURATIONENTITY("ids:durationEntity"),
 
     INTEGER("xsd:integer"),

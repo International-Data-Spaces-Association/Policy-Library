@@ -355,8 +355,13 @@ public class PatternUtil {
 						ruleConstraint.add(artifactStateConstraint);
 						break;
 					case DATE_TIME:
-						Condition datetimeConstraint = new Condition(conditionType, LeftOperand.DATE_TIME, op, rightOperand, "");
-						ruleConstraint.add(datetimeConstraint);
+						String endTimeEntityValue = getRightOperandValueEntity(conditionMap, EntityType.END);
+						RightOperandEntity endTimeEntity = new RightOperandEntity(EntityType.END, endTimeEntityValue, RightOperandType.DATETIMESTAMP);
+						ArrayList<RightOperandEntity> dateTimeEntity = new ArrayList<>();
+						dateTimeEntity.add(endTimeEntity);
+						RightOperand dateTimeRightOperand =new RightOperand(dateTimeEntity, RightOperandType.INSTANT);
+						Condition dateTimeCondition = new Condition(conditionType, LeftOperand.DATE_TIME, op, dateTimeRightOperand, "");
+						ruleConstraint.add(dateTimeCondition);
 						break;
 					case POLICY_EVALUATION_TIME:
 						String beginEntityValue = getRightOperandValueEntity(conditionMap, EntityType.BEGIN);
@@ -373,7 +378,6 @@ public class PatternUtil {
 					case DELAY:
 						String delayEntityValue = getRightOperandValueEntity(conditionMap, EntityType.HASDURATION);
 						RightOperandEntity dEntity = new RightOperandEntity(EntityType.HASDURATION, delayEntityValue, RightOperandType.DURATION);
-						setTimeUnit(delayEntityValue, dEntity);
 						ArrayList<RightOperandEntity> delayPeriodEntities = new ArrayList<>();
 						delayPeriodEntities.add(dEntity);
 						RightOperand delayPeriodRightOperand =new RightOperand(delayPeriodEntities, RightOperandType.DURATIONENTITY);
@@ -383,7 +387,6 @@ public class PatternUtil {
 					case ELAPSED_TIME:
 						String durationEntityValue = getRightOperandValueEntity(conditionMap, EntityType.HASDURATION);
 						RightOperandEntity durationEntity = new RightOperandEntity(EntityType.HASDURATION, durationEntityValue, RightOperandType.DURATION);
-						setTimeUnit(durationEntityValue, durationEntity);
 						ArrayList<RightOperandEntity> elapsedTimeEntities = new ArrayList<>();
 						elapsedTimeEntities.add(durationEntity);
 						String bEntityValue = getRightOperandValueEntity(conditionMap, EntityType.BEGIN);
@@ -436,19 +439,6 @@ public class PatternUtil {
 					break;
 				}
 			}
-		}
-	}
-
-	private static void setTimeUnit(String durationEntityValue, RightOperandEntity durationEntity) {
-		if(durationEntityValue.contains("H"))
-		{
-			durationEntity.setTimeUnit(TimeUnit.HOURS);
-		}else if(durationEntityValue.contains("D")){
-			durationEntity.setTimeUnit(TimeUnit.DAYS);
-		}else if(durationEntityValue.contains("M")){
-			durationEntity.setTimeUnit(TimeUnit.MONTHS);
-		}else if(durationEntityValue.contains("Y")){
-			durationEntity.setTimeUnit(TimeUnit.YEARS);
 		}
 	}
 
