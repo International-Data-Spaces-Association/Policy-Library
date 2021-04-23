@@ -27,7 +27,7 @@ public enum ActionType {
 
     ROUND("idsc:ROUND", "ANONYMIZE"),
 
-    COUNT("idsc:COUNT", "ACTION"),
+    INCREMENT_COUNTER("idsc:INCREMENT_COUNTER", "ACTION"),
 
     LOG("idsc:LOG", "ACTION");
 

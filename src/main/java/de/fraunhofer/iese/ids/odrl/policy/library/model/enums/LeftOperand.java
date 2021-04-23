@@ -10,33 +10,33 @@ public enum LeftOperand {
 
     POLICY_EVALUATION_TIME("datetime", "idsc:POLICY_EVALUATION_TIME"),
 
-    COUNT("count", "ids:count"),
+    COUNT("count", "idsc:COUNT"),
 
-    SYSTEM("system", "ids:system"),
+    SYSTEM("system", "idsc:SYSTEM"),
 
-    APPLICATION("application","ids:application"),
+    APPLICATION("application","idsc:APPLICATION"),
 
-    CONNECTOR("connector", "idsc:connector"),
+    CONNECTOR("connector", "idsc:CONNECTOR"),
 
     SECURITY_LEVEL("securityLevel","idsc:SECURITY_LEVEL"),
 
-    ROLE("role","idsc:role"),
+    ROLE("role","idsc:ROLE"),
 
-    EVENT("event", "ids:event"),
+    EVENT("event", "idsc:EVENT"),
 
-    ENCODING("encoding", "ids:encoding"),
+    ENCODING("encoding", "idsc:ENCODING"),
 
     STATE("state","idsc:STATE"),
 
     ARTIFACT_STATE("artifactState", "idsc:ARTIFACT_STATE"),
 
-    RECIPIENT("recipient", "ids:RECIPIENT"),
+    RECIPIENT("recipient", "idsc:RECIPIENT"),
 
-    INFORMEDPARTY("informedParty", "ids:informedParty"),
+    INFORMEDPARTY("informedParty", "idsc:informedParty"),
 
     TARGET_POLICY("targetPolicy", "idsc:TARGET_POLICY"),
 
-    SYSTEM_DEVICE("systemDevice", "ids:SYSTEM_DEVICE"),
+    SYSTEM_DEVICE("systemDevice", "idsc:SYSTEM_DEVICE"),
 
     PAY_AMOUNT("payamount", "idsc:PAY_AMOUNT"),
 
@@ -46,11 +46,11 @@ public enum LeftOperand {
 
     //JSONPATH("jsonPathQuery","ids:jsonPath"),
 
-    MODIFICATIONMETHOD("modificationMethod","ids:modificationMethod"),
+    MODIFICATION_METHOD("modificationMethod","idsc:MODIFICATION_METHOD"),
 
     DIGIT("digit","ids:digit"),
 
-    ABSOLUTESPATIALPOSITION("absoluteSpatialPosition","https://w3id.org/idsa/core/absoluteSpatialPosition"),
+    ABSOLUTE_SPATIAL_POSITION("absoluteSpatialPosition","idsc:ABSOLUTE_SPATIAL_POSITION"),
 
     PURPOSE("purpose", "https://w3id.org/idsa/core/purpose");
 

@@ -230,8 +230,8 @@ public class PatternUtil {
 						addConstraintsToDutyRule(postDutyMap, postobligationRule);
 						postobligationRules.add(postobligationRule);
 						break;
-					case COUNT:
-						dutyAction.setType(ActionType.COUNT);
+					case INCREMENT_COUNTER:
+						dutyAction.setType(ActionType.INCREMENT_COUNTER);
 						postobligationRule = new Rule(RuleType.POSTDUTY, dutyAction);
 						addConstraintsToDutyRule(postDutyMap, postobligationRule);
 						postobligationRules.add(postobligationRule);
@@ -402,8 +402,8 @@ public class PatternUtil {
 						Condition recipientConstraint = new Condition(conditionType, LeftOperand.RECIPIENT, op, rightOperand, "");
 						ruleConstraint.add(recipientConstraint);
 						break;
-					case MODIFICATIONMETHOD:
-						Condition modificationMethodRefinement = new Condition(conditionType, LeftOperand.MODIFICATIONMETHOD, op, rightOperand, "");
+					case MODIFICATION_METHOD:
+						Condition modificationMethodRefinement = new Condition(conditionType, LeftOperand.MODIFICATION_METHOD, op, rightOperand, "");
 						// add jsonPath
 						modificationMethodRefinement.setJsonPath(getValue(conditionMap, "ids:jsonPath"));
 						// add replaceWith parameter
@@ -419,8 +419,8 @@ public class PatternUtil {
 						paymentConstraint.setUnit(getValue(conditionMap, "ids:unit"));
 						ruleConstraint.add(paymentConstraint);
 						break;
-					case ABSOLUTESPATIALPOSITION:
-						Condition absoluteSpatialPositionConstraint = new Condition(conditionType, LeftOperand.ABSOLUTESPATIALPOSITION, op, rightOperand, "");
+					case ABSOLUTE_SPATIAL_POSITION:
+						Condition absoluteSpatialPositionConstraint = new Condition(conditionType, LeftOperand.ABSOLUTE_SPATIAL_POSITION, op, rightOperand, "");
 						ruleConstraint.add(absoluteSpatialPositionConstraint);
 						break;
 					case SYSTEM_DEVICE:
