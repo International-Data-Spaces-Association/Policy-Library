@@ -32,7 +32,7 @@ public RightOperandEntity(EntityType entityType, String value,  RightOperandType
   if(this.dataType.equals(RightOperandType.DATETIMESTAMP))
     {
         return "            \""+ entityType.getOdrlRuleType() +"\": {\n" +
-            "               \"@value\": \""+ this.value +":00Z\",\n" +
+            "               \"@value\": \""+ this.value +"\",\n" +
             "               \"@type\": \""+ this.dataType.getType() + "\"\n" +
             "            }";
 

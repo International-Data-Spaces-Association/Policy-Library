@@ -56,13 +56,13 @@ public class RightOperand {
        return getEntitiesBlock();
    }else if(this.id == null && this.entities == null && this.value != null && this.type != null && this.type.equals(RightOperandType.DATETIMESTAMP))
    {
-       return "\"@value\": \""+ value +":00Z\", \"@type\": \""+ type.getType() +"\"";
+       return "\"@value\": \""+ value +"\", \"@type\": \""+ type.getType() +"\"";
    }else if(this.id == null && this.entities == null && this.value != null && this.type != null)
    {
     return "\"@value\": \""+ value +"\", \"@type\": \""+ type.getType() +"\"";
    }else if(this.id != null && this.entities == null && this.value != null && this.type != null && this.type.equals(RightOperandType.DATETIMESTAMP))
    {
-       return "\"@id\": \""+ id.getIdsRightOperand() + "\"@value\": \""+ value +":00Z\", \"@type\": \""+ type.getType() +"\"";
+       return "\"@id\": \""+ id.getIdsRightOperand() + "\"@value\": \""+ value +"\", \"@type\": \""+ type.getType() +"\"";
    }else
    {
     return "\"@id\": \""+ id.getIdsRightOperand() + "\"@value\": \""+ value +"\", \"@type\": \""+ type.getType() +"\"";
