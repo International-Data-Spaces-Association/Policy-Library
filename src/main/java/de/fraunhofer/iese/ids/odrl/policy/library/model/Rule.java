@@ -38,14 +38,12 @@ public class Rule {
 
  @Override
  public String toString() {
-  String PXPBlock = getPXPBlock();
   return  "{    \r\n" +
           getIdsType() +
           action.toString() +
           getPreobligationBlock() +
           getConstraintBlock() +
           getPostobligationBlock() +
-          PXPBlock +
           "\r\n" +
           "  }";
  }
@@ -59,19 +57,6 @@ public class Rule {
    return  "      \"ids:target\": {\n" +
            "          \"@id\":\"" + this.target.toString() + "\"\n" +
            "       },    \r\n";
-  }
-  return "";
- }
-
- private String getPXPBlock() {
-  if(this.type.equals(RuleType.OBLIGATION) || this.type.equals(RuleType.POSTDUTY) || this.type.equals(RuleType.PREDUTY))
-  {
-   if(this.action != null)
-   {
-    return ", \n"+
-            "        \"ids:pxpEndpoint\": { \"@id\": \"https//example.com/pxp/" + this.action.getType().toString().toLowerCase() + "\" }";
-
-   }
   }
   return "";
  }

@@ -4,6 +4,7 @@ package de.fraunhofer.iese.ids.odrl.policy.library.model;
 import java.util.ArrayList;
 
 import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.ActionType;
+import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.RuleType;
 import lombok.Data;
 
 
@@ -22,17 +23,14 @@ public class Action {
 
     @Override
     public String toString() {
+        String PXPBlock = getPXPBlock();
         String refinementBlock = this.getRefinementBlock();
-        if(refinementBlock != "")
-        {
-            return  "    \"ids:action\": [{\n" +
-                    "      \"rdf:value\": { \"@id\": \""+ type.getIdsAction() +"\" }" + refinementBlock + "\r\n" +
-                    "    }]";
-        }else {
-            return "      \"ids:action\": [{\n" +
-                    "        \"@id\":\"" + type.getIdsAction() +"\"\n" +
-                    "      }]";
-        }
+        return  "      \"ids:action\": [{\n" +
+                "        \"@id\":\"" + type.getIdsAction() +"\"" +
+                refinementBlock +
+                PXPBlock +
+                "\r\n" +
+                "      }]";
     }
 
     private String getRefinementBlock() {
@@ -60,11 +58,30 @@ public class Action {
 
             if(!conditions.isEmpty()) {
                 conditionInnerBlock = String.format(",     \r\n" +
-                        "      \"ids:refinement\": [%s] ", conditions);
+                        "        \"ids:refinement\": [%s] ", conditions);
             }
         }
 
         return conditionInnerBlock;
+    }
+
+    private String getPXPBlock() {
+        if(this.type.getAbstractIdsAction().equals("DUTY"))
+        {
+            return  ", \n"+
+                    "        \"ids:pxpEndpoint\":{\n" +
+                    "          \"ids:pxpInterfaceDescription\":{\n" +
+                    "            \"@value\":\"https://ids.org/PXP/interfaceDescription/"+ this.type.toString().toLowerCase() + "\", \n" +
+                    "            \"@type\":\"anyURI\"\n" +
+                    "          }, \n" +
+                    "          \"ids:pxpAccessURI\":{\n" +
+                    "            \"@value\":\"https://consumer.org/PXPendpoint/"+ this.type.toString().toLowerCase() + "\", \n" +
+                    "            \"@type\":\"anyURI\"\n" +
+                    "          } \n" +
+                    "        }";
+
+        }
+        return "";
     }
 
 }

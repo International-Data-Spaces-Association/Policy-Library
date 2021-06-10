@@ -66,9 +66,17 @@ public class Condition {
  private String getPIPBlock() {
   if(this.leftOperand != null && !this.operator.equals(Operator.DEFINES_AS))
   {
-   return ", \n"+
-           "        \"ids:pipEndpoint\": { \"@id\": \"https//example.com/pip/" + this.leftOperand.toString().toLowerCase() + "\" }";
-
+   return  ", \n"+
+           "        \"ids:pipEndpoint\":{\n" +
+           "          \"ids:pipInterfaceDescription\":{\n" +
+           "            \"@value\":\"https://ids.org/PIP/interfaceDescription/"+ this.leftOperand.toString().toLowerCase() + "\", \n" +
+           "            \"@type\":\"anyURI\"\n" +
+           "          }, \n" +
+           "          \"ids:pipAccessURI\":{\n" +
+           "            \"@value\":\"https://consumer.org/PXPendpoint/"+ this.leftOperand.toString().toLowerCase() + "\", \n" +
+           "            \"@type\":\"anyURI\"\n" +
+           "          } \n" +
+           "        }";
   }
   return "";
  }
