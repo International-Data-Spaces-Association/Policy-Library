@@ -26,6 +26,8 @@ public enum ActionType {
 
     ROUND("idsc:ROUND", "DUTY"),
 
+    REPLACE("idsc:REPLACE", "DUTY"),
+
     INCREMENT_COUNTER("idsc:INCREMENT_COUNTER", "DUTY"),
 
     LOG("idsc:LOG", "DUTY");

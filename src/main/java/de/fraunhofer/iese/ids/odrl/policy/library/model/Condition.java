@@ -17,7 +17,7 @@ public class Condition {
  String unit;
  String contract;
  String jsonPath;
- ModificationMethodParameter replaceWith;
+ //ModificationMethodParameter replaceWith;
 
  public Condition()
  {
@@ -44,7 +44,7 @@ public class Condition {
   String commentBlock = getCommentBlock();
   String PIPBlock = getPIPBlock();
   String jsonPathBlock = getJsonPathBlock();
-  String replaceWithBlock = getReplaceWithBlock();
+  //String replaceWithBlock = getReplaceWithBlock();
 
   return  !rightOperand.toString().isEmpty() ?"{    \r\n" +
           "        \"@type\":\"ids:Constraint\",  \n" +
@@ -52,7 +52,6 @@ public class Condition {
           "        \"ids:operator\": { \"@id\": \""+ operator.getOdrlOp() +"\"},  \n" +
           "        \"ids:rightOperand\": { " + rightOperand.toString() +
           "        }" +
-          replaceWithBlock +
           jsonPathBlock +
           contractBlock +
           unitBlock +
@@ -108,14 +107,14 @@ public class Condition {
   return "";
  }
 
- private String getReplaceWithBlock() {
+/* private String getReplaceWithBlock() {
   if(this.replaceWith != null && this.replaceWith.getValue() != null && !this.replaceWith.getValue().isEmpty())
   {
    return ", \n"+
            "        \"ids:replaceWith\" : { " + replaceWith.toString() +"}";
   }
   return "";
- }
+ }*/
 
  private String getUnitBlock() {
   if(this.unit != null)

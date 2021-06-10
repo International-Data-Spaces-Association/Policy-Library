@@ -161,10 +161,12 @@ public class PatternUtil {
 
 		Map dutyActionMap = null;
 		ActionType dutyMethod = null;
+		Boolean isAPreDuty = false;
 
 		if (isNotNull(preDutyMap) ) {
 			dutyMethod = getAction(preDutyMap);
 			dutyActionMap = getMap(preDutyMap, "ids:action");
+			isAPreDuty = true;
 		}
 
 		if (isNotNull(postDutyMap) ) {
@@ -225,11 +227,19 @@ public class PatternUtil {
 			{
 				switch (dutyMethod) {
 					case DELETE:
-						dutyAction.setType(ActionType.DELETE);
-						postobligationRule = new Rule(RuleType.POSTDUTY, dutyAction);
-						addConstraintsToDutyRule(postDutyMap, postobligationRule);
-						postobligationRules.add(postobligationRule);
-						break;
+						if(isAPreDuty){
+							dutyAction.setType(ActionType.DELETE);
+							preobligationRule = new Rule(RuleType.PREDUTY, dutyAction);
+							addConstraintsToDutyRule(preDutyMap, preobligationRule);
+							preobligationRules.add(preobligationRule);
+							break;
+						}else{
+							dutyAction.setType(ActionType.DELETE);
+							postobligationRule = new Rule(RuleType.POSTDUTY, dutyAction);
+							addConstraintsToDutyRule(postDutyMap, postobligationRule);
+							postobligationRules.add(postobligationRule);
+							break;
+						}
 					case INCREMENT_COUNTER:
 						dutyAction.setType(ActionType.INCREMENT_COUNTER);
 						postobligationRule = new Rule(RuleType.POSTDUTY, dutyAction);
@@ -238,6 +248,12 @@ public class PatternUtil {
 						break;
 					case ANONYMIZE:
 						dutyAction.setType(ActionType.ANONYMIZE);
+						preobligationRule = new Rule(RuleType.PREDUTY, dutyAction);
+						addConstraintsToDutyRule(preDutyMap, preobligationRule);
+						preobligationRules.add(preobligationRule);
+						break;
+					case REPLACE:
+						dutyAction.setType(ActionType.REPLACE);
 						preobligationRule = new Rule(RuleType.PREDUTY, dutyAction);
 						addConstraintsToDutyRule(preDutyMap, preobligationRule);
 						preobligationRules.add(preobligationRule);
@@ -402,7 +418,7 @@ public class PatternUtil {
 						Condition recipientConstraint = new Condition(conditionType, LeftOperand.RECIPIENT, op, rightOperand, "");
 						ruleConstraint.add(recipientConstraint);
 						break;
-					case MODIFICATION_METHOD:
+					/*case MODIFICATION_METHOD:
 						Condition modificationMethodRefinement = new Condition(conditionType, LeftOperand.MODIFICATION_METHOD, op, rightOperand, "");
 						// add jsonPath
 						modificationMethodRefinement.setJsonPath(getValue(conditionMap, "ids:jsonPath"));
@@ -412,7 +428,13 @@ public class PatternUtil {
 						ModificationMethodParameter replaceWithParam = new ModificationMethodParameter(replaceWithValue, replaceWithType);
 						modificationMethodRefinement.setReplaceWith(replaceWithParam);
 						ruleConstraint.add(modificationMethodRefinement);
-						break;
+						break;*/
+					case REPLACE_WITH:
+						Condition replaceWithRefinement = new Condition(conditionType, LeftOperand.REPLACE_WITH, op, rightOperand, "");
+						ruleConstraint.add(replaceWithRefinement);
+					case SUBSET_SPECIFICATION:
+						Condition subsetSpecificationRefinement = new Condition(conditionType, LeftOperand.SUBSET_SPECIFICATION, op, rightOperand, "");
+						ruleConstraint.add(subsetSpecificationRefinement);
 					case PAY_AMOUNT:
 						Condition paymentConstraint = new Condition(conditionType, LeftOperand.PAY_AMOUNT, op, rightOperand, "");
 						paymentConstraint.setContract(getValue(conditionMap, "ids:contract"));
