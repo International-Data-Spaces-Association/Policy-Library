@@ -74,7 +74,7 @@ public class Action {
                     "            \"@value\":\"https://ids.org/PXP/interfaceDescription/"+ this.type.toString().toLowerCase() + "\", \n" +
                     "            \"@type\":\"anyURI\"\n" +
                     "          }, \n" +
-                    "          \"ids:pxpAccessURI\":{\n" +
+                    "          \"ids:accessURI\":{\n" +
                     "            \"@value\":\"https://consumer.org/PXPendpoint/"+ this.type.toString().toLowerCase() + "\", \n" +
                     "            \"@type\":\"anyURI\"\n" +
                     "          } \n" +

@@ -71,7 +71,7 @@ public class Condition {
            "            \"@value\":\"https://ids.org/PIP/interfaceDescription/"+ this.leftOperand.toString().toLowerCase() + "\", \n" +
            "            \"@type\":\"anyURI\"\n" +
            "          }, \n" +
-           "          \"ids:pipAccessURI\":{\n" +
+           "          \"ids:accessURI\":{\n" +
            "            \"@value\":\"https://consumer.org/PXPendpoint/"+ this.leftOperand.toString().toLowerCase() + "\", \n" +
            "            \"@type\":\"anyURI\"\n" +
            "          } \n" +
