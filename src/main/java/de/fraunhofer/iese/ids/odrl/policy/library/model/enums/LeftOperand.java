@@ -44,7 +44,8 @@ public enum LeftOperand {
 
     NOTIFICATION_LEVEL("notificationLevel", "idsc:NOTIFICATION_LEVEL"),
 
-    SUBSET_SPECIFICATION("jsonPathQuery","idsc:SUBSET_SPECIFICATION"),
+    JSON_PATH("jsonPathQuery","idsc:JSON_PATH"),
+    //SUBSET_SPECIFICATION("jsonPathQuery","idsc:SUBSET_SPECIFICATION"),
 
     REPLACE_WITH("replaceWith","idsc:REPLACE_WITH"),
 

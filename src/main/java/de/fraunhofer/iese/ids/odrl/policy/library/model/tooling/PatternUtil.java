@@ -371,14 +371,27 @@ public class PatternUtil {
 						ruleConstraint.add(artifactStateConstraint);
 						break;
 					case DATE_TIME:
+						String beginTimeEntityValue = getRightOperandValueEntity(conditionMap, EntityType.BEGIN);
+						RightOperandEntity beginTimeEntity = new RightOperandEntity(EntityType.BEGIN, beginTimeEntityValue, RightOperandType.DATETIMESTAMP);
+
 						String endTimeEntityValue = getRightOperandValueEntity(conditionMap, EntityType.END);
 						RightOperandEntity endTimeEntity = new RightOperandEntity(EntityType.END, endTimeEntityValue, RightOperandType.DATETIMESTAMP);
-						ArrayList<RightOperandEntity> dateTimeEntity = new ArrayList<>();
-						dateTimeEntity.add(endTimeEntity);
-						RightOperand dateTimeRightOperand =new RightOperand(dateTimeEntity, RightOperandType.INSTANT);
-						Condition dateTimeCondition = new Condition(conditionType, LeftOperand.DATE_TIME, op, dateTimeRightOperand, "");
-						ruleConstraint.add(dateTimeCondition);
-						break;
+						ArrayList<RightOperandEntity> timeEntities = new ArrayList<>();
+
+						if(!beginTimeEntityValue.isEmpty() && !endTimeEntityValue.isEmpty())
+						{
+							timeEntities.add(beginTimeEntity);
+							timeEntities.add(endTimeEntity);
+							RightOperand timeIntervalRightOperand =new RightOperand(timeEntities, RightOperandType.INTERVAL);
+							Condition timeIntervalCondition = new Condition(conditionType, LeftOperand.DATE_TIME, op, timeIntervalRightOperand, "");
+							ruleConstraint.add(timeIntervalCondition);
+							break;
+						}
+							timeEntities.add(endTimeEntity);
+							RightOperand dateTimeRightOperand =new RightOperand(timeEntities, RightOperandType.INSTANT);
+							Condition dateTimeCondition = new Condition(conditionType, LeftOperand.DATE_TIME, op, dateTimeRightOperand, "");
+							ruleConstraint.add(dateTimeCondition);
+							break;
 					case POLICY_EVALUATION_TIME:
 						String beginEntityValue = getRightOperandValueEntity(conditionMap, EntityType.BEGIN);
 						RightOperandEntity beginEntity = new RightOperandEntity(EntityType.BEGIN, beginEntityValue, RightOperandType.DATETIMESTAMP);
@@ -432,8 +445,8 @@ public class PatternUtil {
 					case REPLACE_WITH:
 						Condition replaceWithRefinement = new Condition(conditionType, LeftOperand.REPLACE_WITH, op, rightOperand, "");
 						ruleConstraint.add(replaceWithRefinement);
-					case SUBSET_SPECIFICATION:
-						Condition subsetSpecificationRefinement = new Condition(conditionType, LeftOperand.SUBSET_SPECIFICATION, op, rightOperand, "");
+					case JSON_PATH:
+						Condition subsetSpecificationRefinement = new Condition(conditionType, LeftOperand.JSON_PATH, op, rightOperand, "");
 						ruleConstraint.add(subsetSpecificationRefinement);
 					case PAY_AMOUNT:
 						Condition paymentConstraint = new Condition(conditionType, LeftOperand.PAY_AMOUNT, op, rightOperand, "");
