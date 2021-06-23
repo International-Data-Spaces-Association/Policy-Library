@@ -44,9 +44,12 @@ public enum LeftOperand {
 
     NOTIFICATION_LEVEL("notificationLevel", "idsc:NOTIFICATION_LEVEL"),
 
-    //JSONPATH("jsonPathQuery","ids:jsonPath"),
+    JSON_PATH("jsonPathQuery","idsc:JSON_PATH"),
+    //SUBSET_SPECIFICATION("jsonPathQuery","idsc:SUBSET_SPECIFICATION"),
 
-    MODIFICATION_METHOD("modificationMethod","idsc:MODIFICATION_METHOD"),
+    REPLACE_WITH("replaceWith","idsc:REPLACE_WITH"),
+
+    //MODIFICATION_METHOD("modificationMethod","idsc:MODIFICATION_METHOD"),
 
     DIGIT("digit","ids:digit"),
 

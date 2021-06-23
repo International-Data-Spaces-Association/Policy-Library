@@ -1,7 +1,6 @@
 package de.fraunhofer.iese.ids.odrl.policy.library.model.enums;
 
 public enum ActionType {
-    ACTION("odrl:action", ""),
 
     USE("idsc:USE","ACTION"),
 
@@ -9,27 +8,29 @@ public enum ActionType {
 
     DISPLAY("idsc:DISPLAY", "ACTION"),
 
-    DELETE("idsc:DELETE", "ACTION"),
+    DELETE("idsc:DELETE", "DUTY"),
 
-    INFORM("idsc:INFORM", "ACTION"),
+    INFORM("idsc:INFORM", "DUTY"),
 
-    NOTIFY("idsc:NOTIFY", "ACTION"),
+    NOTIFY("idsc:NOTIFY", "DUTY"),
 
     PRINT("idsc:PRINT", "ACTION"),
 
-    ANONYMIZE("idsc:ANONYMIZE", "ACTION"),
+    ANONYMIZE("idsc:ANONYMIZE", "DUTY"),
 
     REPRODUCE("idsc:REPRODUCE", "ACTION"),
 
-    NEXT_POLICY("idsc:NEXT_POLICY", "ACTION"),
+    NEXT_POLICY("idsc:NEXT_POLICY", "DUTY"),
 
     DISTRIBUTE("idsc:DISTRIBUTE", "ACTION"),
 
-    ROUND("idsc:ROUND", "ANONYMIZE"),
+    ROUND("idsc:ROUND", "DUTY"),
 
-    INCREMENT_COUNTER("idsc:INCREMENT_COUNTER", "ACTION"),
+    REPLACE("idsc:REPLACE", "DUTY"),
 
-    LOG("idsc:LOG", "ACTION");
+    INCREMENT_COUNTER("idsc:INCREMENT_COUNTER", "DUTY"),
+
+    LOG("idsc:LOG", "DUTY");
 
     private final String idsAction;
     private final String abstractAction;
