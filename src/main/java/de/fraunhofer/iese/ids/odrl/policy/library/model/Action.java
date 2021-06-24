@@ -70,7 +70,7 @@ public class Action {
         {
             return  ", \n"+
                     "        \"ids:pxpEndpoint\":{\n" +
-                    "          \"ids:pxpInterfaceDescription\":{\n" +
+                    "          \"ids:interfaceDescription\":{\n" +
                     "            \"@value\":\"https://ids.org/PXP/interfaceDescription/"+ this.type.toString().toLowerCase() + "\", \n" +
                     "            \"@type\":\"anyURI\"\n" +
                     "          }, \n" +

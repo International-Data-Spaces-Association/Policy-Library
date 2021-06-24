@@ -67,7 +67,7 @@ public class Condition {
   {
    return  ", \n"+
            "        \"ids:pipEndpoint\":{\n" +
-           "          \"ids:pipInterfaceDescription\":{\n" +
+           "          \"ids:interfaceDescription\":{\n" +
            "            \"@value\":\"https://ids.org/PIP/interfaceDescription/"+ this.leftOperand.toString().toLowerCase() + "\", \n" +
            "            \"@type\":\"anyURI\"\n" +
            "          }, \n" +
