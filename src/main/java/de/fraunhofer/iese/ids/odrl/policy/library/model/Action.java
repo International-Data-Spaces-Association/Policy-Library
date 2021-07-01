@@ -70,11 +70,12 @@ public class Action {
         {
             return  ", \n"+
                     "        \"ids:pxpEndpoint\":{\n" +
+                    "          \"@type\":\"ids:PXP\", \n" +
                     "          \"ids:interfaceDescription\":{\n" +
                     "            \"@value\":\"https://ids.org/PXP/interfaceDescription/"+ this.type.toString().toLowerCase() + "\", \n" +
                     "            \"@type\":\"anyURI\"\n" +
                     "          }, \n" +
-                    "          \"ids:accessURI\":{\n" +
+                    "          \"ids:endpointURI\":{\n" +
                     "            \"@value\":\"https://consumer.org/PXPendpoint/"+ this.type.toString().toLowerCase() + "\", \n" +
                     "            \"@type\":\"anyURI\"\n" +
                     "          } \n" +

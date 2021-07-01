@@ -67,11 +67,12 @@ public class Condition {
   {
    return  ", \n"+
            "        \"ids:pipEndpoint\":{\n" +
+           "          \"@type\":\"ids:PIP\", \n" +
            "          \"ids:interfaceDescription\":{\n" +
            "            \"@value\":\"https://ids.org/PIP/interfaceDescription/"+ this.leftOperand.toString().toLowerCase() + "\", \n" +
            "            \"@type\":\"anyURI\"\n" +
            "          }, \n" +
-           "          \"ids:accessURI\":{\n" +
+           "          \"ids:endpointURI\":{\n" +
            "            \"@value\":\"https://consumer.org/PXPendpoint/"+ this.leftOperand.toString().toLowerCase() + "\", \n" +
            "            \"@type\":\"anyURI\"\n" +
            "          } \n" +
