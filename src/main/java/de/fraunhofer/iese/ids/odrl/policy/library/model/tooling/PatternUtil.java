@@ -149,15 +149,15 @@ public class PatternUtil {
 		Map ruleMap = getRuleMap(map, ruleType);
 
 		// get target
-		Map target = getMap(ruleMap, "ids:target");
+		Map target = getFirstMap(ruleMap, "ids:target");
 		String targetId = getValue(target, "@id");
 		URI targetURI = URI.create(targetId);
 
 		ActionType action = getAction(ruleMap);
-        Map ruleActionMap = getMap(ruleMap, "ids:action");
+        Map ruleActionMap = getFirstMap(ruleMap, "ids:action");
 
-		Map preDutyMap = getMap(ruleMap, "ids:preDuty");
-		Map postDutyMap = getMap(ruleMap, "ids:postDuty");
+		Map preDutyMap = getFirstMap(ruleMap, "ids:preDuty");
+		Map postDutyMap = getFirstMap(ruleMap, "ids:postDuty");
 
 		Map dutyActionMap = null;
 		ActionType dutyMethod = null;
@@ -165,13 +165,13 @@ public class PatternUtil {
 
 		if (isNotNull(preDutyMap) ) {
 			dutyMethod = getAction(preDutyMap);
-			dutyActionMap = getMap(preDutyMap, "ids:action");
+			dutyActionMap = getFirstMap(preDutyMap, "ids:action");
 			isAPreDuty = true;
 		}
 
 		if (isNotNull(postDutyMap) ) {
 			dutyMethod = getAction(postDutyMap);
-			dutyActionMap = getMap(postDutyMap, "ids:action");
+			dutyActionMap = getFirstMap(postDutyMap, "ids:action");
 		}
 
 		//TODO: for all rules!
@@ -194,9 +194,9 @@ public class PatternUtil {
 
 			//build the rule constraints
 			List<Map> ruleConstraintList = new ArrayList<>();
-			if ((isNotNull(ruleMap) && isNotNull(getConditions(ruleMap, ConditionType.CONSTRAINT))))
+			if ((isNotNull(ruleMap) && isNotNull(getList(ruleMap, ConditionType.CONSTRAINT.getOdrlConditionType()))))
 			{
-				ruleConstraintList = getConditions(ruleMap, ConditionType.CONSTRAINT);
+				ruleConstraintList = getList(ruleMap, ConditionType.CONSTRAINT.getOdrlConditionType());
 				ArrayList<Condition> ruleConstraint = new ArrayList<Condition>();
 				buildConditions(ruleConstraintList, ruleConstraint, ConditionType.CONSTRAINT);
 				rule.setConstraints(ruleConstraint);
@@ -204,9 +204,9 @@ public class PatternUtil {
 
 			//build the rule action refinements
 			List<Map> ruleActionRefinementList = new ArrayList<>();
-			if (isNotNull(ruleActionMap) && isNotNull(getConditions(ruleActionMap, ConditionType.REFINEMENT)))
+			if (isNotNull(ruleActionMap) && isNotNull(getList(ruleActionMap, ConditionType.REFINEMENT.getOdrlConditionType())))
 			{
-				ruleActionRefinementList.addAll(getConditions(ruleActionMap, ConditionType.REFINEMENT));
+				ruleActionRefinementList.addAll(getList(ruleActionMap, ConditionType.REFINEMENT.getOdrlConditionType()));
 				ArrayList<Condition> ruleActionRefinements = new ArrayList<Condition>();
 				buildConditions(ruleActionRefinementList, ruleActionRefinements, ConditionType.REFINEMENT);
 				ruleAction.setRefinements(ruleActionRefinements);
@@ -214,9 +214,9 @@ public class PatternUtil {
 
 			//build the duty action refinements
 			List<Map> dutyActionRefinementList = new ArrayList<>();
-			if (isNotNull(dutyActionMap) && isNotNull(getConditions(dutyActionMap, ConditionType.REFINEMENT)))
+			if (isNotNull(dutyActionMap) && isNotNull(getList(dutyActionMap, ConditionType.REFINEMENT.getOdrlConditionType())))
 			{
-				dutyActionRefinementList.addAll(getConditions(dutyActionMap, ConditionType.REFINEMENT));
+				dutyActionRefinementList.addAll(getList(dutyActionMap, ConditionType.REFINEMENT.getOdrlConditionType()));
 				ArrayList<Condition> dutyActionRefinements = new ArrayList<Condition>();
 				buildConditions(dutyActionRefinementList, dutyActionRefinements,ConditionType.REFINEMENT);
 				dutyAction.setRefinements(dutyActionRefinements);
@@ -299,8 +299,8 @@ public class PatternUtil {
 	private static void addConstraintsToDutyRule(Map postobligationMap, Rule dutyRule) {
 		//build the postobligation constraints
 		List<Map> postobligationConstraintList = new ArrayList<>();
-		if (isNotNull(postobligationMap) && isNotNull(getConditions(postobligationMap, ConditionType.CONSTRAINT))) {
-			postobligationConstraintList.addAll(getConditions(postobligationMap, ConditionType.CONSTRAINT));
+		if (isNotNull(postobligationMap) && isNotNull(getList(postobligationMap, ConditionType.CONSTRAINT.getOdrlConditionType()))) {
+			postobligationConstraintList.addAll(getList(postobligationMap, ConditionType.CONSTRAINT.getOdrlConditionType()));
 			ArrayList<Condition> postobligationConstraints = new ArrayList<Condition>();
 			buildConditions(postobligationConstraintList, postobligationConstraints,ConditionType.CONSTRAINT);
 			dutyRule.setConstraints(postobligationConstraints);
@@ -311,163 +311,108 @@ public class PatternUtil {
 		if(null != ruleConstraintList) {
 			for (Map conditionMap : ruleConstraintList) {
 				LeftOperand leftOperand = getLeftOperand(conditionMap);
-				RightOperandId rightOperandId = getRightOperandId(conditionMap);
 				Operator op = getOperator(conditionMap);
-				String rightOperandValue = getRightOperandValue(conditionMap);
-				RightOperandType rightOperandType = getRightOperandType(conditionMap);
-				RightOperand rightOperand = new RightOperand(rightOperandId, rightOperandValue, rightOperandType);
+				ArrayList<RightOperand> rightOperands = getRightOperands(conditionMap);
 
 				switch (leftOperand) {
 					case PURPOSE:
-						Condition purposeConstraint = new Condition(conditionType, LeftOperand.PURPOSE, op, rightOperand, "");
+						Condition purposeConstraint = new Condition(conditionType, LeftOperand.PURPOSE, op, rightOperands, "");
 						ruleConstraint.add(purposeConstraint);
 						break;
 					case SYSTEM:
-						Condition systemConstraint = new Condition(conditionType, LeftOperand.SYSTEM, op, rightOperand, "");
+						Condition systemConstraint = new Condition(conditionType, LeftOperand.SYSTEM, op, rightOperands, "");
 						ruleConstraint.add(systemConstraint);
 						break;
 					case APPLICATION:
-						Condition applicationConstraint = new Condition(conditionType, LeftOperand.APPLICATION, op, rightOperand, "");
+						Condition applicationConstraint = new Condition(conditionType, LeftOperand.APPLICATION, op, rightOperands, "");
 						ruleConstraint.add(applicationConstraint);
 						break;
 					case CONNECTOR:
-						Condition connectorConstraint = new Condition(conditionType, LeftOperand.CONNECTOR, op, rightOperand, "");
+						Condition connectorConstraint = new Condition(conditionType, LeftOperand.CONNECTOR, op, rightOperands, "");
 						ruleConstraint.add(connectorConstraint);
 						break;
 					case STATE:
-						Condition stateConstraint = new Condition(conditionType, LeftOperand.STATE, op, rightOperand, "");
+						Condition stateConstraint = new Condition(conditionType, LeftOperand.STATE, op, rightOperands, "");
 						ruleConstraint.add(stateConstraint);
 						break;
 					case SECURITY_LEVEL:
-						Condition securityLevelConstraint = new Condition(conditionType, LeftOperand.SECURITY_LEVEL, op, rightOperand, "");
+						Condition securityLevelConstraint = new Condition(conditionType, LeftOperand.SECURITY_LEVEL, op, rightOperands, "");
 						ruleConstraint.add(securityLevelConstraint);
 						break;
 					case ROLE:
-						Condition roleConstraint = new Condition(conditionType, LeftOperand.ROLE, op, rightOperand, "");
+						Condition roleConstraint = new Condition(conditionType, LeftOperand.ROLE, op, rightOperands, "");
 						ruleConstraint.add(roleConstraint);
 						break;
 					case EVENT:
-						Condition eventConstraint = new Condition(conditionType, LeftOperand.EVENT, op, rightOperand, "");
+						Condition eventConstraint = new Condition(conditionType, LeftOperand.EVENT, op, rightOperands, "");
 						ruleConstraint.add(eventConstraint);
 						break;
 					case COUNT:
-						Condition countConstraint = new Condition(conditionType, LeftOperand.COUNT, op, rightOperand, "");
+						Condition countConstraint = new Condition(conditionType, LeftOperand.COUNT, op, rightOperands, "");
 						ruleConstraint.add(countConstraint);
 						break;
 					case ENCODING:
-						Condition encodingConstraint = new Condition(conditionType, LeftOperand.ENCODING, op, rightOperand, "");
+						Condition encodingConstraint = new Condition(conditionType, LeftOperand.ENCODING, op, rightOperands, "");
 						ruleConstraint.add(encodingConstraint);
 						break;
 					case LOG_LEVEL:
-						Condition logLevelConstraint = new Condition(conditionType, LeftOperand.LOG_LEVEL, op, rightOperand, "");
+						Condition logLevelConstraint = new Condition(conditionType, LeftOperand.LOG_LEVEL, op, rightOperands, "");
 						ruleConstraint.add(logLevelConstraint);
 						break;
 					case NOTIFICATION_LEVEL:
-						Condition notificationLevelConstraint = new Condition(conditionType, LeftOperand.NOTIFICATION_LEVEL, op, rightOperand, "");
+						Condition notificationLevelConstraint = new Condition(conditionType, LeftOperand.NOTIFICATION_LEVEL, op, rightOperands, "");
 						ruleConstraint.add(notificationLevelConstraint);
 						break;
 					case ARTIFACT_STATE:
-						Condition artifactStateConstraint = new Condition(conditionType, LeftOperand.ARTIFACT_STATE, op, rightOperand, "");
+						Condition artifactStateConstraint = new Condition(conditionType, LeftOperand.ARTIFACT_STATE, op, rightOperands, "");
 						ruleConstraint.add(artifactStateConstraint);
 						break;
 					case DATE_TIME:
-						String beginTimeEntityValue = getRightOperandValueEntity(conditionMap, EntityType.BEGIN);
-						RightOperandEntity beginTimeEntity = new RightOperandEntity(EntityType.BEGIN, beginTimeEntityValue, RightOperandType.DATETIMESTAMP);
-
-						String endTimeEntityValue = getRightOperandValueEntity(conditionMap, EntityType.END);
-						RightOperandEntity endTimeEntity = new RightOperandEntity(EntityType.END, endTimeEntityValue, RightOperandType.DATETIMESTAMP);
-						ArrayList<RightOperandEntity> timeEntities = new ArrayList<>();
-
-						if(!beginTimeEntityValue.isEmpty() && !endTimeEntityValue.isEmpty())
-						{
-							timeEntities.add(beginTimeEntity);
-							timeEntities.add(endTimeEntity);
-							RightOperand timeIntervalRightOperand =new RightOperand(timeEntities, RightOperandType.INTERVAL);
-							Condition timeIntervalCondition = new Condition(conditionType, LeftOperand.DATE_TIME, op, timeIntervalRightOperand, "");
-							ruleConstraint.add(timeIntervalCondition);
-							break;
-						}
-							timeEntities.add(endTimeEntity);
-							RightOperand dateTimeRightOperand =new RightOperand(timeEntities, RightOperandType.INSTANT);
-							Condition dateTimeCondition = new Condition(conditionType, LeftOperand.DATE_TIME, op, dateTimeRightOperand, "");
-							ruleConstraint.add(dateTimeCondition);
-							break;
-					case POLICY_EVALUATION_TIME:
-						String beginEntityValue = getRightOperandValueEntity(conditionMap, EntityType.BEGIN);
-						RightOperandEntity beginEntity = new RightOperandEntity(EntityType.BEGIN, beginEntityValue, RightOperandType.DATETIMESTAMP);
-						String endEntityValue = getRightOperandValueEntity(conditionMap, EntityType.END);
-						RightOperandEntity endEntity = new RightOperandEntity(EntityType.END, endEntityValue, RightOperandType.DATETIMESTAMP);
-						ArrayList<RightOperandEntity> timeIntervalEntities = new ArrayList<>();
-						timeIntervalEntities.add(beginEntity);
-						timeIntervalEntities.add(endEntity);
-						RightOperand timeIntervalRightOperand =new RightOperand(timeIntervalEntities, RightOperandType.INTERVAL);
-						Condition timeIntervalCondition = new Condition(conditionType, LeftOperand.POLICY_EVALUATION_TIME, op, timeIntervalRightOperand, "");
+						Condition timeIntervalCondition = new Condition(conditionType, LeftOperand.DATE_TIME, op, rightOperands, "");
 						ruleConstraint.add(timeIntervalCondition);
 						break;
+					case POLICY_EVALUATION_TIME:
+						Condition evaluationTimeCondition = new Condition(conditionType, LeftOperand.POLICY_EVALUATION_TIME, op, rightOperands, "");
+						ruleConstraint.add(evaluationTimeCondition);
+						break;
 					case DELAY:
-						String delayEntityValue = getRightOperandValueEntity(conditionMap, EntityType.HASDURATION);
-						RightOperandEntity dEntity = new RightOperandEntity(EntityType.HASDURATION, delayEntityValue, RightOperandType.DURATION);
-						ArrayList<RightOperandEntity> delayPeriodEntities = new ArrayList<>();
-						delayPeriodEntities.add(dEntity);
-						RightOperand delayPeriodRightOperand =new RightOperand(delayPeriodEntities, RightOperandType.DURATIONENTITY);
-						Condition delayPeriodConstraint = new Condition(conditionType, LeftOperand.DELAY, op, delayPeriodRightOperand, "");
+						Condition delayPeriodConstraint = new Condition(conditionType, LeftOperand.DELAY, op, rightOperands, "");
 						ruleConstraint.add(delayPeriodConstraint);
 						break;
 					case ELAPSED_TIME:
-						String durationEntityValue = getRightOperandValueEntity(conditionMap, EntityType.HASDURATION);
-						RightOperandEntity durationEntity = new RightOperandEntity(EntityType.HASDURATION, durationEntityValue, RightOperandType.DURATION);
-						ArrayList<RightOperandEntity> elapsedTimeEntities = new ArrayList<>();
-						elapsedTimeEntities.add(durationEntity);
-						String bEntityValue = getRightOperandValueEntity(conditionMap, EntityType.BEGIN);
-						if(!bEntityValue.isEmpty()){
-							RightOperandEntity bEntity = new RightOperandEntity(EntityType.BEGIN, bEntityValue, RightOperandType.DATETIMESTAMP);
-							elapsedTimeEntities.add(bEntity);
-						}
-						RightOperand elapsedTimeRightOperand =new RightOperand(elapsedTimeEntities, RightOperandType.DURATIONENTITY);
-						Condition elapsedTimeConstraint = new Condition(conditionType, LeftOperand.ELAPSED_TIME, op, elapsedTimeRightOperand, "");
+						Condition elapsedTimeConstraint = new Condition(conditionType, LeftOperand.ELAPSED_TIME, op, rightOperands, "");
 						ruleConstraint.add(elapsedTimeConstraint);
 						break;
 					case RECIPIENT:
-						Condition recipientConstraint = new Condition(conditionType, LeftOperand.RECIPIENT, op, rightOperand, "");
+						Condition recipientConstraint = new Condition(conditionType, LeftOperand.RECIPIENT, op, rightOperands, "");
 						ruleConstraint.add(recipientConstraint);
 						break;
-					/*case MODIFICATION_METHOD:
-						Condition modificationMethodRefinement = new Condition(conditionType, LeftOperand.MODIFICATION_METHOD, op, rightOperand, "");
-						// add jsonPath
-						modificationMethodRefinement.setJsonPath(getValue(conditionMap, "ids:jsonPath"));
-						// add replaceWith parameter
-						String replaceWithValue = getReplaceWithValue(conditionMap);
-						RightOperandType replaceWithType = getReplaceWithType(conditionMap);
-						ModificationMethodParameter replaceWithParam = new ModificationMethodParameter(replaceWithValue, replaceWithType);
-						modificationMethodRefinement.setReplaceWith(replaceWithParam);
-						ruleConstraint.add(modificationMethodRefinement);
-						break;*/
 					case REPLACE_WITH:
-						Condition replaceWithRefinement = new Condition(conditionType, LeftOperand.REPLACE_WITH, op, rightOperand, "");
+						Condition replaceWithRefinement = new Condition(conditionType, LeftOperand.REPLACE_WITH, op, rightOperands, "");
 						ruleConstraint.add(replaceWithRefinement);
 					case JSON_PATH:
-						Condition subsetSpecificationRefinement = new Condition(conditionType, LeftOperand.JSON_PATH, op, rightOperand, "");
+						Condition subsetSpecificationRefinement = new Condition(conditionType, LeftOperand.JSON_PATH, op, rightOperands, "");
 						ruleConstraint.add(subsetSpecificationRefinement);
 					case PAY_AMOUNT:
-						Condition paymentConstraint = new Condition(conditionType, LeftOperand.PAY_AMOUNT, op, rightOperand, "");
+						Condition paymentConstraint = new Condition(conditionType, LeftOperand.PAY_AMOUNT, op, rightOperands, "");
 						paymentConstraint.setContract(getValue(conditionMap, "ids:contract"));
 						paymentConstraint.setUnit(getValue(conditionMap, "ids:unit"));
 						ruleConstraint.add(paymentConstraint);
 						break;
 					case ABSOLUTE_SPATIAL_POSITION:
-						Condition absoluteSpatialPositionConstraint = new Condition(conditionType, LeftOperand.ABSOLUTE_SPATIAL_POSITION, op, rightOperand, "");
+						Condition absoluteSpatialPositionConstraint = new Condition(conditionType, LeftOperand.ABSOLUTE_SPATIAL_POSITION, op, rightOperands, "");
 						ruleConstraint.add(absoluteSpatialPositionConstraint);
 						break;
 					case SYSTEM_DEVICE:
-						Condition systemDeviceRefinement = new Condition(conditionType, LeftOperand.SYSTEM_DEVICE, op, rightOperand, "");
+						Condition systemDeviceRefinement = new Condition(conditionType, LeftOperand.SYSTEM_DEVICE, op, rightOperands, "");
 						ruleConstraint.add(systemDeviceRefinement);
 						break;
 					case INFORMEDPARTY:
-						Condition informedPartyRefinement = new Condition(conditionType, LeftOperand.INFORMEDPARTY, op, rightOperand, "");
+						Condition informedPartyRefinement = new Condition(conditionType, LeftOperand.INFORMEDPARTY, op, rightOperands, "");
 						ruleConstraint.add(informedPartyRefinement);
 						break;
 					case TARGET_POLICY:
-						Condition thirdPartyRefinement = new Condition(conditionType, LeftOperand.TARGET_POLICY, op, rightOperand, "");
+						Condition thirdPartyRefinement = new Condition(conditionType, LeftOperand.TARGET_POLICY, op, rightOperands, "");
 						ruleConstraint.add(thirdPartyRefinement);
 						break;
 				default:
@@ -475,6 +420,50 @@ public class PatternUtil {
 				}
 			}
 		}
+	}
+
+	private static ArrayList<RightOperand> getRightOperands(Map conditionMap) {
+		List<Map> rightOperandMaps = getList(conditionMap, "ids:rightOperand");
+		ArrayList<RightOperand> rightOperands = new ArrayList<>();
+		for(Map rightOperandMap: rightOperandMaps)
+		{
+			RightOperandId rightOperandId = getRightOperandId(rightOperandMap);
+			String rightOperandValue = getRightOperandValue(rightOperandMap);
+			RightOperandType rightOperandType = getRightOperandType(rightOperandMap);
+
+			ArrayList<RightOperandEntity> entities = new ArrayList<>();
+			Map beginEntityMap = (Map) rightOperandMap.get(EntityType.BEGIN.getOdrlRuleType());
+			if(beginEntityMap != null){
+				String beginTimeEntityValue = getRightOperandValueEntity(beginEntityMap, EntityType.DATETIME);
+				RightOperandEntity beginTimeEntity = new RightOperandEntity(EntityType.DATETIME, beginTimeEntityValue, RightOperandType.DATETIMESTAMP);
+				RightOperandEntity beginEntity = new RightOperandEntity(EntityType.BEGIN, beginTimeEntity, rightOperandType.INSTANT);
+				entities.add(beginEntity);
+			}
+
+			Map endEntityMap = (Map) rightOperandMap.get(EntityType.END.getOdrlRuleType());
+			if(beginEntityMap != null) {
+				String endTimeEntityValue = getRightOperandValueEntity(endEntityMap, EntityType.DATETIME);
+				RightOperandEntity endTimeEntity = new RightOperandEntity(EntityType.DATETIME, endTimeEntityValue, RightOperandType.DATETIMESTAMP);
+				RightOperandEntity endEntity = new RightOperandEntity(EntityType.END, endTimeEntity, rightOperandType.INSTANT);
+				entities.add(endEntity);
+			}
+
+			String dateTimeEntityValue = getRightOperandValueEntity(rightOperandMap, EntityType.DATETIME);
+			if(null != dateTimeEntityValue && !dateTimeEntityValue.isEmpty()) {
+				RightOperandEntity dateTimeEntity = new RightOperandEntity(EntityType.DATETIME, dateTimeEntityValue, RightOperandType.DATETIMESTAMP);
+				entities.add(dateTimeEntity);
+			}
+
+			String durationEntityValue = getRightOperandValueEntity(rightOperandMap, EntityType.HASDURATION);
+			if(null != durationEntityValue && !durationEntityValue.isEmpty()) {
+				RightOperandEntity durationEntity = new RightOperandEntity(EntityType.HASDURATION, durationEntityValue, RightOperandType.DURATION);
+				entities.add(durationEntity);
+			}
+
+			RightOperand rightOperand = new RightOperand(rightOperandId, rightOperandValue, rightOperandType, entities);
+			rightOperands.add(rightOperand);
+		}
+		return rightOperands;
 	}
 
 	public static RuleType getRuleType(Map map) {
@@ -485,7 +474,7 @@ public class PatternUtil {
 
 
 	private static boolean isAnonymizeInTransit(Map ruleMap) {
-		Map dutyMap = getMap(ruleMap, "ids:duty");
+		Map dutyMap = getFirstMap(ruleMap, "ids:duty");
 		if(isNotNull(dutyMap))
 		{
 			ActionType abstractAction = getAbstractAction(dutyMap);
@@ -533,59 +522,54 @@ public class PatternUtil {
 		return isNotNull (replaceWithMap) && isNotNull(getValue(replaceWithMap, "@type")) ? RightOperandType.valueOf(removeIdsOrXsdTag(getValue(replaceWithMap, "@type"))): null;
 	}
 
-	public static String getRightOperandValue(Map conditionMap) {
-		Map rightOperandMap = (Map) conditionMap.get("ids:rightOperand");
+	public static String getRightOperandValue(Map rightOperandMap) {
 		return isNotNull (rightOperandMap)? getValue(rightOperandMap, "@value"): "";
 	}
 
-	public static String getRightOperandValueEntity(Map conditionMap, EntityType entityType) {
-		Map rightOperandMap = (Map) conditionMap.get("ids:rightOperand");
-		Map rightOperandValueMap = (Map) rightOperandMap.get("@value");
-		Map entityMap = (Map) rightOperandValueMap.get(entityType.getOdrlRuleType());
+	public static String getRightOperandValueEntity(Map rightOperandMap, EntityType entityType) {
+		//Map rightOperandMap = (Map) conditionMap.get("ids:rightOperand");
+		//Map rightOperandValueMap = (Map) rightOperandMap.get("@value");
+		Map entityMap = (Map) rightOperandMap.get(entityType.getOdrlRuleType());
 		return isNotNull (entityMap)? getValue(entityMap, "@value"): "";
 	}
 
-	public static RightOperandType getRightOperandType(Map conditionMap) {
-		Map rightOperandMap = (Map) conditionMap.get("ids:rightOperand");
+	public static RightOperandType getRightOperandType(Map rightOperandMap) {
 		return isNotNull (rightOperandMap) && isNotNull(getValue(rightOperandMap, "@type")) ? RightOperandType.valueOf(removeIdsOrXsdTag(getValue(rightOperandMap, "@type"))): null;
 	}
 
-	public static RightOperandId getRightOperandId(Map conditionMap) {
-		Map rightOperandMap = (Map) conditionMap.get("ids:rightOperand");
+	public static RightOperandId getRightOperandId(Map rightOperandMap) {
 		return isNotNull (rightOperandMap) && isNotNull(getValue(rightOperandMap, "@id")) ? RightOperandId.valueOf(removeIdsOrXsdTag(getValue(rightOperandMap, "@id"))): null;
 	}
-
-    public static List<Map> getConditions(Map map, ConditionType conditionType) {
-        Object condition = map.get(conditionType.getOdrlConditionType());
-        if(condition instanceof List) {
-        	List conditions = ((List)condition);
-            if(!conditions.isEmpty()) {
-                
-                List<Map> conditionsAsMap = new ArrayList<>();
-                for(Object conditionsElement : conditions)
+	
+    public static List<Map> getList(Map map, String tag) {
+        Object obj = map.get(tag);
+        if(obj instanceof List) {
+        	List objects = ((List)obj);
+            if(!objects.isEmpty()) {
+                List<Map> listAsMap = new ArrayList<>();
+                for(Object element : objects)
                 {
-                	//TODO: check instanceof Map?!?
-                    conditionsAsMap.add((Map) conditionsElement);
+					listAsMap.add((Map) element);
                 }
-                return conditionsAsMap;
+                return listAsMap;
             }
         }
         return null;
     }
 
-	public static Map getMap(Map ruleMap, String tag) {
-		Object action = ruleMap.get(tag);
-		if(action instanceof List) {
-			List actions = (List)action;
-			if(!actions.isEmpty()) {
-				Object actionsFistElement = actions.get(0);
-				if(actionsFistElement instanceof Map) {
-					return (Map) actionsFistElement;
+	public static Map getFirstMap(Map map, String tag) {
+		Object obj = map.get(tag);
+		if(obj instanceof List) {
+			List objects = (List)obj;
+			if(!objects.isEmpty()) {
+				Object objectsFistElement = objects.get(0);
+				if(objectsFistElement instanceof Map) {
+					return (Map) objectsFistElement;
 				}
 			}
 		}
-		if(action instanceof Map) {
-			return (Map) action;
+		if(obj instanceof Map) {
+			return (Map) obj;
 		}
 		return null;
 	}

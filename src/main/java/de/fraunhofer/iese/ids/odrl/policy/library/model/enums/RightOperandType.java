@@ -6,9 +6,9 @@ public enum RightOperandType {
 
     DATETIMESTAMP("xsd:datetimeStamp"),
 
-    INTERVAL("ids:interval"),
+    INTERVAL("ids:Interval"),
 
-    INSTANT("ids:instant"),
+    INSTANT("ids:Instant"),
 
     DURATIONENTITY("ids:durationEntity"),
 

@@ -4,6 +4,12 @@ package de.fraunhofer.iese.ids.odrl.policy.library.model.enums;
 public enum Operator {
 
  // Logical operators
+ IS_ANY_OF("isAnyOf", "idsc:IS_ANY_OF"),
+
+ IS_ALL_OF("isAllOf", "idsc:IS_ALL_OF"),
+
+ IS_NONE_OF("isNoneOf", "idsc:IS_NONE_OF"),
+
  EQUALS("equals", "idsc:EQUALS"),
 
  SAME_AS("equals", "idsc:SAME_AS"),

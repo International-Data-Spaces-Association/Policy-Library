@@ -38,6 +38,13 @@ public class RightOperand {
         this.type = type;
     }
 
+    public RightOperand(RightOperandId id, String value, RightOperandType type, ArrayList<RightOperandEntity> entities) {
+        this.id = id;
+        this.value = value;
+        this.type = type;
+        this.entities = entities;
+    }
+
     public RightOperand(ArrayList<RightOperandEntity> entities, RightOperandType type) {
         this.entities = entities;
         this.type = type;
@@ -50,22 +57,22 @@ public class RightOperand {
     return "";
    } else if(this.id != null && this.entities == null && this.value == null && this.type == null)
    {
-    return "\"@id\": \""+ id.getIdsRightOperand() +"\"";
+    return "{\"@id\": \""+ id.getIdsRightOperand() +"\"}";
    }else if(this.id == null && this.value == null && this.type != null && this.entities != null && !this.entities.isEmpty())
    {
        return getEntitiesBlock();
    }else if(this.id == null && this.entities == null && this.value != null && this.type != null && this.type.equals(RightOperandType.DATETIMESTAMP))
    {
-       return "\"@value\": \""+ value +"\", \"@type\": \""+ type.getType() +"\"";
+       return "{\"@value\": \""+ value +"\", \"@type\": \""+ type.getType() +"\"}";
    }else if(this.id == null && this.entities == null && this.value != null && this.type != null)
    {
-    return "\"@value\": \""+ value +"\", \"@type\": \""+ type.getType() +"\"";
+    return "{\"@value\": \""+ value +"\", \"@type\": \""+ type.getType() +"\"}";
    }else if(this.id != null && this.entities == null && this.value != null && this.type != null && this.type.equals(RightOperandType.DATETIMESTAMP))
    {
-       return "\"@id\": \""+ id.getIdsRightOperand() + "\"@value\": \""+ value +"\", \"@type\": \""+ type.getType() +"\"";
+       return "{\"@id\": \""+ id.getIdsRightOperand() + "\"@value\": \""+ value +"\", \"@type\": \""+ type.getType() +"\"}";
    }else
    {
-    return "\"@id\": \""+ id.getIdsRightOperand() + "\"@value\": \""+ value +"\", \"@type\": \""+ type.getType() +"\"";
+    return "{\"@id\": \""+ id.getIdsRightOperand() + "\"@value\": \""+ value +"\", \"@type\": \""+ type.getType() +"\"}";
    }
  }
 
@@ -78,7 +85,7 @@ public class RightOperand {
             String temp= "";
             while (i < this.entities.size())
             {
-                  if(this.entities.get(i).getValue() != null)
+                  if((this.entities.get(i).getValue() != null) || this.entities.get(i).getInnerEntity() != null)
                 {
                     if(temp.isEmpty())
                     {
@@ -90,10 +97,10 @@ public class RightOperand {
                 i++;
             }
             if(!temp.isEmpty()){
-                entitiesBlock = entitiesBlock.concat(String.format( "\r\n" +
+                entitiesBlock = entitiesBlock.concat(String.format( "{\r\n" +
                         "         \"@type\": \""+ type.getType() +"\", \r\n" +
-                        "         \"@value\": { \n %s \n" +
-                        "         } \n" , temp));
+                        "%s \n" +
+                        "       }" , temp));
             }
 
         }

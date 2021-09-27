@@ -13,33 +13,40 @@ public class RightOperandEntity {
  EntityType entityType;
  String value;
  RightOperandType dataType;
+ RightOperandEntity innerEntity;
 
  public RightOperandEntity()
  {
 
  }
 
-public RightOperandEntity(EntityType entityType, String value,  RightOperandType dataType) {
-    this.entityType = entityType;
-    this.value = value;
-    this.dataType = dataType;
-}
+    public RightOperandEntity(EntityType entityType, String value,  RightOperandType dataType) {
+        this.entityType = entityType;
+        this.value = value;
+        this.dataType = dataType;
+    }
+
+    public RightOperandEntity(EntityType entityType, RightOperandEntity innerEntity,  RightOperandType dataType) {
+        this.entityType = entityType;
+        this.innerEntity = innerEntity;
+        this.dataType = dataType;
+    }
 
     @Override
  public String toString() {
 
 
-  if(this.dataType.equals(RightOperandType.DATETIMESTAMP))
+  if(null != this.innerEntity)
     {
         return "            \""+ entityType.getOdrlRuleType() +"\": {\n" +
-            "               \"@value\": \""+ this.value +"\",\n" +
-            "               \"@type\": \""+ this.dataType.getType() + "\"\n" +
+               "               \"@type\": \""+ this.dataType.getType() + "\",\n" +
+                innerEntity.toString() + "\n" +
             "            }";
 
     }else {
         return "            \""+ entityType.getOdrlRuleType() +"\": {\n" +
-              "               \"@value\": \""+ this.value +"\",\n" +
-              "               \"@type\": \""+ this.dataType.getType() + "\"\n" +
+              "               \"@type\": \""+ this.dataType.getType() + "\",\n" +
+              "               \"@value\": \""+ this.value +"\"\n" +
               "            }";
   }
  }
