@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -99,7 +100,12 @@ public class PatternUtil {
 	}
 
 	public static Map getRuleMap(Map map, RuleType ruleType) {
-		return (Map) ((List) map.get(ruleType.getOdrlRuleType())).get(0);
+		List<Map> maps = (List) map.get(ruleType.getOdrlRuleType());
+		return isNotNull(maps)? (Map)((List) map.get(ruleType.getOdrlRuleType())).get(0) : null;
+	}
+
+	public static List getRuleMaps(Map map, RuleType ruleType) {
+		return (List) map.get(ruleType.getOdrlRuleType());
 	}
 
 	public static ActionType getAction(Map map) {
@@ -144,157 +150,207 @@ public class PatternUtil {
 	public static OdrlPolicy addDetails(Map map) {
         OdrlPolicy policy = new OdrlPolicy();
 
-		// get rule type
-		RuleType ruleType = getRuleType(map);
-		Map ruleMap = getRuleMap(map, ruleType);
+        // get rules
+		ArrayList<Rule> rules = new ArrayList<>();
+		List<Map> perRuleMaps = getRuleMaps(map, RuleType.PERMISSION);
+		if(perRuleMaps != null) {
+			for (Map ruleMap : perRuleMaps) {
+
+				Rule rule = buildRule(ruleMap);
+				rule.setType(RuleType.PERMISSION);
+				rules.add(rule);
+			}
+		}
+
+		List<Map> proRuleMaps = getRuleMaps(map, RuleType.PROHIBITION);
+		if(proRuleMaps != null) {
+			for (Map ruleMap : proRuleMaps) {
+
+				Rule rule = buildRule(ruleMap);
+				rule.setType(RuleType.PROHIBITION);
+				rules.add(rule);
+			}
+		}
+
+		List<Map> OblRuleMaps = getRuleMaps(map, RuleType.OBLIGATION);
+		if(OblRuleMaps != null) {
+			for (Map ruleMap : OblRuleMaps) {
+
+				Rule rule = buildRule(ruleMap);
+				rule.setType(RuleType.OBLIGATION);
+				rules.add(rule);
+			}
+		}
+
+		policy.setRules(rules);
+        return policy;
+    }
+
+	private static Rule buildRule(Map ruleMap) {
+		Rule rule = new Rule();
 
 		// get target
 		Map target = getFirstMap(ruleMap, "ids:target");
 		String targetId = getValue(target, "@id");
 		URI targetURI = URI.create(targetId);
+		rule.setTarget(targetURI);
 
 		ActionType action = getAction(ruleMap);
-        Map ruleActionMap = getFirstMap(ruleMap, "ids:action");
+		Map ruleActionMap = getFirstMap(ruleMap, "ids:action");
 
-		Map preDutyMap = getFirstMap(ruleMap, "ids:preDuty");
-		Map postDutyMap = getFirstMap(ruleMap, "ids:postDuty");
+		Action ruleAction = new Action(action);
 
+		//build the rule constraints
+		List<Map> ruleConstraintList = new ArrayList<>();
+		if ((isNotNull(ruleMap) && isNotNull(getList(ruleMap, ConditionType.CONSTRAINT.getOdrlConditionType())))) {
+			ruleConstraintList = getList(ruleMap, ConditionType.CONSTRAINT.getOdrlConditionType());
+			ArrayList<Condition> ruleConstraint = new ArrayList<Condition>();
+			buildConditions(ruleConstraintList, ruleConstraint, ConditionType.CONSTRAINT);
+			rule.setConstraints(ruleConstraint);
+		}
+
+		//build the rule action refinements
+		List<Map> ruleActionRefinementList = new ArrayList<>();
+		if (isNotNull(ruleActionMap) && isNotNull(getList(ruleActionMap, ConditionType.REFINEMENT.getOdrlConditionType()))) {
+			ruleActionRefinementList.addAll(getList(ruleActionMap, ConditionType.REFINEMENT.getOdrlConditionType()));
+			ArrayList<Condition> ruleActionRefinements = new ArrayList<Condition>();
+			buildConditions(ruleActionRefinementList, ruleActionRefinements, ConditionType.REFINEMENT);
+			ruleAction.setRefinements(ruleActionRefinements);
+		}
+
+		rule.setAction(ruleAction);
+
+
+		List<Map> preDutyMaps = getList(ruleMap, "ids:preDuty");
+		List<Map> postDutyMaps = getList(ruleMap, "ids:postDuty");
+
+		ArrayList<Rule> preDutyRules = new ArrayList<>();
+		if(preDutyMaps != null)
+	  {
+		  buildPreDuties(preDutyMaps, preDutyRules);
+		  rule.setPreduties(preDutyRules);
+	  }
+
+		ArrayList<Rule> postDutyRules = new ArrayList<>();
+		if(postDutyMaps != null)
+		{
+			buildPostDuties(postDutyMaps, postDutyRules);
+			rule.setPostduties(postDutyRules);
+		}
+		return rule;
+	}
+
+	private static void buildPreDuties(List<Map> preDutyMaps, ArrayList<Rule> dutyRules) {
 		Map dutyActionMap = null;
 		ActionType dutyMethod = null;
-		Boolean isAPreDuty = false;
+		for(Map dutyMap: preDutyMaps){
+			if (isNotNull(dutyMap)) {
+				dutyMethod = getAction(dutyMap);
+				dutyActionMap = getFirstMap(dutyMap, "ids:action");
 
-		if (isNotNull(preDutyMap) ) {
-			dutyMethod = getAction(preDutyMap);
-			dutyActionMap = getFirstMap(preDutyMap, "ids:action");
-			isAPreDuty = true;
-		}
+				Rule preobligationRule = new Rule();
 
-		if (isNotNull(postDutyMap) ) {
-			dutyMethod = getAction(postDutyMap);
-			dutyActionMap = getFirstMap(postDutyMap, "ids:action");
-		}
+				Action dutyAction = new Action();
 
-		//TODO: for all rules!
-        if(null != ruleType)
-		{
-			Rule rule = new Rule();
-			rule.setType(ruleType);
+				//build the duty action refinements
+				List<Map> dutyActionRefinementList = new ArrayList<>();
+				if (isNotNull(dutyActionMap) && isNotNull(getList(dutyActionMap, ConditionType.REFINEMENT.getOdrlConditionType()))) {
+					dutyActionRefinementList.addAll(getList(dutyActionMap, ConditionType.REFINEMENT.getOdrlConditionType()));
+					ArrayList<Condition> dutyActionRefinements = new ArrayList<Condition>();
+					buildConditions(dutyActionRefinementList, dutyActionRefinements, ConditionType.REFINEMENT);
+					dutyAction.setRefinements(dutyActionRefinements);
+				}
 
-			rule.setTarget(targetURI);
-
-			Action ruleAction = new Action(action);
-
-			ArrayList<Rule> preobligationRules = new ArrayList<>();
-			ArrayList<Rule> postobligationRules = new ArrayList<>();
-
-			Rule preobligationRule = new Rule();
-			Rule postobligationRule = new Rule();
-
-			Action dutyAction = new Action();
-
-			//build the rule constraints
-			List<Map> ruleConstraintList = new ArrayList<>();
-			if ((isNotNull(ruleMap) && isNotNull(getList(ruleMap, ConditionType.CONSTRAINT.getOdrlConditionType()))))
-			{
-				ruleConstraintList = getList(ruleMap, ConditionType.CONSTRAINT.getOdrlConditionType());
-				ArrayList<Condition> ruleConstraint = new ArrayList<Condition>();
-				buildConditions(ruleConstraintList, ruleConstraint, ConditionType.CONSTRAINT);
-				rule.setConstraints(ruleConstraint);
-			}
-
-			//build the rule action refinements
-			List<Map> ruleActionRefinementList = new ArrayList<>();
-			if (isNotNull(ruleActionMap) && isNotNull(getList(ruleActionMap, ConditionType.REFINEMENT.getOdrlConditionType())))
-			{
-				ruleActionRefinementList.addAll(getList(ruleActionMap, ConditionType.REFINEMENT.getOdrlConditionType()));
-				ArrayList<Condition> ruleActionRefinements = new ArrayList<Condition>();
-				buildConditions(ruleActionRefinementList, ruleActionRefinements, ConditionType.REFINEMENT);
-				ruleAction.setRefinements(ruleActionRefinements);
-			}
-
-			//build the duty action refinements
-			List<Map> dutyActionRefinementList = new ArrayList<>();
-			if (isNotNull(dutyActionMap) && isNotNull(getList(dutyActionMap, ConditionType.REFINEMENT.getOdrlConditionType())))
-			{
-				dutyActionRefinementList.addAll(getList(dutyActionMap, ConditionType.REFINEMENT.getOdrlConditionType()));
-				ArrayList<Condition> dutyActionRefinements = new ArrayList<Condition>();
-				buildConditions(dutyActionRefinementList, dutyActionRefinements,ConditionType.REFINEMENT);
-				dutyAction.setRefinements(dutyActionRefinements);
-			}
-
-
-			if(null != dutyMethod)
-			{
-				switch (dutyMethod) {
-					case DELETE:
-						if(isAPreDuty){
+				if (null != dutyMethod) {
+					switch (dutyMethod) {
+						case DELETE:
 							dutyAction.setType(ActionType.DELETE);
 							preobligationRule = new Rule(RuleType.PREDUTY, dutyAction);
-							addConstraintsToDutyRule(preDutyMap, preobligationRule);
-							preobligationRules.add(preobligationRule);
+							addConstraintsToDutyRule(dutyMap, preobligationRule);
+							dutyRules.add(preobligationRule);
 							break;
-						}else{
-							dutyAction.setType(ActionType.DELETE);
-							postobligationRule = new Rule(RuleType.POSTDUTY, dutyAction);
-							addConstraintsToDutyRule(postDutyMap, postobligationRule);
-							postobligationRules.add(postobligationRule);
+						case ANONYMIZE:
+							dutyAction.setType(ActionType.ANONYMIZE);
+							preobligationRule = new Rule(RuleType.PREDUTY, dutyAction);
+							addConstraintsToDutyRule(dutyMap, preobligationRule);
+							dutyRules.add(preobligationRule);
 							break;
-						}
-					case INCREMENT_COUNTER:
-						dutyAction.setType(ActionType.INCREMENT_COUNTER);
-						postobligationRule = new Rule(RuleType.POSTDUTY, dutyAction);
-						addConstraintsToDutyRule(postDutyMap, postobligationRule);
-						postobligationRules.add(postobligationRule);
-						break;
-					case ANONYMIZE:
-						dutyAction.setType(ActionType.ANONYMIZE);
-						preobligationRule = new Rule(RuleType.PREDUTY, dutyAction);
-						addConstraintsToDutyRule(preDutyMap, preobligationRule);
-						preobligationRules.add(preobligationRule);
-						break;
-					case REPLACE:
-						dutyAction.setType(ActionType.REPLACE);
-						preobligationRule = new Rule(RuleType.PREDUTY, dutyAction);
-						addConstraintsToDutyRule(preDutyMap, preobligationRule);
-						preobligationRules.add(preobligationRule);
-						break;
-					case LOG:
-						dutyAction.setType(ActionType.LOG);
-						postobligationRule = new Rule(RuleType.PREDUTY, dutyAction);
-						addConstraintsToDutyRule(postDutyMap, postobligationRule);
-						postobligationRules.add(postobligationRule);
-						break;
-					case INFORM:
-						dutyAction.setType(ActionType.INFORM);
-						postobligationRule = new Rule(RuleType.PREDUTY, dutyAction);
-						addConstraintsToDutyRule(postDutyMap, postobligationRule);
-						postobligationRules.add(postobligationRule);
-						break;
-					case NOTIFY:
-						dutyAction.setType(ActionType.NOTIFY);
-						postobligationRule = new Rule(RuleType.PREDUTY, dutyAction);
-						addConstraintsToDutyRule(postDutyMap, postobligationRule);
-						postobligationRules.add(postobligationRule);
-						break;
-					case NEXT_POLICY:
-						dutyAction.setType(ActionType.NEXT_POLICY);
-						preobligationRule = new Rule(RuleType.PREDUTY, dutyAction);
-						addConstraintsToDutyRule(preDutyMap, preobligationRule);
-						preobligationRules.add(preobligationRule);
-						break;
+						case REPLACE:
+							dutyAction.setType(ActionType.REPLACE);
+							preobligationRule = new Rule(RuleType.PREDUTY, dutyAction);
+							addConstraintsToDutyRule(dutyMap, preobligationRule);
+							dutyRules.add(preobligationRule);
+							break;
+						case NEXT_POLICY:
+							dutyAction.setType(ActionType.NEXT_POLICY);
+							preobligationRule = new Rule(RuleType.PREDUTY, dutyAction);
+							addConstraintsToDutyRule(dutyMap, preobligationRule);
+							dutyRules.add(preobligationRule);
+							break;
+					}
 				}
 			}
-			rule.setPreduties(preobligationRules);
-			rule.setPostduties(postobligationRules);
-
-			rule.setAction(ruleAction);
-			ArrayList<Rule> rules = new ArrayList<>();
-			rules.add(rule);
-			policy.setRules(rules);
 		}
+	}
 
-        return policy;
-    }
+	private static void buildPostDuties(List<Map> preDutyMaps, ArrayList<Rule> dutyRules) {
+		Map dutyActionMap = null;
+		ActionType dutyMethod = null;
+		for(Map dutyMap: preDutyMaps){
+			if (isNotNull(dutyMap)) {
+				dutyMethod = getAction(dutyMap);
+				dutyActionMap = getFirstMap(dutyMap, "ids:action");
+
+				Rule postobligationRule = new Rule();
+
+				Action dutyAction = new Action();
+
+				//build the duty action refinements
+				List<Map> dutyActionRefinementList = new ArrayList<>();
+				if (isNotNull(dutyActionMap) && isNotNull(getList(dutyActionMap, ConditionType.REFINEMENT.getOdrlConditionType()))) {
+					dutyActionRefinementList.addAll(getList(dutyActionMap, ConditionType.REFINEMENT.getOdrlConditionType()));
+					ArrayList<Condition> dutyActionRefinements = new ArrayList<Condition>();
+					buildConditions(dutyActionRefinementList, dutyActionRefinements, ConditionType.REFINEMENT);
+					dutyAction.setRefinements(dutyActionRefinements);
+				}
+
+				if (null != dutyMethod) {
+					switch (dutyMethod) {
+						case DELETE:
+							dutyAction.setType(ActionType.DELETE);
+							postobligationRule = new Rule(RuleType.POSTDUTY, dutyAction);
+							addConstraintsToDutyRule(dutyMap, postobligationRule);
+							dutyRules.add(postobligationRule);
+							break;
+						case INCREMENT_COUNTER:
+							dutyAction.setType(ActionType.INCREMENT_COUNTER);
+							postobligationRule = new Rule(RuleType.POSTDUTY, dutyAction);
+							addConstraintsToDutyRule(dutyMap, postobligationRule);
+							dutyRules.add(postobligationRule);
+							break;
+						case LOG:
+							dutyAction.setType(ActionType.LOG);
+							postobligationRule = new Rule(RuleType.PREDUTY, dutyAction);
+							addConstraintsToDutyRule(dutyMap, postobligationRule);
+							dutyRules.add(postobligationRule);
+							break;
+						case INFORM:
+							dutyAction.setType(ActionType.INFORM);
+							postobligationRule = new Rule(RuleType.PREDUTY, dutyAction);
+							addConstraintsToDutyRule(dutyMap, postobligationRule);
+							dutyRules.add(postobligationRule);
+							break;
+						case NOTIFY:
+							dutyAction.setType(ActionType.NOTIFY);
+							postobligationRule = new Rule(RuleType.PREDUTY, dutyAction);
+							addConstraintsToDutyRule(dutyMap, postobligationRule);
+							dutyRules.add(postobligationRule);
+							break;
+					}
+				}
+			}
+		}
+	}
 
 	private static void addConstraintsToDutyRule(Map postobligationMap, Rule dutyRule) {
 		//build the postobligation constraints

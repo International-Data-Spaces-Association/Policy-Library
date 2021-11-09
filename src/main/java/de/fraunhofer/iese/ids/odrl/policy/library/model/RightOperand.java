@@ -52,28 +52,59 @@ public class RightOperand {
 
     @Override
  public String toString() {
+     if(null == this.id){
+         if(null == this.entities){
+             if(null == this.value) {
+                 return "";
+             }else{
+                 return "{\"@value\": \""+ value +"\", \"@type\": \""+ type.getType() +"\"}";
+             }
+         }else{
+             if(!this.entities.isEmpty())
+             {
+                 return getEntitiesBlock();
+             }
+         }
+     }else{
+         if(null == this.entities)
+         {
+             if(null == this.value)
+             {
+                 return "{\"@id\": \""+ id.getIdsRightOperand() +"\"}";
+             }
+         }
+     }
+     return "{\"@id\": \""+ id.getIdsRightOperand() + "\"@value\": \""+ value +"\", \"@type\": \""+ type.getType() +"\"}";
+   /*
    if(this.id == null && this.value == null && this.entities == null && this.type != null)
    {
+       //done
     return "";
    } else if(this.id != null && this.entities == null && this.value == null && this.type == null)
    {
+       //done
     return "{\"@id\": \""+ id.getIdsRightOperand() +"\"}";
    }else if(this.id == null && this.value == null && this.type != null && this.entities != null && !this.entities.isEmpty())
    {
+       //done
        return getEntitiesBlock();
    }else if(this.id == null && this.entities == null && this.value != null && this.type != null && this.type.equals(RightOperandType.DATETIMESTAMP))
    {
+       //removed
        return "{\"@value\": \""+ value +"\", \"@type\": \""+ type.getType() +"\"}";
    }else if(this.id == null && this.entities == null && this.value != null && this.type != null)
    {
+       //done
     return "{\"@value\": \""+ value +"\", \"@type\": \""+ type.getType() +"\"}";
    }else if(this.id != null && this.entities == null && this.value != null && this.type != null && this.type.equals(RightOperandType.DATETIMESTAMP))
    {
+       //removed
        return "{\"@id\": \""+ id.getIdsRightOperand() + "\"@value\": \""+ value +"\", \"@type\": \""+ type.getType() +"\"}";
    }else
    {
     return "{\"@id\": \""+ id.getIdsRightOperand() + "\"@value\": \""+ value +"\", \"@type\": \""+ type.getType() +"\"}";
    }
+   */
  }
 
     private String getEntitiesBlock() {

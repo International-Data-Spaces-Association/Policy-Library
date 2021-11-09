@@ -3,13 +3,18 @@ package de.fraunhofer.iese.ids.odrl.policy.library.model.enums;
 
 public enum Operator {
 
- // Logical operators
+
+ // set
  IS_ANY_OF("isAnyOf", "idsc:IS_ANY_OF"),
 
  IS_ALL_OF("isAllOf", "idsc:IS_ALL_OF"),
 
  IS_NONE_OF("isNoneOf", "idsc:IS_NONE_OF"),
 
+ // TODO: what is the equivalent MYDATA operator for idsc:IN
+ IN("subsetOf", "idsc:IN"),
+
+ // Logical operators
  EQUALS("equals", "idsc:EQUALS"),
 
  SAME_AS("equals", "idsc:SAME_AS"),
@@ -47,7 +52,10 @@ HAS_MEMBERSHIP("equals", "idsc:HAS_MEMBERSHIP"),
 
  LONGER("greater", "idsc:LONGER"),
 
- LONGER_EQ("greaterEqual", "idsc:LONGER_EQ");
+ LONGER_EQ("greaterEqual", "idsc:LONGER_EQ"),
+
+ // # Binary Operators comparing spatial entities
+ INSIDE("equals", "idsc:INSIDE");
 
  private final String mydataOp;
  private final String odrlOp;
