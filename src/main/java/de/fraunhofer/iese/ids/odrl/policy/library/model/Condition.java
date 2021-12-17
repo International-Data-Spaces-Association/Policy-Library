@@ -91,11 +91,11 @@ public class Condition {
            "        \"ids:pipEndpoint\":{\n" +
            "          \"@type\":\"ids:PIP\", \n" +
            "          \"ids:interfaceDescription\":{\n" +
-           "            \"@value\":\"https://ids.org/PIP/interfaceDescription/"+ this.leftOperand.toString().toLowerCase() + "\", \n" +
+           "            \"@value\":\"https://example.com/ids/PIP/interfaceDescription/"+ this.leftOperand.toString().toLowerCase() + "\", \n" +
            "            \"@type\":\"anyURI\"\n" +
            "          }, \n" +
            "          \"ids:endpointURI\":{\n" +
-           "            \"@value\":\"https://consumer.org/PXPendpoint/"+ this.leftOperand.toString().toLowerCase() + "\", \n" +
+           "            \"@value\":\"https://example.com/ids/PXPendpoint/"+ this.leftOperand.toString().toLowerCase() + "\", \n" +
            "            \"@type\":\"anyURI\"\n" +
            "          } \n" +
            "        }";

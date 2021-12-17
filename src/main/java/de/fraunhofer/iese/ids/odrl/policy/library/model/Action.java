@@ -72,11 +72,11 @@ public class Action {
                     "        \"ids:pxpEndpoint\":{\n" +
                     "          \"@type\":\"ids:PXP\", \n" +
                     "          \"ids:interfaceDescription\":{\n" +
-                    "            \"@value\":\"https://ids.org/PXP/interfaceDescription/"+ this.type.toString().toLowerCase() + "\", \n" +
+                    "            \"@value\":\"https://example.com/ids/PXP/interfaceDescription/"+ this.type.toString().toLowerCase() + "\", \n" +
                     "            \"@type\":\"anyURI\"\n" +
                     "          }, \n" +
                     "          \"ids:endpointURI\":{\n" +
-                    "            \"@value\":\"https://consumer.org/PXPendpoint/"+ this.type.toString().toLowerCase() + "\", \n" +
+                    "            \"@value\":\"https://example.com/ids/PXPendpoint/"+ this.type.toString().toLowerCase() + "\", \n" +
                     "            \"@type\":\"anyURI\"\n" +
                     "          } \n" +
                     "        }";
