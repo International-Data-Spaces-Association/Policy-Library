@@ -6,6 +6,8 @@ public enum EntityType {
 
     END("endDate", "ids:end"),
 
+    DATETIME("datetime", "ids:dateTime"),
+
     HASDURATION("duration", "ids:hasDuration");
 
     private final String mydataDecision;

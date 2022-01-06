@@ -7,12 +7,14 @@ import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.Operator;
 import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.TimeUnit;
 import lombok.Data;
 
+import java.util.ArrayList;
+
 @Data
 public class Condition {
  ConditionType type;
  Operator operator;
  LeftOperand leftOperand;
- RightOperand rightOperand;
+ ArrayList<RightOperand> rightOperands;
  String comment;
  String unit;
  String contract;
@@ -29,16 +31,17 @@ public class Condition {
   this.comment = comment;
  }
 
- public Condition(ConditionType conditionType, LeftOperand leftOperand, Operator operator, RightOperand rightOperand, String comment) {
+ public Condition(ConditionType conditionType, LeftOperand leftOperand, Operator operator, ArrayList<RightOperand> rightOperands, String comment) {
   this.type = conditionType;
   this.operator = operator;
   this.leftOperand = leftOperand;
-  this.rightOperand= rightOperand;
+  this.rightOperands= rightOperands;
   this.comment = comment;
  }
 
  @Override
  public String toString() {
+  String rightOperandBlock = getRightOperandBlock();
   String contractBlock = getContractBlock();
   String unitBlock = getUnitBlock();
   String commentBlock = getCommentBlock();
@@ -46,12 +49,11 @@ public class Condition {
   String jsonPathBlock = getJsonPathBlock();
   //String replaceWithBlock = getReplaceWithBlock();
 
-  return  !rightOperand.toString().isEmpty() ?"{    \r\n" +
+  return  !rightOperands.isEmpty() ?"{    \r\n" +
           "        \"@type\":\"ids:Constraint\",  \n" +
           "        \"ids:leftOperand\": { \"@id\": \""+ leftOperand.getIdsLeftOperand() +"\"},  \n" +
-          "        \"ids:operator\": { \"@id\": \""+ operator.getOdrlOp() +"\"},  \n" +
-          "        \"ids:rightOperand\": { " + rightOperand.toString() +
-          "        }" +
+          "        \"ids:operator\": { \"@id\": \""+ operator.getOdrlOp()  +"\"}" +
+          rightOperandBlock +
           jsonPathBlock +
           contractBlock +
           unitBlock +
@@ -62,17 +64,38 @@ public class Condition {
 
  }
 
+ private String getRightOperandBlock() {
+  String rightOperandBlock = "";
+
+  if(this.rightOperands != null && this.rightOperands.size() > 0)
+  {
+   String temp= "";
+   temp = this.rightOperands.get(0).toString();
+   if(this.rightOperands.size() > 1)
+   {
+    for (int i = 1; i < this.rightOperands.size(); i++)
+    {
+     temp = temp.concat(", \n" + this.rightOperands.get(i).toString());
+    }
+   }
+   rightOperandBlock = String.format(", \r\n" + "      \"ids:rightOperand\": [%s] \n" , temp);
+  }
+
+  return rightOperandBlock;
+ }
+
  private String getPIPBlock() {
   if(this.leftOperand != null && !this.operator.equals(Operator.DEFINES_AS))
   {
    return  ", \n"+
            "        \"ids:pipEndpoint\":{\n" +
-           "          \"ids:pipInterfaceDescription\":{\n" +
-           "            \"@value\":\"https://ids.org/PIP/interfaceDescription/"+ this.leftOperand.toString().toLowerCase() + "\", \n" +
+           "          \"@type\":\"ids:PIP\", \n" +
+           "          \"ids:interfaceDescription\":{\n" +
+           "            \"@value\":\"https://example.com/ids/PIP/interfaceDescription/"+ this.leftOperand.toString().toLowerCase() + "\", \n" +
            "            \"@type\":\"anyURI\"\n" +
            "          }, \n" +
-           "          \"ids:accessURI\":{\n" +
-           "            \"@value\":\"https://consumer.org/PXPendpoint/"+ this.leftOperand.toString().toLowerCase() + "\", \n" +
+           "          \"ids:endpointURI\":{\n" +
+           "            \"@value\":\"https://example.com/ids/PXPendpoint/"+ this.leftOperand.toString().toLowerCase() + "\", \n" +
            "            \"@type\":\"anyURI\"\n" +
            "          } \n" +
            "        }";
