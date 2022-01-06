@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.fraunhofer.iese.ids.odrl</groupId>
 	<artifactId>policy-library</artifactId>
-	<version>0.1.0</version>
+	<version>1.0.0</version>
 	<name>Policy Library</name>
 	<description>ODRL based Policy language for IDS model and tooling</description>
 
@@ -64,6 +64,14 @@
 					<target>${java.version}</target>
 					<source>${java.version}</source>
 					<!-- <release>${java.version}</release> -->
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.amashchenko.maven.plugin</groupId>
+				<artifactId>gitflow-maven-plugin</artifactId>
+				<version>1.17.0</version>
+				<configuration>
+					<goalPrefix>gitflow</goalPrefix>
 				</configuration>
 			</plugin>
 		</plugins>
