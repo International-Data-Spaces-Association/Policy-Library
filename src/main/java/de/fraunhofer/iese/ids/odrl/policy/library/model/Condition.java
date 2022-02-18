@@ -1,20 +1,19 @@
 package de.fraunhofer.iese.ids.odrl.policy.library.model;
 
 
+import java.util.List;
+
 import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.ConditionType;
 import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.LeftOperand;
 import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.Operator;
-import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.TimeUnit;
 import lombok.Data;
-
-import java.util.ArrayList;
 
 @Data
 public class Condition {
  ConditionType type;
  Operator operator;
  LeftOperand leftOperand;
- ArrayList<RightOperand> rightOperands;
+ List<RightOperand> rightOperands;
  String comment;
  String unit;
  String contract;
@@ -31,7 +30,7 @@ public class Condition {
   this.comment = comment;
  }
 
- public Condition(ConditionType conditionType, LeftOperand leftOperand, Operator operator, ArrayList<RightOperand> rightOperands, String comment) {
+ public Condition(ConditionType conditionType, LeftOperand leftOperand, Operator operator, List<RightOperand> rightOperands, String comment) {
   this.type = conditionType;
   this.operator = operator;
   this.leftOperand = leftOperand;

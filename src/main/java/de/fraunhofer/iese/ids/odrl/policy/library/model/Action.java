@@ -1,17 +1,16 @@
 package de.fraunhofer.iese.ids.odrl.policy.library.model;
 
 
-import java.util.ArrayList;
+import java.util.List;
 
 import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.ActionType;
-import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.RuleType;
 import lombok.Data;
 
 
 @Data
 public class Action {
     ActionType type;
-    ArrayList<Condition> refinements;
+    List<Condition> refinements;
 
     public Action()
     {

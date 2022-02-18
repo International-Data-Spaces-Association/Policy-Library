@@ -2,9 +2,7 @@ package de.fraunhofer.iese.ids.odrl.policy.library.model;
 
 
 import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.EntityType;
-import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.RightOperandId;
 import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.RightOperandType;
-import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.TimeUnit;
 import lombok.Data;
 
 

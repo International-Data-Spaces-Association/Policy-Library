@@ -2,7 +2,7 @@ package de.fraunhofer.iese.ids.odrl.policy.library.model;
 
 
 import java.net.URI;
-import java.util.ArrayList;
+import java.util.List;
 
 import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.RuleType;
 import lombok.Data;
@@ -13,9 +13,9 @@ public class Rule {
  RuleType type;
  URI target;
  Action action;
- ArrayList<Condition> constraints;
- ArrayList<Rule> preduties;
- ArrayList<Rule> postduties;
+ List<Condition> constraints;
+ List<Rule> preduties;
+ List<Rule> postduties;
 
  public Rule()
  {

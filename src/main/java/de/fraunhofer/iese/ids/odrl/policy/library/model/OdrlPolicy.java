@@ -14,7 +14,7 @@ import lombok.Data;
 
 @Data
 public class OdrlPolicy implements IPolicy {
- ArrayList<Rule> rules;
+ List<Rule> rules;
  URI profile;
  URI policyId;
  PolicyType type;

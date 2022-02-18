@@ -4,12 +4,27 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.fraunhofer.iese.ids.odrl.policy.library.model.*;
-import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.*;
+import de.fraunhofer.iese.ids.odrl.policy.library.model.Action;
+import de.fraunhofer.iese.ids.odrl.policy.library.model.Condition;
+import de.fraunhofer.iese.ids.odrl.policy.library.model.OdrlPolicy;
+import de.fraunhofer.iese.ids.odrl.policy.library.model.Party;
+import de.fraunhofer.iese.ids.odrl.policy.library.model.RightOperand;
+import de.fraunhofer.iese.ids.odrl.policy.library.model.RightOperandEntity;
+import de.fraunhofer.iese.ids.odrl.policy.library.model.Rule;
+import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.ActionType;
+import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.ConditionType;
+import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.EntityType;
+import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.IntervalCondition;
+import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.LeftOperand;
+import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.Operator;
+import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.PartyType;
+import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.PolicyType;
+import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.RightOperandId;
+import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.RightOperandType;
+import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.RuleType;
 
 @SuppressWarnings("rawtypes")
 public class PatternUtil {
@@ -68,6 +83,7 @@ public class PatternUtil {
 			return null;
 		}
 		catch (IllegalArgumentException e){
+			e.printStackTrace();
 			return null;
 		}
 
@@ -99,6 +115,7 @@ public class PatternUtil {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static Map getRuleMap(Map map, RuleType ruleType) {
 		List<Map> maps = (List) map.get(ruleType.getOdrlRuleType());
 		return isNotNull(maps)? (Map)((List) map.get(ruleType.getOdrlRuleType())).get(0) : null;
@@ -151,7 +168,7 @@ public class PatternUtil {
         OdrlPolicy policy = new OdrlPolicy();
 
         // get rules
-		ArrayList<Rule> rules = new ArrayList<>();
+		List<Rule> rules = new ArrayList<>();
 		List<Map> perRuleMaps = getRuleMaps(map, RuleType.PERMISSION);
 		if(perRuleMaps != null) {
 			for (Map ruleMap : perRuleMaps) {
@@ -201,20 +218,16 @@ public class PatternUtil {
 		Action ruleAction = new Action(action);
 
 		//build the rule constraints
-		List<Map> ruleConstraintList = new ArrayList<>();
 		if ((isNotNull(ruleMap) && isNotNull(getList(ruleMap, ConditionType.CONSTRAINT.getOdrlConditionType())))) {
-			ruleConstraintList = getList(ruleMap, ConditionType.CONSTRAINT.getOdrlConditionType());
-			ArrayList<Condition> ruleConstraint = new ArrayList<Condition>();
-			buildConditions(ruleConstraintList, ruleConstraint, ConditionType.CONSTRAINT);
+			List<Map> ruleConstraintList =  getList(ruleMap, ConditionType.CONSTRAINT.getOdrlConditionType());
+			List<Condition> ruleConstraint = buildConditions(ruleConstraintList, ConditionType.CONSTRAINT);
 			rule.setConstraints(ruleConstraint);
 		}
 
 		//build the rule action refinements
-		List<Map> ruleActionRefinementList = new ArrayList<>();
 		if (isNotNull(ruleActionMap) && isNotNull(getList(ruleActionMap, ConditionType.REFINEMENT.getOdrlConditionType()))) {
-			ruleActionRefinementList.addAll(getList(ruleActionMap, ConditionType.REFINEMENT.getOdrlConditionType()));
-			ArrayList<Condition> ruleActionRefinements = new ArrayList<Condition>();
-			buildConditions(ruleActionRefinementList, ruleActionRefinements, ConditionType.REFINEMENT);
+			List<Map> ruleActionRefinementList = getList(ruleActionMap, ConditionType.REFINEMENT.getOdrlConditionType());
+			List<Condition> ruleActionRefinements = buildConditions(ruleActionRefinementList, ConditionType.REFINEMENT);
 			ruleAction.setRefinements(ruleActionRefinements);
 		}
 
@@ -224,14 +237,14 @@ public class PatternUtil {
 		List<Map> preDutyMaps = getList(ruleMap, "ids:preDuty");
 		List<Map> postDutyMaps = getList(ruleMap, "ids:postDuty");
 
-		ArrayList<Rule> preDutyRules = new ArrayList<>();
+		List<Rule> preDutyRules = new ArrayList<>();
 		if(preDutyMaps != null)
 	  {
 		  buildPreDuties(preDutyMaps, preDutyRules);
 		  rule.setPreduties(preDutyRules);
 	  }
 
-		ArrayList<Rule> postDutyRules = new ArrayList<>();
+		List<Rule> postDutyRules = new ArrayList<>();
 		if(postDutyMaps != null)
 		{
 			buildPostDuties(postDutyMaps, postDutyRules);
@@ -240,7 +253,7 @@ public class PatternUtil {
 		return rule;
 	}
 
-	private static void buildPreDuties(List<Map> preDutyMaps, ArrayList<Rule> dutyRules) {
+	private static void buildPreDuties(List<Map> preDutyMaps, List<Rule> dutyRules) {
 		Map dutyActionMap = null;
 		ActionType dutyMethod = null;
 		for(Map dutyMap: preDutyMaps){
@@ -256,8 +269,7 @@ public class PatternUtil {
 				List<Map> dutyActionRefinementList = new ArrayList<>();
 				if (isNotNull(dutyActionMap) && isNotNull(getList(dutyActionMap, ConditionType.REFINEMENT.getOdrlConditionType()))) {
 					dutyActionRefinementList.addAll(getList(dutyActionMap, ConditionType.REFINEMENT.getOdrlConditionType()));
-					ArrayList<Condition> dutyActionRefinements = new ArrayList<Condition>();
-					buildConditions(dutyActionRefinementList, dutyActionRefinements, ConditionType.REFINEMENT);
+					List<Condition> dutyActionRefinements = buildConditions(dutyActionRefinementList, ConditionType.REFINEMENT);
 					dutyAction.setRefinements(dutyActionRefinements);
 				}
 
@@ -293,7 +305,7 @@ public class PatternUtil {
 		}
 	}
 
-	private static void buildPostDuties(List<Map> preDutyMaps, ArrayList<Rule> dutyRules) {
+	private static void buildPostDuties(List<Map> preDutyMaps, List<Rule> dutyRules) {
 		Map dutyActionMap = null;
 		ActionType dutyMethod = null;
 		for(Map dutyMap: preDutyMaps){
@@ -302,15 +314,12 @@ public class PatternUtil {
 				dutyActionMap = getFirstMap(dutyMap, "ids:action");
 
 				Rule postobligationRule = new Rule();
-
 				Action dutyAction = new Action();
 
 				//build the duty action refinements
-				List<Map> dutyActionRefinementList = new ArrayList<>();
 				if (isNotNull(dutyActionMap) && isNotNull(getList(dutyActionMap, ConditionType.REFINEMENT.getOdrlConditionType()))) {
-					dutyActionRefinementList.addAll(getList(dutyActionMap, ConditionType.REFINEMENT.getOdrlConditionType()));
-					ArrayList<Condition> dutyActionRefinements = new ArrayList<Condition>();
-					buildConditions(dutyActionRefinementList, dutyActionRefinements, ConditionType.REFINEMENT);
+					List<Map> dutyActionRefinementList = getList(dutyActionMap, ConditionType.REFINEMENT.getOdrlConditionType());
+					List<Condition> dutyActionRefinements = buildConditions(dutyActionRefinementList, ConditionType.REFINEMENT);
 					dutyAction.setRefinements(dutyActionRefinements);
 				}
 
@@ -354,21 +363,21 @@ public class PatternUtil {
 
 	private static void addConstraintsToDutyRule(Map postobligationMap, Rule dutyRule) {
 		//build the postobligation constraints
-		List<Map> postobligationConstraintList = new ArrayList<>();
 		if (isNotNull(postobligationMap) && isNotNull(getList(postobligationMap, ConditionType.CONSTRAINT.getOdrlConditionType()))) {
-			postobligationConstraintList.addAll(getList(postobligationMap, ConditionType.CONSTRAINT.getOdrlConditionType()));
-			ArrayList<Condition> postobligationConstraints = new ArrayList<Condition>();
-			buildConditions(postobligationConstraintList, postobligationConstraints,ConditionType.CONSTRAINT);
+			List<Map> postobligationConstraintList = getList(postobligationMap, ConditionType.CONSTRAINT.getOdrlConditionType());
+			List<Condition> postobligationConstraints = buildConditions(postobligationConstraintList,ConditionType.CONSTRAINT);
 			dutyRule.setConstraints(postobligationConstraints);
 		}
 	}
 
-	private static void buildConditions(List<Map> ruleConstraintList, List<Condition> ruleConstraint, ConditionType conditionType) {
-		if(null != ruleConstraintList) {
+	private static List<Condition> buildConditions(List<Map> ruleConstraintList, ConditionType conditionType) {
+		List<Condition> ruleConstraint = new ArrayList<>();
+	
+		if(isNotNull(ruleConstraintList)) {
 			for (Map conditionMap : ruleConstraintList) {
 				LeftOperand leftOperand = getLeftOperand(conditionMap);
 				Operator op = getOperator(conditionMap);
-				ArrayList<RightOperand> rightOperands = getRightOperands(conditionMap);
+				List<RightOperand> rightOperands = getRightOperands(conditionMap);
 
 				switch (leftOperand) {
 					case PURPOSE:
@@ -476,42 +485,43 @@ public class PatternUtil {
 				}
 			}
 		}
+		return ruleConstraint;
 	}
 
-	private static ArrayList<RightOperand> getRightOperands(Map conditionMap) {
+	private static List<RightOperand> getRightOperands(Map conditionMap) {
 		List<Map> rightOperandMaps = getList(conditionMap, "ids:rightOperand");
-		ArrayList<RightOperand> rightOperands = new ArrayList<>();
+		List<RightOperand> rightOperands = new ArrayList<>();
 		for(Map rightOperandMap: rightOperandMaps)
 		{
 			RightOperandId rightOperandId = getRightOperandId(rightOperandMap);
 			String rightOperandValue = getRightOperandValue(rightOperandMap);
 			RightOperandType rightOperandType = getRightOperandType(rightOperandMap);
 
-			ArrayList<RightOperandEntity> entities = new ArrayList<>();
+			List<RightOperandEntity> entities = new ArrayList<>();
 			Map beginEntityMap = (Map) rightOperandMap.get(EntityType.BEGIN.getOdrlRuleType());
-			if(beginEntityMap != null){
+			if(isNotNull(beginEntityMap)){
 				String beginTimeEntityValue = getRightOperandValueEntity(beginEntityMap, EntityType.DATETIME);
 				RightOperandEntity beginTimeEntity = new RightOperandEntity(EntityType.DATETIME, beginTimeEntityValue, RightOperandType.DATETIMESTAMP);
-				RightOperandEntity beginEntity = new RightOperandEntity(EntityType.BEGIN, beginTimeEntity, rightOperandType.INSTANT);
+				RightOperandEntity beginEntity = new RightOperandEntity(EntityType.BEGIN, beginTimeEntity, RightOperandType.INSTANT);
 				entities.add(beginEntity);
 			}
 
 			Map endEntityMap = (Map) rightOperandMap.get(EntityType.END.getOdrlRuleType());
-			if(beginEntityMap != null) {
+			if(isNotNull(endEntityMap)) {
 				String endTimeEntityValue = getRightOperandValueEntity(endEntityMap, EntityType.DATETIME);
 				RightOperandEntity endTimeEntity = new RightOperandEntity(EntityType.DATETIME, endTimeEntityValue, RightOperandType.DATETIMESTAMP);
-				RightOperandEntity endEntity = new RightOperandEntity(EntityType.END, endTimeEntity, rightOperandType.INSTANT);
+				RightOperandEntity endEntity = new RightOperandEntity(EntityType.END, endTimeEntity, RightOperandType.INSTANT);
 				entities.add(endEntity);
 			}
 
 			String dateTimeEntityValue = getRightOperandValueEntity(rightOperandMap, EntityType.DATETIME);
-			if(null != dateTimeEntityValue && !dateTimeEntityValue.isEmpty()) {
+			if(!isEmpty(dateTimeEntityValue)) {
 				RightOperandEntity dateTimeEntity = new RightOperandEntity(EntityType.DATETIME, dateTimeEntityValue, RightOperandType.DATETIMESTAMP);
 				entities.add(dateTimeEntity);
 			}
 
 			String durationEntityValue = getRightOperandValueEntity(rightOperandMap, EntityType.HASDURATION);
-			if(null != durationEntityValue && !durationEntityValue.isEmpty()) {
+			if(!isEmpty(durationEntityValue)) {
 				RightOperandEntity durationEntity = new RightOperandEntity(EntityType.HASDURATION, durationEntityValue, RightOperandType.DURATION);
 				entities.add(durationEntity);
 			}
@@ -526,21 +536,6 @@ public class PatternUtil {
 		return isNotNull(map.get(RuleType.PERMISSION.getOdrlRuleType()))? RuleType.PERMISSION :
 				(isNotNull(map.get(RuleType.PROHIBITION.getOdrlRuleType()))? RuleType.PROHIBITION :
 						(isNotNull(map.get(RuleType.OBLIGATION.getOdrlRuleType()))? RuleType.OBLIGATION : null ));
-	}
-
-
-	private static boolean isAnonymizeInTransit(Map ruleMap) {
-		Map dutyMap = getFirstMap(ruleMap, "ids:duty");
-		if(isNotNull(dutyMap))
-		{
-			ActionType abstractAction = getAbstractAction(dutyMap);
-			return (abstractAction.equals(ActionType.ANONYMIZE));
-		}
-		return false;
-	}
-
-	private static boolean isAction(Map permissionMap, Action action) {
-		return getAction(permissionMap).equals(action);
 	}
 
 	public static LeftOperand getLeftOperand(Map conditionMap) {
@@ -668,6 +663,7 @@ public class PatternUtil {
 	private static boolean isEmpty(String value) {
 		return (null == value || value.isEmpty());
 	}
+
 
 }
 

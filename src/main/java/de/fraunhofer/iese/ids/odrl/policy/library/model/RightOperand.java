@@ -1,9 +1,8 @@
 package de.fraunhofer.iese.ids.odrl.policy.library.model;
 
 
-import java.util.ArrayList;
+import java.util.List;
 
-import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.LogLevelType;
 import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.RightOperandId;
 import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.RightOperandType;
 import lombok.Data;
@@ -14,7 +13,7 @@ public class RightOperand {
  RightOperandId id;
  String value;
  RightOperandType type;
- ArrayList<RightOperandEntity> entities;
+ List<RightOperandEntity> entities;
 
  public RightOperand()
  {
@@ -38,14 +37,14 @@ public class RightOperand {
         this.type = type;
     }
 
-    public RightOperand(RightOperandId id, String value, RightOperandType type, ArrayList<RightOperandEntity> entities) {
+    public RightOperand(RightOperandId id, String value, RightOperandType type, List<RightOperandEntity> entities) {
         this.id = id;
         this.value = value;
         this.type = type;
         this.entities = entities;
     }
 
-    public RightOperand(ArrayList<RightOperandEntity> entities, RightOperandType type) {
+    public RightOperand(List<RightOperandEntity> entities, RightOperandType type) {
         this.entities = entities;
         this.type = type;
     }
