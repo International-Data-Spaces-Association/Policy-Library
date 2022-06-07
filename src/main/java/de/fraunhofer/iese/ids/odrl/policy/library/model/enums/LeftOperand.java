@@ -2,71 +2,73 @@ package de.fraunhofer.iese.ids.odrl.policy.library.model.enums;
 
 public enum LeftOperand {
 
-    ELAPSED_TIME("elapsedtime", "idsc:ELAPSED_TIME"),
+    ELAPSED_TIME("elapsedtime", "idsc:ELAPSED_TIME", de.fraunhofer.iais.eis.LeftOperand.ELAPSED_TIME.getId().toString()),
 
-    DELAY("delay","idsc:DELAY"),
+    DELAY("delay","idsc:DELAY", de.fraunhofer.iais.eis.LeftOperand.DELAY.getId().toString()),
 
-    DATE_TIME("datetime", "idsc:DATE_TIME"),
+    DATE_TIME("datetime", "idsc:DATE_TIME", de.fraunhofer.iais.eis.LeftOperand.DATE_TIME.getId().toString()),
 
-    POLICY_EVALUATION_TIME("datetime", "idsc:POLICY_EVALUATION_TIME"),
+    POLICY_EVALUATION_TIME("datetime", "idsc:POLICY_EVALUATION_TIME", de.fraunhofer.iais.eis.LeftOperand.POLICY_EVALUATION_TIME.getId().toString()),
 
-    COUNT("count", "idsc:COUNT"),
+    COUNT("count", "idsc:COUNT", de.fraunhofer.iais.eis.LeftOperand.COUNT.getId().toString()),
 
-    SYSTEM("system", "idsc:SYSTEM"),
+    SYSTEM("system", "idsc:SYSTEM", de.fraunhofer.iais.eis.LeftOperand.SYSTEM.getId().toString()),
 
-    APPLICATION("application","idsc:APPLICATION"),
+    APPLICATION("application","idsc:APPLICATION", de.fraunhofer.iais.eis.LeftOperand.APPLICATION.getId().toString()),
 
-    CONNECTOR("connector", "idsc:CONNECTOR"),
+    CONNECTOR("connector", "idsc:CONNECTOR", de.fraunhofer.iais.eis.LeftOperand.CONNECTOR.getId().toString()),
 
-    SECURITY_LEVEL("securityLevel","idsc:SECURITY_LEVEL"),
+    SECURITY_LEVEL("securityLevel","idsc:SECURITY_LEVEL", de.fraunhofer.iais.eis.LeftOperand.SECURITY_LEVEL.getId().toString()),
 
-    ROLE("role","idsc:ROLE"),
+    ROLE("role","idsc:ROLE", de.fraunhofer.iais.eis.LeftOperand.ROLE.getId().toString()),
 
-    EVENT("event", "idsc:EVENT"),
+    EVENT("event", "idsc:EVENT", de.fraunhofer.iais.eis.LeftOperand.EVENT.getId().toString()),
 
-    ENCODING("encoding", "idsc:ENCODING"),
+//    ENCODING("encoding", "idsc:ENCODING", de.fraunhofer.iais.eis.LeftOperand.ENCODING.getId().toString()),
 
-    STATE("state","idsc:STATE"),
+    STATE("state","idsc:STATE", de.fraunhofer.iais.eis.LeftOperand.STATE.getId().toString()),
 
-    ARTIFACT_STATE("artifactState", "idsc:ARTIFACT_STATE"),
+    ARTIFACT_STATE("artifactState", "idsc:ARTIFACT_STATE", de.fraunhofer.iais.eis.LeftOperand.ARTIFACT_STATE.getId().toString()),
 
-    RECIPIENT("recipient", "idsc:RECIPIENT"),
+    RECIPIENT("recipient", "idsc:RECIPIENT", de.fraunhofer.iais.eis.LeftOperand.RECIPIENT.getId().toString()),
 
-    INFORMEDPARTY("informedParty", "idsc:informedParty"),
+//    INFORMEDPARTY("informedParty", "idsc:informedParty", de.fraunhofer.iais.eis.LeftOperand.INFORMED_PARTY.getId().toString()),
 
-    TARGET_POLICY("targetPolicy", "idsc:TARGET_POLICY"),
+    TARGET_POLICY("targetPolicy", "idsc:TARGET_POLICY", de.fraunhofer.iais.eis.LeftOperand.TARGET_POLICY.getId().toString()),
 
-    SYSTEM_DEVICE("systemDevice", "idsc:SYSTEM_DEVICE"),
+    SYSTEM_DEVICE("systemDevice", "idsc:SYSTEM_DEVICE", de.fraunhofer.iais.eis.LeftOperand.SYSTEM_DEVICE.getId().toString()),
 
-    PAY_AMOUNT("payamount", "idsc:PAY_AMOUNT"),
+    PAY_AMOUNT("payamount", "idsc:PAY_AMOUNT", de.fraunhofer.iais.eis.LeftOperand.PAY_AMOUNT.getId().toString()),
 
-    LOG_LEVEL("logLevel", "idsc:LOG_LEVEL"),
+    LOG_LEVEL("logLevel", "idsc:LOG_LEVEL", de.fraunhofer.iais.eis.LeftOperand.LOG_LEVEL.getId().toString()),
 
-    NOTIFICATION_LEVEL("notificationLevel", "idsc:NOTIFICATION_LEVEL"),
+    NOTIFICATION_LEVEL("notificationLevel", "idsc:NOTIFICATION_LEVEL", de.fraunhofer.iais.eis.LeftOperand.NOTIFICATION_LEVEL.getId().toString()),
 
-    JSON_PATH("jsonPathQuery","idsc:JSON_PATH"),
+    JSON_PATH("jsonPathQuery","idsc:JSON_PATH", de.fraunhofer.iais.eis.LeftOperand.JSON_PATH.getId().toString()),
     //SUBSET_SPECIFICATION("jsonPathQuery","idsc:SUBSET_SPECIFICATION"),
 
-    REPLACE_WITH("replaceWith","idsc:REPLACE_WITH"),
+    REPLACE_WITH("replaceWith","idsc:REPLACE_WITH", de.fraunhofer.iais.eis.LeftOperand.REPLACE_WITH.getId().toString()),
 
     //MODIFICATION_METHOD("modificationMethod","idsc:MODIFICATION_METHOD"),
 
-    DIGIT("digit","ids:digit"),
+//    DIGIT("digit","ids:digit", de.fraunhofer.iais.eis.LeftOperand.DIGIT.getId().toString()),
 
-    ABSOLUTE_SPATIAL_POSITION("absoluteSpatialPosition","idsc:ABSOLUTE_SPATIAL_POSITION"),
+    ABSOLUTE_SPATIAL_POSITION("absoluteSpatialPosition","idsc:ABSOLUTE_SPATIAL_POSITION", de.fraunhofer.iais.eis.LeftOperand.ABSOLUTE_SPATIAL_POSITION.getId().toString()),
 
-    PURPOSE("purpose", "https://w3id.org/idsa/core/purpose");
+    PURPOSE("purpose", "https://w3id.org/idsa/core/purpose", de.fraunhofer.iais.eis.LeftOperand.PURPOSE.getId().toString());
 
-    private final String mydataLeftOperand;
+    private final String label;
     private final String idsLeftOperand;
+    private final String imLeftOperand;
 
-    LeftOperand(String op1, String op2) {
-        mydataLeftOperand = op1;
-        idsLeftOperand = op2;
+    LeftOperand(String label, String idsLeftOperand, String imLeftOperand) {
+        this.label = label;
+        this.idsLeftOperand = idsLeftOperand;
+        this.imLeftOperand = imLeftOperand;
     }
 
-    public String getMydataLeftOperand() {
-        return mydataLeftOperand;
+    public String getLabel() {
+        return label;
     }
 
     public String getIdsLeftOperand() {

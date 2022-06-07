@@ -37,14 +37,17 @@ public class IdsOdrlUtil {
 		return odrlPolicyMap;
 	}
 	
-	public static OdrlPolicy getOdrlPolicy(@SuppressWarnings("rawtypes") Map map) {
+	public static OdrlPolicy getOdrlPolicy(@SuppressWarnings("rawtypes") Map map , String version) {
+		if("IM4".equalsIgnoreCase(version)) {
+			return Im4PatternUtil.getPolicy(map, true);
+		}
 		return PatternUtil.getPolicy(map, true);
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public static OdrlPolicy getOdrlPolicy(String odrlPolicyString) {
+	public static OdrlPolicy getOdrlPolicy(String odrlPolicyString, String version) {
 		Map map = getMapOfJsonString(odrlPolicyString);
-		return PatternUtil.getPolicy(map, true);
+		return getOdrlPolicy(map, version);
 	}
 
 }
