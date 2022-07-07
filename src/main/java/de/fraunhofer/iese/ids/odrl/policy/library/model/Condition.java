@@ -20,14 +20,11 @@ public class Condition {
  String jsonPath;
  //ModificationMethodParameter replaceWith;
 
+ 
+ //Constructors
  public Condition()
  {
 
- }
-
- public Condition(ConditionType conditionType, String comment) {
-  this.type = conditionType;
-  this.comment = comment;
  }
 
  public Condition(ConditionType conditionType, LeftOperand leftOperand, Operator operator, List<RightOperand> rightOperands, String comment) {
@@ -37,7 +34,17 @@ public class Condition {
   this.rightOperands= rightOperands;
   this.comment = comment;
  }
+ 
+ public Condition(ConditionType conditionType, LeftOperand leftOperand, Operator operator, List<RightOperand> rightOperands) {
+	 this(conditionType, leftOperand, operator, rightOperands, "");
+ }
+ 
+ public Condition(ConditionType conditionType, String comment) {
+	 this(conditionType, null, null, null, comment);
+ }
 
+ //End of constructors
+ 
  @Override
  public String toString() {
   String rightOperandBlock = getRightOperandBlock();

@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.github.jsonldjava.shaded.com.google.common.base.Strings;
 
 import de.fraunhofer.iese.ids.odrl.policy.library.model.OdrlPolicy;
@@ -20,7 +21,7 @@ import de.fraunhofer.iese.ids.odrl.policy.library.model.tooling.IdsOdrlUtil;
 public class OdrlPolicyTest {
 	
 	@Test
-	public void restrictAccessIntervalTest(){
+	public void restrictAccessIntervalTest() throws InvalidFormatException{
 		String policy = "{"  + System.lineSeparator()  + 
 				"  \"@context\" : {" + System.lineSeparator()  + 
 				"    \"ids\" : \"https://w3id.org/idsa/core/\"," + System.lineSeparator()  + 

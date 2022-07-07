@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.github.jsonldjava.utils.JsonUtils;
 
 import de.fraunhofer.iese.ids.odrl.policy.library.model.OdrlPolicy;
@@ -37,17 +38,15 @@ public class IdsOdrlUtil {
 		return odrlPolicyMap;
 	}
 	
-	public static OdrlPolicy getOdrlPolicy(@SuppressWarnings("rawtypes") Map map , String version) {
-		if("IM4".equalsIgnoreCase(version)) {
-			return Im4PatternUtil.getPolicy(map, true);
-		}
+	public static OdrlPolicy getOdrlPolicy(@SuppressWarnings("rawtypes") Map map ) {
+
 		return PatternUtil.getPolicy(map, true);
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public static OdrlPolicy getOdrlPolicy(String odrlPolicyString, String version) {
+	public static OdrlPolicy getOdrlPolicy(String odrlPolicyString) {
 		Map map = getMapOfJsonString(odrlPolicyString);
-		return getOdrlPolicy(map, version);
+		return getOdrlPolicy(map);
 	}
 
 }

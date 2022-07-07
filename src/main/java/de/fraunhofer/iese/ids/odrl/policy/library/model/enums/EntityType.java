@@ -2,28 +2,24 @@ package de.fraunhofer.iese.ids.odrl.policy.library.model.enums;
 
 public enum EntityType {
 
-    BEGIN("startDate","ids:begin"),
+    BEGIN("ids:begin"),//"startDate",
 
-    END("endDate", "ids:end"),
+    END("ids:end"),//"endDate", 
 
-    DATETIME("datetime", "ids:dateTime"),
+    DATETIME("ids:dateTime"),//"datetime",
 
-    HASDURATION("duration", "ids:hasDuration");
+    HASDURATION("ids:hasDuration");//"duration", 
 
-    private final String mydataDecision;
-    private final String odrlRuleType;
 
-    EntityType(String op1, String op2) {
-        mydataDecision = op1;
-        odrlRuleType = op2;
+    private String type;
+
+    EntityType(String type) {
+    	this.type = type;
     }
 
-    public String getMydataDecision() {
-        return mydataDecision;
-    }
 
-    public String getOdrlRuleType() {
-        return odrlRuleType;
+    public String getType() {
+        return type;
     }
 }
 

@@ -10,12 +10,12 @@ import lombok.Data;
 
 @Data
 public class Rule {
- RuleType type;
- URI target;
- Action action;
- List<Condition> constraints;
- List<Rule> preduties;
- List<Rule> postduties;
+private RuleType ruleType;
+private URI target;
+private Action action;
+private List<Condition> constraints;
+private List<Rule> preduties;
+private List<Rule> postduties;
 
  public Rule()
  {
@@ -24,7 +24,7 @@ public class Rule {
 
  public Rule(RuleType type,URI target, Action action)
  {
-  this.type = type;
+  this.ruleType = type;
   this.target = target;
   this.action = action;
  }
@@ -32,7 +32,7 @@ public class Rule {
  // to create a duty rule
  public Rule(RuleType type, Action action)
  {
-  this.type = type;
+  this.ruleType = type;
   this.action = action;
  }
 
@@ -49,7 +49,7 @@ public class Rule {
  }
 
  private String getIdsType() {
-  if(this.type.equals(RuleType.POSTDUTY) || this.type.equals(RuleType.PREDUTY))
+  if(this.ruleType.equals(RuleType.POSTDUTY) || this.ruleType.equals(RuleType.PREDUTY))
   {
    return           "      \"@type\":\"ids:Duty\",  \n" ;
   }else if(target != null){

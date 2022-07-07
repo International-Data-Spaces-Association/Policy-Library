@@ -2,30 +2,25 @@ package de.fraunhofer.iese.ids.odrl.policy.library.model.enums;
 
 public enum RuleType {
 
-    PERMISSION("allow","ids:permission"),
+    PERMISSION("ids:permission"), //"allow",
 
-    PROHIBITION("inhibit", "ids:prohibition"),
+    PROHIBITION("ids:prohibition"),//"inhibit"
 
-    OBLIGATION("allow", "ids:obligation"),
+    OBLIGATION("ids:obligation"), //"allow"
 
-    PREDUTY("allow", "ids:preDuty"),
+    PREDUTY("ids:preDuty"),//"allow"
 
-    POSTDUTY("allow", "ids:postDuty");
+    POSTDUTY("ids:postDuty");//"allow"
 
-    private final String mydataDecision;
-    private final String odrlRuleType;
 
-    RuleType(String op1, String op2) {
-        mydataDecision = op1;
-        odrlRuleType = op2;
+    private final String type;
+
+    RuleType(String type) {
+        this.type = type;
     }
 
-    public String getMydataDecision() {
-        return mydataDecision;
-    }
-
-    public String getOdrlRuleType() {
-        return odrlRuleType;
+    public String getType() {
+        return type;
     }
 }
 

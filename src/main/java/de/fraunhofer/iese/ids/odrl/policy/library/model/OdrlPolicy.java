@@ -77,17 +77,17 @@ public class OdrlPolicy implements IPolicy {
   List<Rule> prohibitionList = new ArrayList<>();
   List<Rule> obligationList = new ArrayList<>();
 
-  for(Rule r: this.rules)
+  for(Rule rule: this.rules)
   {
-   if(r.type.equals(RuleType.PERMISSION))
+   if(RuleType.PERMISSION.equals(rule.getRuleType()))
    {
-    permissionList.add(r);
-   }else if(r.type.equals(RuleType.PROHIBITION))
+    permissionList.add(rule);
+   }else if(RuleType.PROHIBITION.equals(rule.getRuleType()))
    {
-    prohibitionList.add(r);
+    prohibitionList.add(rule);
    }else{
-    //it is obligation
-    obligationList.add(r);
+    //assume it is obligation
+    obligationList.add(rule);
    }
   }
 
