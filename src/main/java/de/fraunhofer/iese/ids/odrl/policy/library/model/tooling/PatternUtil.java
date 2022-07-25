@@ -725,6 +725,8 @@ public class PatternUtil{
 			if (splitedValue[lastIndex].contains("#")) {
 				String[] lastPartSplit = splitedValue[lastIndex].split("#");
 				return lastPartSplit[1].toUpperCase();
+			}else{
+				return splitedValue[lastIndex].toUpperCase();
 			}
 		} else if (value.startsWith("idsc")) {
 			String valueWithoutTag = value.trim().replaceAll(" ", "_");
