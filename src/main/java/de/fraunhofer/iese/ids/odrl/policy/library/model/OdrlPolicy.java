@@ -39,19 +39,19 @@ public class OdrlPolicy implements IPolicy {
 
  @Override
  public String toString() {
-  return  " {    \r\n" +
-          "   \"@context\": {\n" +
-          "      \"ids\":\"https://w3id.org/idsa/core/\",\n" +
-          "      \"idsc\" : \"https://w3id.org/idsa/code/\"\n" +
-          "   },    \r\n" +
-          "  \"@type\": \"" + this.type.getStringRepresentation() +"\",    \r\n" +
-          "  \"@id\": \"" + this.policyId.toString() +"\",    \r\n" +
-          "  \"profile\": \""+ this.profile.toString() +"\",    \r\n" +
-          getProviderBlock() +
-          getConsumerBlock() +
-          getRulesBlock() +
-          "} ";
- }
+	 return  " {    \r\n" +
+	          "   \"@context\": {\n" +
+	          "      \"ids\":\"https://w3id.org/idsa/core/\",\n" +
+	          "      \"idsc\" : \"https://w3id.org/idsa/code/\"\n" +
+	          "   },    \r\n" +
+	          "  \"@type\": \"" + this.type.getStringRepresentation() +"\",    \r\n" +
+	          "  \"@id\": \"" + this.policyId.toString() +"\",    \r\n" +
+	          "  \"profile\": \""+ this.profile.toString() +"\",    \r\n" +
+	          getProviderBlock() +
+	          getConsumerBlock() +
+	          getRulesBlock() +
+	          "} ";
+ } 
 
  private String getConsumerBlock() {
   if(null != this.consumer && !this.type.equals(PolicyType.OFFER)) {
@@ -94,6 +94,7 @@ public class OdrlPolicy implements IPolicy {
   if(!permissionList.isEmpty())
   {
    String temp= "";
+
    temp = permissionList.get(0).toString();
    if(permissionList.size() > 1)
    {
@@ -102,7 +103,13 @@ public class OdrlPolicy implements IPolicy {
      temp = temp.concat(", \n" + permissionList.get(i).toString());
     }
    }
-   permissionBlock = String.format("  \"ids:permission\": [%s] \n" , temp);
+   // Add Assigner and Assigner
+   String assigner = String.format("      \n\"assigner\": \"%s\", \n" , this.provider.getUri());
+   String assignee = String.format("      \"assignee\": \"%s\", \n" , this.consumer.getUri());
+   
+   temp = temp.replaceFirst("(?:\\{)+", "{" + assigner + assignee);
+   
+   permissionBlock = String.format("  \"permission\": [%s] \n" , temp);
    rulesBlock = rulesBlock.concat(permissionBlock);
    if(!prohibitionList.isEmpty())
    {
