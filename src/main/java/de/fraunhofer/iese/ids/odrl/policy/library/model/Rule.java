@@ -47,6 +47,17 @@ private List<Rule> postduties;
           "\r\n" +
           "  }";
  }
+ 
+ public String toOdrlString() {
+	  return  "{    \r\n" +
+	          getOdrlType() +
+	          action.toOdrlString() +
+	          getPreobligationBlock() +
+	          getOdrlConstraintBlock() +
+	          getPostobligationBlock() +
+	          "\r\n" +
+	          "  }";
+	 }
 
  private String getIdsType() {
   if(this.ruleType.equals(RuleType.POSTDUTY) || this.ruleType.equals(RuleType.PREDUTY))
@@ -60,6 +71,16 @@ private List<Rule> postduties;
   }
   return "";
  }
+ 
+ private String getOdrlType() {
+	 if(target != null){
+	   //only return the target
+	   return  "      \"target\":" +
+	           "          \"" + this.target.toString() + "\",\n" +
+	           "       \r\n";
+	  }
+	  return "";
+	 }
 
  private String getPreobligationBlock() {
   String preobligationBlock = "";
@@ -113,6 +134,39 @@ private List<Rule> postduties;
 
   return conditionInnerBlock;
  }
+ 
+ private String getOdrlConstraintBlock() {
+
+	  String conditionInnerBlock = "";
+
+	  if (this.constraints != null)
+	  {
+
+	   String conditions = "";
+	   for(int i=0 ; i< this.constraints.size(); i++)
+	   {
+	    String tempString = this.constraints.get(i).toOdrlString();
+	    if(!tempString.isEmpty())
+	    {
+	     if(conditions.isEmpty() && !tempString.isEmpty())
+	     {
+	      conditions = conditions.concat(tempString);
+
+	     }else {
+	      conditions = conditions.concat("," + tempString);
+	     }
+	    }
+	   }
+
+	  if(!conditions.isEmpty()){
+	   conditionInnerBlock = String.format(",     \r\n" +
+	           "      \"constraint\": [%s] " , conditions);
+	  }
+
+	  }
+
+	  return conditionInnerBlock;
+	 }
 
  private String getPostobligationBlock() {
   String postobligationBlock = "";

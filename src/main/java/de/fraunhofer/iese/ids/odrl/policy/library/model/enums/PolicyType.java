@@ -2,28 +2,34 @@ package de.fraunhofer.iese.ids.odrl.policy.library.model.enums;
 
 public enum  PolicyType {
 
-    OFFER("ids:ContractOffer"),
+    OFFER("ids:ContractOffer", "Offer"),
 
-    REQUEST("ids:ContractRequest"),
+    REQUEST("ids:ContractRequest", "Request"),
 
-    AGREEMENT("ids:ContractAgreement");
+    AGREEMENT("ids:ContractAgreement", "Agreement");
 
-    String stringRepresentation;
+    String idsRepresentation;
+    String odrlRepresentation;
 
-    PolicyType(String s) {
-        this.stringRepresentation = s;
+    PolicyType(String idsRepresentation, String odrlRepresentation) {
+        this.idsRepresentation = idsRepresentation;
+        this.odrlRepresentation = odrlRepresentation;
     }
-    public String getStringRepresentation() {
-        return this.stringRepresentation;
+    
+    public String getIdsRepresentation() {
+        return this.idsRepresentation;
+    }
+    
+    public String getOdrlRepresentation() {
+        return this.odrlRepresentation;
     }
 
-    public static PolicyType getFromIdsString(String stringRepresentation) {
+    public static PolicyType getFromString(String stringRepresentation) {
         for( PolicyType policyType : values()) {
-            if(policyType.getStringRepresentation().equals(stringRepresentation)) {
+            if(policyType.getIdsRepresentation().equals(stringRepresentation) || policyType.getOdrlRepresentation().equals(stringRepresentation)) {
                 return policyType;
             }
         }
         return null;
     }
-
 }

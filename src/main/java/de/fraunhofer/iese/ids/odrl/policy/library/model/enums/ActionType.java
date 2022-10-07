@@ -6,53 +6,56 @@ import de.fraunhofer.iais.eis.Action;
 
 public enum ActionType {
 
-    USE("idsc:USE", Action.USE.getId().toString(), "ACTION"),
+    USE("idsc:USE", Action.USE.getId().toString(), "ACTION", "use"),
 
-    READ("idsc:READ", Action.READ.getId().toString(), "ACTION"),
+    READ("idsc:READ", Action.READ.getId().toString(), "ACTION", "MISSING"), // TODO Missing Right operand
 
-    DISPLAY("idsc:DISPLAY", "http://www.w3.org/ns/odrl/2/display", "ACTION"),
+    DISPLAY("idsc:DISPLAY", "http://www.w3.org/ns/odrl/2/display", "ACTION", "MISSING"), // TODO Missing Right operand
     
-    COMPENSATE("idsc:COMPENSATE", Action.COMPENSATE.getId().toString().toString(), "DUTY"),
+    COMPENSATE("idsc:COMPENSATE", Action.COMPENSATE.getId().toString().toString(), "DUTY", "MISSING"), // TODO Missing Right operand
 
-    DELETE("idsc:DELETE", Action.DELETE.getId().toString(), "DUTY"),
+    DELETE("idsc:DELETE", Action.DELETE.getId().toString(), "DUTY", "MISSING"), // TODO Missing Right operand
 
-    INFORM("idsc:INFORM", "http://www.w3.org/ns/odrl/2/inform", "DUTY"),
+    INFORM("idsc:INFORM", "http://www.w3.org/ns/odrl/2/inform", "DUTY", "MISSING"), // TODO Missing Right operand
 
-    NOTIFY("idsc:NOTIFY", Action.NOTIFY.getId().toString(), "DUTY"),
+    NOTIFY("idsc:NOTIFY", Action.NOTIFY.getId().toString(), "DUTY", "MISSING"), // TODO Missing Right operand
 
-    PRINT("idsc:PRINT", "http://www.w3.org/ns/odrl/2/print","ACTION"),
+    PRINT("idsc:PRINT", "http://www.w3.org/ns/odrl/2/print","ACTION", "MISSING"), // TODO Missing Right operand
 
-    ANONYMIZE("idsc:ANONYMIZE", Action.ANONYMIZE.getId().toString() , "DUTY"),
+    ANONYMIZE("idsc:ANONYMIZE", Action.ANONYMIZE.getId().toString() , "DUTY", "MISSING"), // TODO Missing Right operand
 
-    REPRODUCE("idsc:REPRODUCE", "http://www.w3.org/ns/odrl/2/reproduce" ,"ACTION"),
+    REPRODUCE("idsc:REPRODUCE", "http://www.w3.org/ns/odrl/2/reproduce" ,"ACTION", "MISSING"), // TODO Missing Right operand
 
-    NEXT_POLICY("idsc:NEXT_POLICY", Action.NEXT_POLICY.getId().toString(), "DUTY"),
+    NEXT_POLICY("idsc:NEXT_POLICY", Action.NEXT_POLICY.getId().toString(), "DUTY", "MISSING"), // TODO Missing Right operand
 
-    DISTRIBUTE("idsc:DISTRIBUTE", Action.DISTRIBUTE.getId().toString(),"ACTION"),
+    DISTRIBUTE("idsc:DISTRIBUTE", Action.DISTRIBUTE.getId().toString(),"ACTION", "MISSING"), // TODO Missing Right operand
 
-    ROUND("idsc:ROUND", "http://example.com/iese/fraunhofer/de/action/round", "DUTY"),
+    ROUND("idsc:ROUND", "http://example.com/iese/fraunhofer/de/action/round", "DUTY", "MISSING"), // TODO Missing Right operand
 
-    REPLACE("idsc:REPLACE", Action.REPLACE.getId().toString() ,"DUTY"),
+    REPLACE("idsc:REPLACE", Action.REPLACE.getId().toString() ,"DUTY", "MISSING"), // TODO Missing Right operand
 
-    INCREMENT_COUNTER("idsc:INCREMENT_COUNTER", Action.INCREMENT_COUNTER.getId().toString(), "DUTY"),
+    INCREMENT_COUNTER("idsc:INCREMENT_COUNTER", Action.INCREMENT_COUNTER.getId().toString(), "DUTY", "MISSING"), // TODO Missing Right operand
 
-    LOG("idsc:LOG", Action.LOG.getId().toString(),  "DUTY");
+    LOG("idsc:LOG", Action.LOG.getId().toString(),  "DUTY", "MISSING"); // TODO Missing Right operand
 
     private final String idsAction;
     private final String imActionUri;
     private final String abstractAction;
+    private final String odrlAction;
 
-    ActionType(String idsAction, String imActionUri, String abstractAction) {
+    ActionType(String idsAction, String imActionUri, String abstractAction, String odrlAction) {
 
         this.idsAction = idsAction;
         this.imActionUri = imActionUri;
         this.abstractAction = abstractAction;
-        
-        
+        this.odrlAction = odrlAction;  
     }
 
     public String getIdsAction() {
         return idsAction;
+    }
+    public String getOdrlAction() {
+        return odrlAction;
     }
     public String getAbstractIdsAction() {
         return abstractAction;

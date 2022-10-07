@@ -40,32 +40,20 @@ public class OdrlPolicy implements IPolicy {
  @Override
  public String toString() {
 	 return  " {    \r\n" +
-	          "   \"@context\": {\n" +
-	          "      \"ids\":\"https://w3id.org/idsa/core/\",\n" +
-	          "      \"idsc\" : \"https://w3id.org/idsa/code/\"\n" +
-	          "   },    \r\n" +
-	          "  \"@type\": \"" + this.type.getStringRepresentation() +"\",    \r\n" +
-	          "  \"@id\": \"" + this.policyId.toString() +"\",    \r\n" +
+	          "   \"@context\":[\n" +
+	          " \"http://www.w3.org/ns/odrl.jsonld\",\n" +
+	          "      {\"ids\":\"https://w3id.org/idsa/core/\",\n" +
+	          "      \"idsc\" : \"https://w3id.org/idsa/code/\"}," +
+	          "    \n],    \r\n" +
+	          "  \"@type\": \"" + this.type.getOdrlRepresentation() +"\",    \r\n" +
+	          "  \"uid\": \"" + this.policyId.toString() +"\",    \r\n" +
 	          "  \"profile\": \""+ this.profile.toString() +"\",    \r\n" +
-	          getProviderBlock() +
-	          getConsumerBlock() +
+	          //getProviderBlock() +
+	          //getConsumerBlock() +
 	          getRulesBlock() +
 	          "} ";
  } 
 
- private String getConsumerBlock() {
-  if(null != this.consumer && !this.type.equals(PolicyType.OFFER)) {
-   return this.consumer.toString();
-  }
-  return "";
- }
-
- private String getProviderBlock() {
-  if(null != this.provider && !this.type.equals(PolicyType.REQUEST)) {
-   return this.provider.toString();
-  }
-  return "";
- }
 
  private String getRulesBlock() {
   String rulesBlock = "";
@@ -95,12 +83,12 @@ public class OdrlPolicy implements IPolicy {
   {
    String temp= "";
 
-   temp = permissionList.get(0).toString();
+   temp = permissionList.get(0).toOdrlString();
    if(permissionList.size() > 1)
    {
     for (int i = 1; i < permissionList.size(); i++)
     {
-     temp = temp.concat(", \n" + permissionList.get(i).toString());
+     temp = temp.concat(", \n" + permissionList.get(i).toOdrlString());
     }
    }
    // Add Assigner and Assigner
@@ -117,7 +105,7 @@ public class OdrlPolicy implements IPolicy {
    }
   }
 
-  if(!prohibitionList.isEmpty())
+  /*if(!prohibitionList.isEmpty())
   {
    String temp= "";
    temp = prohibitionList.get(0).toString();
@@ -149,7 +137,7 @@ public class OdrlPolicy implements IPolicy {
    }
    obligationBlock = String.format("\"ids:obligation\": [%s] \n" , temp);
    rulesBlock = rulesBlock.concat(obligationBlock);
-  }
+  }*/
 
   return rulesBlock;
  }

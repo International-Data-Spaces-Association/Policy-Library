@@ -44,7 +44,7 @@ public class IdsPolicy implements IPolicy {
 	          "      \"ids\":\"https://w3id.org/idsa/core/\",\n" +
 	          "      \"idsc\" : \"https://w3id.org/idsa/code/\"\n" +
 	          "   },    \r\n" +
-	          "  \"@type\": \"" + this.type.getStringRepresentation() +"\",    \r\n" +
+	          "  \"@type\": \"" + this.type.getIdsRepresentation() +"\",    \r\n" +
 	          "  \"@id\": \"" + this.policyId.toString() +"\",    \r\n" +
 	          "  \"profile\": \""+ this.profile.toString() +"\",    \r\n" +
 	          getProviderBlock() +

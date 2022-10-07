@@ -31,6 +31,17 @@ public class Action {
                 "\r\n" +
                 "      }]";
     }
+    
+    public String toOdrlString() {
+        String PXPBlock = getPXPBlock();
+        String refinementBlock = this.getRefinementBlock();
+        return  "      \"action\": \n" +
+                "       \"" + type.getOdrlAction() +"\"" +
+                refinementBlock +
+                PXPBlock +
+                "\n" +
+                "      ";
+    }
 
     private String getRefinementBlock() {
 
