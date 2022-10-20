@@ -52,12 +52,25 @@ private List<Rule> postduties;
 	  return  "{    \r\n" +
 	          getOdrlType() +
 	          action.toOdrlString() +
-	          getPreobligationBlock() +
+	          getOdrlPreobligationBlock() +
 	          getOdrlConstraintBlock() +
-	          getPostobligationBlock() +
+	          getOdrlPostobligationBlock() +
 	          "\r\n" +
 	          "  }";
 	 }
+ 
+ public String toOdrlDutyString() {
+	  return  "{    \r\n" +
+	          getOdrlType() +
+	          action.toOdrlDutyString() +
+	          getOdrlPreobligationBlock() +
+	          getOdrlConstraintBlock() +
+	          getOdrlPostobligationBlock() +
+	          "\r\n" +
+	          "  }";
+	 }
+ 
+ 
 
  private String getIdsType() {
   if(this.ruleType.equals(RuleType.POSTDUTY) || this.ruleType.equals(RuleType.PREDUTY))
@@ -82,6 +95,27 @@ private List<Rule> postduties;
 	  return "";
 	 }
 
+ 
+ private String getOdrlPreobligationBlock() {
+	  String preobligationBlock = "";
+
+	  if(this.preduties != null && this.preduties.size() > 0)
+	  {
+	   String temp= "";
+	   temp = this.preduties.get(0).toOdrlDutyString();
+	   if(this.preduties.size() > 1)
+	   {
+	    for (int i = 1; i < this.preduties.size(); i++)
+	    {
+	     temp = temp.concat(", \n" + this.preduties.get(i).toOdrlDutyString());
+	    }
+	   }
+	   preobligationBlock = String.format(", \r\n" + "    \"duty\": [%s] \n" , temp);
+	  }
+
+	  return preobligationBlock;
+	 }
+ 
  private String getPreobligationBlock() {
   String preobligationBlock = "";
 
@@ -168,6 +202,27 @@ private List<Rule> postduties;
 	  return conditionInnerBlock;
 	 }
 
+ 
+ private String getOdrlPostobligationBlock() {
+	  String postobligationBlock = "";
+
+	  if(this.postduties != null && this.postduties.size() > 0)
+	  {
+	   String temp= "";
+	   temp = this.postduties.get(0).toOdrlString();
+	   if(this.postduties.size() > 1)
+	   {
+	    for (int i = 1; i < this.postduties.size(); i++)
+	    {
+	     temp = temp.concat(", \n" + this.postduties.get(i).toOdrlString());
+	    }
+	   }
+	   postobligationBlock = postobligationBlock.concat(String.format(", \r\n" +"    \"duty\": [%s] \n" , temp));
+	  }
+
+	  return postobligationBlock;
+	 }
+ 
  private String getPostobligationBlock() {
   String postobligationBlock = "";
 

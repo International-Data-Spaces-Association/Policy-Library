@@ -127,7 +127,7 @@ public class Condition {
 	     temp = temp.concat(", \n" + this.rightOperands.get(i).toString());
 	    }
 	   }
-	   rightOperandBlock = String.format(", \r\n" + "      \"rightOperand\": [%s] \n" , temp);
+	   rightOperandBlock = String.format(", \r\n" + "      \"rightOperand\": %s \n" , temp);
 	  }
 
 	  return rightOperandBlock;

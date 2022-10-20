@@ -44,10 +44,10 @@ public enum LeftOperand {
 
     NOTIFICATION_LEVEL("notificationLevel", "idsc:NOTIFICATION_LEVEL", de.fraunhofer.iais.eis.LeftOperand.NOTIFICATION_LEVEL.getId().toString(), "MISSING"), // TODO Missing Left operand
 
-    JSON_PATH("jsonPathQuery","idsc:JSON_PATH", de.fraunhofer.iais.eis.LeftOperand.JSON_PATH.getId().toString(), "MISSING"), // TODO Missing Left operand
+    JSON_PATH("jsonPathQuery","idsc:JSON_PATH", de.fraunhofer.iais.eis.LeftOperand.JSON_PATH.getId().toString(), "idsc:JSON_PATH"), // TODO Missing Left operand
     //SUBSET_SPECIFICATION("jsonPathQuery","idsc:SUBSET_SPECIFICATION"),
 
-    REPLACE_WITH("replaceWith","idsc:REPLACE_WITH", de.fraunhofer.iais.eis.LeftOperand.REPLACE_WITH.getId().toString(), "MISSING"), // TODO Missing Left operand
+    REPLACE_WITH("replaceWith","idsc:REPLACE_WITH", de.fraunhofer.iais.eis.LeftOperand.REPLACE_WITH.getId().toString(), "idsc:REPLACE_WITH"), // TODO Missing Left operand
 
     //MODIFICATION_METHOD("modificationMethod","idsc:MODIFICATION_METHOD"),
 

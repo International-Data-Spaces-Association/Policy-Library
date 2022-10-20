@@ -16,47 +16,47 @@ public enum Operator {
  IN("subsetOf", "idsc:IN", "subsetOf"),
 
  // Logical operators
- EQUALS("equals", "idsc:EQUALS", "equals"),
+ EQUALS("equals", "idsc:EQUALS", "eq"),
 
- SAME_AS("equals", "idsc:SAME_AS", "equals"),
+ SAME_AS("equals", "idsc:SAME_AS", "eq"),
 
- DEFINES_AS("equals", "idsc:DEFINES_AS", "equals"),
+ DEFINES_AS("equals", "idsc:DEFINES_AS", "eq"),
 
-HAS_MEMBERSHIP("equals", "idsc:HAS_MEMBERSHIP", "equals"),
+HAS_MEMBERSHIP("equals", "idsc:HAS_MEMBERSHIP", "eq"),
 
  // Arithmetic operators
- EQ("equals", "idsc:EQ", "equals"),
+ EQ("equals", "idsc:EQ", "eq"),
 
- LT("less", "idsc:LT", "less"),
+ LT("less", "idsc:LT", "lt"),
 
- LTEQ("lessEqual", "idsc:LTEQ", "lessEqual"),
+ LTEQ("lessEqual", "idsc:LTEQ", "le"),
 
- GT("greater", "idsc:GT", "greater"),
+ GT("greater", "idsc:GT", "gt"),
 
- GTEQ("greaterEqual", "idsc:GTEQ", "greaterEqual"),
+ GTEQ("greaterEqual", "idsc:GTEQ", "ge"),
 
  // Temporal operators
 
- AFTER("greater", "idsc:AFTER", "greater"),
+ AFTER("greater", "idsc:AFTER", "gt"),
 
- BEFORE("less", "idsc:BEFORE", "less"),
+ BEFORE("less", "idsc:BEFORE", "lt"),
 
- TEMPORAL_EQUALS("equals", "idsc:TEMPORAL_EQUALS", "equals"),
+ TEMPORAL_EQUALS("equals", "idsc:TEMPORAL_EQUALS", "eq"),
 
- DURING("equals", "idsc:DURING", "equals"),
+ DURING("equals", "idsc:DURING", "eq"),
 
- DURATION_EQ("equals", "idsc:DURATION_EQ", "equals"),
+ DURATION_EQ("equals", "idsc:DURATION_EQ", "eq"),
 
- SHORTER("less", "idsc:SHORTER", "less"),
+ SHORTER("less", "idsc:SHORTER", "lt"),
 
- SHORTER_EQ("lessEqual", "idsc:SHORTER_EQ", "lessEqual"),
+ SHORTER_EQ("lessEqual", "idsc:SHORTER_EQ", "le"),
 
- LONGER("greater", "idsc:LONGER", "greater"),
+ LONGER("greater", "idsc:LONGER", "gt"),
 
- LONGER_EQ("greaterEqual", "idsc:LONGER_EQ", "greaterEqual"),
+ LONGER_EQ("greaterEqual", "idsc:LONGER_EQ", "ge"),
 
  // # Binary Operators comparing spatial entities
- INSIDE("equals", "idsc:INSIDE", "equals");
+ INSIDE("equals", "idsc:INSIDE", "eq");
 
  private final String mydataOp;
  private final String idsOP;
