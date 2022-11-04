@@ -42,7 +42,8 @@ public class OdrlPolicy implements IPolicy {
 	 return  " {    \r\n" +
 	          "   \"@context\":[\n" +
 	          " \"http://www.w3.org/ns/odrl.jsonld\",\n" +
-	          "      {\"ids\":\"https://w3id.org/idsa/core/\",\n" +
+	          "      { \"dc\": \"http://purl.org/dc/terms/\",\n" +
+	          "\"ids\":\"https://w3id.org/idsa/core/\",\n" +
 	          "      \"idsc\" : \"https://w3id.org/idsa/code/\"}," +
 	          "    \n],    \r\n" +
 	          "  \"@type\": \"" + this.type.getOdrlRepresentation() +"\",    \r\n" +
@@ -53,7 +54,7 @@ public class OdrlPolicy implements IPolicy {
 	          getRulesBlock() +
 	          "} ";
  } 
-
+ 
 
  private String getRulesBlock() {
   String rulesBlock = "";
@@ -84,6 +85,7 @@ public class OdrlPolicy implements IPolicy {
    String temp= "";
 
    temp = permissionList.get(0).toOdrlString();
+
    if(permissionList.size() > 1)
    {
     for (int i = 1; i < permissionList.size(); i++)
@@ -98,6 +100,7 @@ public class OdrlPolicy implements IPolicy {
    temp = temp.replaceFirst("(?:\\{)+", "{" + assigner + assignee);
    
    permissionBlock = String.format("  \"permission\": [%s] \n" , temp);
+   //permissionBlock += Action.getOdrlPXPBlock();
    rulesBlock = rulesBlock.concat(permissionBlock);
    if(!prohibitionList.isEmpty())
    {

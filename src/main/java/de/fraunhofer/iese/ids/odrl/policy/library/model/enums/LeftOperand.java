@@ -8,27 +8,27 @@ public enum LeftOperand {
 
     DATE_TIME("datetime", "idsc:DATE_TIME", de.fraunhofer.iais.eis.LeftOperand.DATE_TIME.getId().toString(), "dateTime"),
 
-    POLICY_EVALUATION_TIME("datetime", "idsc:POLICY_EVALUATION_TIME", de.fraunhofer.iais.eis.LeftOperand.POLICY_EVALUATION_TIME.getId().toString(), "MISSING"), // TODO Missing Left operand 
+    POLICY_EVALUATION_TIME("datetime", "idsc:POLICY_EVALUATION_TIME", de.fraunhofer.iais.eis.LeftOperand.POLICY_EVALUATION_TIME.getId().toString(), "datetime"), // TODO Check operand 
 
     COUNT("count", "idsc:COUNT", de.fraunhofer.iais.eis.LeftOperand.COUNT.getId().toString(), "count"),
 
     SYSTEM("system", "idsc:SYSTEM", de.fraunhofer.iais.eis.LeftOperand.SYSTEM.getId().toString(), "systemDevice"),
 
-    APPLICATION("application","idsc:APPLICATION", de.fraunhofer.iais.eis.LeftOperand.APPLICATION.getId().toString(), "MISSING"), // TODO Missing Left operand  
+    APPLICATION("application","idsc:APPLICATION", de.fraunhofer.iais.eis.LeftOperand.APPLICATION.getId().toString(), "application"), // TODO Check operand  
 
     CONNECTOR("connector", "idsc:CONNECTOR", de.fraunhofer.iais.eis.LeftOperand.CONNECTOR.getId().toString(), "idsc:CONNECTOR"),
 
     SECURITY_LEVEL("securityLevel","idsc:SECURITY_LEVEL", de.fraunhofer.iais.eis.LeftOperand.SECURITY_LEVEL.getId().toString(), "idsc:SECURITY_LEVEL"),
 
-    ROLE("role","idsc:ROLE", de.fraunhofer.iais.eis.LeftOperand.ROLE.getId().toString(), "MISSING"), // TODO Missing Left operand
+    ROLE("role","idsc:ROLE", de.fraunhofer.iais.eis.LeftOperand.ROLE.getId().toString(), "role"), // TODO Check operand
 
     EVENT("event", "idsc:EVENT", de.fraunhofer.iais.eis.LeftOperand.EVENT.getId().toString(), "event"),
 
 //    ENCODING("encoding", "idsc:ENCODING", de.fraunhofer.iais.eis.LeftOperand.ENCODING.getId().toString()),
 
-    STATE("state","idsc:STATE", de.fraunhofer.iais.eis.LeftOperand.STATE.getId().toString(), "MISSING"), // TODO Missing Left operand
+    STATE("state","idsc:STATE", de.fraunhofer.iais.eis.LeftOperand.STATE.getId().toString(), "state"), // TODO Check operand
 
-    ARTIFACT_STATE("artifactState", "idsc:ARTIFACT_STATE", de.fraunhofer.iais.eis.LeftOperand.ARTIFACT_STATE.getId().toString(), "MISSING"), // TODO Missing Left operand
+    ARTIFACT_STATE("artifactState", "idsc:ARTIFACT_STATE", de.fraunhofer.iais.eis.LeftOperand.ARTIFACT_STATE.getId().toString(), "artifactState"), // TODO Check operand
 
     RECIPIENT("recipient", "idsc:RECIPIENT", de.fraunhofer.iais.eis.LeftOperand.RECIPIENT.getId().toString(), "recipient"),
 
@@ -40,14 +40,14 @@ public enum LeftOperand {
 
     PAY_AMOUNT("payamount", "idsc:PAY_AMOUNT", de.fraunhofer.iais.eis.LeftOperand.PAY_AMOUNT.getId().toString(), "pay"),
 
-    LOG_LEVEL("logLevel", "idsc:LOG_LEVEL", de.fraunhofer.iais.eis.LeftOperand.LOG_LEVEL.getId().toString(), "MISSING"), // TODO Missing Left operand
+    LOG_LEVEL("logLevel", "idsc:LOG_LEVEL", de.fraunhofer.iais.eis.LeftOperand.LOG_LEVEL.getId().toString(), "idsc:LOG_LEVEL"), // TODO Check operand
 
-    NOTIFICATION_LEVEL("notificationLevel", "idsc:NOTIFICATION_LEVEL", de.fraunhofer.iais.eis.LeftOperand.NOTIFICATION_LEVEL.getId().toString(), "MISSING"), // TODO Missing Left operand
+    NOTIFICATION_LEVEL("notificationLevel", "idsc:NOTIFICATION_LEVEL", de.fraunhofer.iais.eis.LeftOperand.NOTIFICATION_LEVEL.getId().toString(), "notificationLevel"), // TODO Check operand
 
-    JSON_PATH("jsonPathQuery","idsc:JSON_PATH", de.fraunhofer.iais.eis.LeftOperand.JSON_PATH.getId().toString(), "idsc:JSON_PATH"), // TODO Missing Left operand
+    JSON_PATH("jsonPathQuery","idsc:JSON_PATH", de.fraunhofer.iais.eis.LeftOperand.JSON_PATH.getId().toString(), "idsc:JSON_PATH"), // TODO Check operand
     //SUBSET_SPECIFICATION("jsonPathQuery","idsc:SUBSET_SPECIFICATION"),
 
-    REPLACE_WITH("replaceWith","idsc:REPLACE_WITH", de.fraunhofer.iais.eis.LeftOperand.REPLACE_WITH.getId().toString(), "idsc:REPLACE_WITH"), // TODO Missing Left operand
+    REPLACE_WITH("replaceWith","idsc:REPLACE_WITH", de.fraunhofer.iais.eis.LeftOperand.REPLACE_WITH.getId().toString(), "idsc:REPLACE_WITH"), // TODO Check operand
 
     //MODIFICATION_METHOD("modificationMethod","idsc:MODIFICATION_METHOD"),
 

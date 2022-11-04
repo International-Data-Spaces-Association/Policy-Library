@@ -27,17 +27,17 @@ public class Action {
 	}
 
 	public String toOdrlString() {
-		String PXPBlock = getPXPBlock();
 		String refinementBlock = this.getRefinementBlock();
-		return "      \"action\": \n" + "       \"" + type.getOdrlAction() + "\"" + refinementBlock + PXPBlock + "\n"
+		return "      \"action\": \n" + "       \"" + type.getOdrlAction() + "\"" + refinementBlock  + "\n"
 				+ "      ";
 	}
 
 	public String toOdrlDutyString() {
 		String rdfValue = getRDFValue();
+		String PXPBlock = getOdrlPXPBlock();
 		String refinementBlock = this.getDutyRefinementBlock();
 		String constraint = getDutyConstraint();
-		return "      \"action\": [{ \n" + rdfValue + refinementBlock +"}]\n"+ constraint + "\n" + "      ";
+		return "      \"action\": [{ \n" + rdfValue + refinementBlock  +"}]\n" + constraint + PXPBlock + "\n" + "      ";
 	}
 
 	private String getDutyConstraint() {
@@ -121,6 +121,17 @@ public class Action {
 
 		}
 		return "";
+	}
+	
+	private String getOdrlPXPBlock() {
+			return ", \n" + "        \"ids:pxpEndpoint\":[{\n" + "          \"@type\":\"ids:PXP\", \n"
+					+ "          \"ids:interfaceDescription\":{\n"
+					+ "            \"@value\":\"https://example.com/ids/PXP/interfaceDescription/"
+					+ this.type.toString().toLowerCase() + "\", \n" + "            \"@type\":\"anyURI\"\n"
+					+ "          }, \n" + "          \"ids:endpointURI\":{\n"
+					+ "            \"@value\":\"https://example.com/ids/PXPendpoint/"
+					+ this.type.toString().toLowerCase() + "\", \n" + "            \"@type\":\"anyURI\"\n"
+					+ "          } \n" + "        }]";
 	}
 
 }

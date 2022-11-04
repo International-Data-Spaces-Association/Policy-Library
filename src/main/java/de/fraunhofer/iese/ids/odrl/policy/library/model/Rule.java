@@ -70,8 +70,7 @@ private List<Rule> postduties;
 	          "  }";
 	 }
  
- 
-
+	
  private String getIdsType() {
   if(this.ruleType.equals(RuleType.POSTDUTY) || this.ruleType.equals(RuleType.PREDUTY))
   {
@@ -209,12 +208,12 @@ private List<Rule> postduties;
 	  if(this.postduties != null && this.postduties.size() > 0)
 	  {
 	   String temp= "";
-	   temp = this.postduties.get(0).toOdrlString();
+	   temp = this.postduties.get(0).toOdrlDutyString();
 	   if(this.postduties.size() > 1)
 	   {
 	    for (int i = 1; i < this.postduties.size(); i++)
 	    {
-	     temp = temp.concat(", \n" + this.postduties.get(i).toOdrlString());
+	     temp = temp.concat(", \n" + this.postduties.get(i).toOdrlDutyString());
 	    }
 	   }
 	   postobligationBlock = postobligationBlock.concat(String.format(", \r\n" +"    \"duty\": [%s] \n" , temp));

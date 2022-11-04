@@ -37,7 +37,7 @@ public class RightOperand {
 	}
 	
 	public RightOperand(List<RightOperandEntity> entities, RightOperandType type) {
-		this(null, null, type, null);
+		this(null, null, type, entities);
 	}
 
 	public RightOperand(RightOperandId id) {
@@ -103,7 +103,7 @@ public class RightOperand {
 			for(RightOperandEntity rightOperandEntity : rightOperandEntities) {
 				if(null != rightOperandEntity.getValue() || null != rightOperandEntity.getInnerEntity()) {
 					
-					boolean isNotFirstElement = stringBuilder.toString().isEmpty();
+					boolean isNotFirstElement = stringBuilder.toString().isEmpty() && rightOperandEntities.size() > 1;
 					
 					stringBuilder.append(rightOperandEntity.toString());
 					
@@ -119,5 +119,25 @@ public class RightOperand {
 		}
 		return entitiesBlock;
 	}
+	
+	
+	public String toOdrlString() {
+		if (null == this.id) {
+			if (null == this.value) {
+				return "";
+			} else {
+				return "{\"@value\": \"" + value + "\", \"@type\": \"" + type.getType() + "\"}";
+			}
+		} else {
+			if (null == this.rightOperandEntities) {
+				if (null == this.value) {
+					return "{\"@id\": \"" + id.getIdsRightOperand() + "\"}";
+				}
+			}
+		}
+		return "{\"@id\": \"" + id.getIdsRightOperand() + "\"@value\": \"" + value + "\", \"@type\": \""
+				+ type.getType() + "\"}";
+	}
+	
 
 }

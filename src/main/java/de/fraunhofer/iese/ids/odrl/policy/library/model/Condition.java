@@ -75,7 +75,7 @@ public class Condition {
 	  String contractBlock = getContractBlock();
 	  String unitBlock = getUnitBlock();
 	  String commentBlock = getCommentBlock();
-	  String PIPBlock = getOdrlPIPBlock();
+	  String PIPBlock = "";
 	  String jsonPathBlock = getJsonPathBlock();
 	  //String replaceWithBlock = getReplaceWithBlock();
 
@@ -119,7 +119,7 @@ public class Condition {
 	  if(this.rightOperands != null && this.rightOperands.size() > 0)
 	  {
 	   String temp= "";
-	   temp = this.rightOperands.get(0).toString();
+	   temp = this.rightOperands.get(0).toOdrlString();
 	   if(this.rightOperands.size() > 1)
 	   {
 	    for (int i = 1; i < this.rightOperands.size(); i++)
@@ -153,10 +153,10 @@ public class Condition {
  }
 
  private String getOdrlPIPBlock() {
-	  if(this.leftOperand != null && !this.operator.equals(Operator.DEFINES_AS))
+	  if(this.leftOperand != null && !this.operator.equals(Operator.DEFINES_AS) )
 	  {
 	   return  ", \n"+
-	           "        \"ids:pipEndpoint\":{\n" +
+	           "        \"ids:pipEndpoint\":[\n{\n" +
 	           "          \"@type\":\"ids:PIP\", \n" +
 	           "          \"ids:interfaceDescription\":{\n" +
 	           "            \"@value\":\"https://example.com/ids/PIP/interfaceDescription/"+ this.leftOperand.toString().toLowerCase() + "\", \n" +
@@ -166,7 +166,7 @@ public class Condition {
 	           "            \"@value\":\"https://example.com/ids/PXPendpoint/"+ this.leftOperand.toString().toLowerCase() + "\", \n" +
 	           "            \"@type\":\"xsd:anyURI\"\n" +
 	           "          } \n" +
-	           "        }";
+	           "        }\n]";
 	  }
 	  return "";
 	 }
