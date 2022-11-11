@@ -29,11 +29,11 @@ HAS_MEMBERSHIP("equals", "idsc:HAS_MEMBERSHIP", "eq"),
 
  LT("less", "idsc:LT", "lt"),
 
- LTEQ("lessEqual", "idsc:LTEQ", "le"),
+ LTEQ("lessEqual", "idsc:LTEQ", "lteq"),
 
  GT("greater", "idsc:GT", "gt"),
 
- GTEQ("greaterEqual", "idsc:GTEQ", "ge"),
+ GTEQ("greaterEqual", "idsc:GTEQ", "gteq"),
 
  // Temporal operators
 

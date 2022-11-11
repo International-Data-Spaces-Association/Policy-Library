@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.github.jsonldjava.utils.Obj;
 import de.fraunhofer.iese.ids.odrl.policy.library.model.Action;
 import de.fraunhofer.iese.ids.odrl.policy.library.model.Condition;
 import de.fraunhofer.iese.ids.odrl.policy.library.model.OdrlPolicy;
@@ -66,6 +67,10 @@ public class PatternUtil{
 			if (isNotNull(policyType)) {
 				// get policy id
 				String pid = getValue(map, "@id");
+				if(null == pid)
+				{
+					pid = getValue(map, "uid");
+				}
 				URI pidUri = URI.create(pid);
 
 				OdrlPolicy policy = createOdrlPolicyBody(map);
@@ -95,7 +100,11 @@ public class PatternUtil{
 	 * @ 
 	 */
 	public static PolicyType getPolicyType(Map map)  {
-		return PolicyType.valueOf(removeIdsOrXsdTag(map.get("@type").toString()).substring(8));
+		try{
+			return PolicyType.valueOf(removeIdsOrXsdTag(map.get("@type").toString()).substring(8));
+		}catch (IllegalArgumentException exception){
+			return PolicyType.valueOf(removeIdsOrXsdTag(map.get("@type").toString()));
+		}
 	}
 
 	public static String getValue(Map map, String attribute) {
@@ -123,12 +132,15 @@ public class PatternUtil{
 	}
 
 	public static List getRuleMaps(Map map, RuleType ruleType) {
-		return (List) map.get(ruleType.getType());
+		List list = (List) map.get(ruleType.getType());
+		return isNotNull(list) ? list: (List) map.get(ruleType.name().toLowerCase());
 	}
 
 	public static ActionType getAction(Map map)  {
-		if (map.get("ids:action") instanceof List) {
-			Map actionBlock = (Map) ((List) map.get("ids:action")).get(0);
+		Object idsActionMap = map.get("ids:action");
+		Object actionMap =  isNotNull(idsActionMap)? idsActionMap : map.get("action");
+		if (actionMap instanceof List) {
+			Map actionBlock = (Map) ((List) actionMap).get(0);
 			Map valueBlock = (Map) actionBlock.get("rdf:value");
 			if (isNotNull(valueBlock)) {
 				return ActionType.valueOf(removeIdsOrXsdTag(valueBlock.get("@id").toString()));
@@ -136,7 +148,7 @@ public class PatternUtil{
 				return ActionType.valueOf(removeIdsOrXsdTag(actionBlock.get("@id").toString()));
 			}
 		} else {
-			return ActionType.valueOf(removeIdsOrXsdTag(map.get("ids:action").toString()));
+			return ActionType.valueOf(removeIdsOrXsdTag(actionMap.toString()));
 		}
 	}
 
@@ -206,29 +218,37 @@ public class PatternUtil{
 
 		// get target
 //		Map target = getFirstMap(ruleMap, "ids:target");
-		String targetId = getValue(ruleMap, "ids:target");
+		String idsTargetId = getValue(ruleMap, "ids:target");
+		String targetId = isNotNull(idsTargetId)? idsTargetId: getValue(ruleMap, "target");
 		URI targetURI = URI.create(targetId);
 		rule.setTarget(targetURI);
 
 		ActionType action = getAction(ruleMap);
-		Map ruleActionMap = getFirstMap(ruleMap, "ids:action");
+		Map idsRuleActionMap = getFirstMap(ruleMap, "ids:action");
+		Map ruleActionMap = isNotNull(idsRuleActionMap)? idsRuleActionMap: getFirstMap(ruleMap, "action");
 
 		Action ruleAction = new Action(action);
 
 		// build the rule constraints
-		if ((isNotNull(ruleMap) && isNotNull(getList(ruleMap, ConditionType.CONSTRAINT.getOdrlConditionType())))) {
-			List<Map> ruleConstraintList = getList(ruleMap, ConditionType.CONSTRAINT.getOdrlConditionType());
-			List<Condition> ruleConstraint = buildConditions(ruleConstraintList, ConditionType.CONSTRAINT);
-			rule.setConstraints(ruleConstraint);
+		if(isNotNull(ruleMap))
+		{
+			List<Map> idsConstraintList = getList(ruleMap, ConditionType.CONSTRAINT.getOdrlConditionType());
+			List<Map> constraintList = isNotNull(idsConstraintList)? idsConstraintList: getList(ruleMap, ConditionType.CONSTRAINT.name().toLowerCase());
+			if ( isNotNull(constraintList)) {
+				List<Condition> ruleConstraint = buildConditions(constraintList, ConditionType.CONSTRAINT);
+				rule.setConstraints(ruleConstraint);
+			}
 		}
 
 		// build the rule action refinements
-		if (isNotNull(ruleActionMap)
-				&& isNotNull(getList(ruleActionMap, ConditionType.REFINEMENT.getOdrlConditionType()))) {
-			List<Map> ruleActionRefinementList = getList(ruleActionMap,
-					ConditionType.REFINEMENT.getOdrlConditionType());
-			List<Condition> ruleActionRefinements = buildConditions(ruleActionRefinementList, ConditionType.REFINEMENT);
-			ruleAction.setRefinements(ruleActionRefinements);
+		if(isNotNull(ruleActionMap))
+		{
+			List<Map> idsRefinementList = getList(ruleActionMap, ConditionType.REFINEMENT.getOdrlConditionType());
+			List<Map> refinementList = isNotNull(idsRefinementList)?idsRefinementList:getList(ruleActionMap, ConditionType.REFINEMENT.name().toLowerCase());
+			if (isNotNull(refinementList)) {
+				List<Condition> ruleActionRefinements = buildConditions(refinementList, ConditionType.REFINEMENT);
+				ruleAction.setRefinements(ruleActionRefinements);
+			}
 		}
 
 		rule.setAction(ruleAction);
@@ -518,6 +538,7 @@ public class PatternUtil{
 
 	private static List<RightOperand> getRightOperands(Map conditionMap)  {
 		List<Map> rightOperandMaps = getList(conditionMap, "ids:rightOperand");
+		rightOperandMaps = isNotNull(rightOperandMaps)? rightOperandMaps: getList(conditionMap, "rightOperand");
 		List<RightOperand> rightOperands = new ArrayList<>();
 		List<RightOperandEntity> entities = new ArrayList<>();
 
@@ -612,12 +633,15 @@ public class PatternUtil{
 
 	public static LeftOperand getLeftOperand(Map conditionMap)  {
 		try {
-			return isNotNull(conditionMap) && isNotNull(getValue(conditionMap, "ids:leftOperand"))
-					? LeftOperand.valueOf(removeIdsOrXsdTag(getValue(conditionMap, "ids:leftOperand")))
+			String leftOperandValue = isNotNull(conditionMap)? getValue(conditionMap, "ids:leftOperand"):null;
+			leftOperandValue = isNullOrEmpty(leftOperandValue)? getValue(conditionMap, "leftOperand"): leftOperandValue;
+			return isNotNull(leftOperandValue)
+					? LeftOperand.valueOf(removeIdsOrXsdTag(leftOperandValue))
 					: null;
 		} catch (Exception e) {
-			Map leftOperandMap = (Map) conditionMap.get("ids:leftOperand");
-			return isNotNull(conditionMap) && isNotNull(leftOperandMap) && isNotNull(getValue(leftOperandMap, "@id"))
+			Map leftOperandMap = isNotNull(conditionMap)? (Map) conditionMap.get("ids:leftOperand"): null;
+			leftOperandMap = isNotNull(leftOperandMap)? leftOperandMap : (Map) conditionMap.get("leftOperand");
+			return isNotNull(leftOperandMap) && isNotNull(getValue(leftOperandMap, "@id"))
 					? LeftOperand.valueOf(removeIdsOrXsdTag(getValue(leftOperandMap, "@id")))
 					: null;
 		}
@@ -630,11 +654,14 @@ public class PatternUtil{
 	 */
 	public static Operator getOperator(Map conditionMap)  {
 		try {
-			return isNotNull(conditionMap) ? Operator.valueOf(removeIdsOrXsdTag(getValue(conditionMap, "ids:operator")))
+			String operatorValue = isNotNull(conditionMap) ? getValue(conditionMap, "ids:operator"): null;
+			operatorValue = isNotNull(operatorValue)? operatorValue:getValue(conditionMap, "operator");
+			return isNotNull(operatorValue) ? Operator.valueOf(removeIdsOrXsdTag(operatorValue))
 					: null;
 		} catch (Exception e) {
-			Map operatorMap = (Map) conditionMap.get("ids:operator");
-			return isNotNull(conditionMap) && isNotNull(operatorMap)
+			Map operatorMap = isNotNull(conditionMap)? (Map) conditionMap.get("ids:operator"): null;
+			operatorMap = isNotNull(operatorMap)? operatorMap:(Map) conditionMap.get("operator");
+			return isNotNull(operatorMap) && isNotNull(getValue(operatorMap, "@id"))
 					? Operator.valueOf(removeIdsOrXsdTag(getValue(operatorMap, "@id")))
 					: null;
 		}
@@ -734,8 +761,23 @@ public class PatternUtil{
 		} else if (value.startsWith("ids") || value.startsWith("xsd")){
 			String valueWithoutTag = value.trim().replaceAll(" ", "_");
 			return valueWithoutTag.substring(4).toUpperCase();
+		}else{
+			//the value has no prefix
+			value = replaceUppercaseWithUnderline(value);
+			return value.toUpperCase();
 		}
-		throw new IllegalArgumentException("Invalid syntax, value " + value + " is not allowed");
+		//throw new IllegalArgumentException("Invalid syntax, value " + value + " is not allowed");
+	}
+
+	private static String replaceUppercaseWithUnderline(String value) {
+		// TODO: find a better solution
+		for(int i=1; i < value.length(); i++) {
+			if(Character.isUpperCase(value.charAt(i))) {
+				value = value.replace(value.substring(i,i+1), "_" + value.charAt(i));
+				break;
+			}
+		}
+		return value;
 	}
 
 	/*
