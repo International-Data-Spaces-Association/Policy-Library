@@ -28,4 +28,5 @@ public interface IPolicy {
 
 	public boolean isProviderSide();
 	public void setProviderSide(boolean providerSide);
+	String toOdrlString();
 }

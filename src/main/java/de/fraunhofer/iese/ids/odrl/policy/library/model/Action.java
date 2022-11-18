@@ -37,7 +37,11 @@ public class Action {
 		String PXPBlock = getOdrlPXPBlock();
 		String refinementBlock = this.getDutyRefinementBlock();
 		String constraint = getDutyConstraint();
-		return "      \"action\": [{ \n" + rdfValue + refinementBlock  +"}]\n" + constraint + PXPBlock + "\n" + "      ";
+		if ( this.type.getIdsAction().equals("idsc:DELETE") || this.type.getIdsAction().equals("idsc:DROP") ||this.type.getIdsAction().equals("idsc:REPLACE")) {
+			return "      \"action\": [{ \n" + rdfValue + refinementBlock  +"}]\n" + constraint + PXPBlock + "\n" + "      ";
+		} else {
+			return "      \"action\": [{ \n" + rdfValue + refinementBlock  +"}]\n"  + PXPBlock + "\n" + "      ";
+		}
 	}
 
 	private String getDutyConstraint() {
@@ -103,7 +107,7 @@ public class Action {
 
 	private String getRDFValue() {
 		if (this.type.getAbstractIdsAction().equals("DUTY")) {
-			return "        \"rdf:value\": {\"@id\"" + ":\"idsc:" + this.type.toString().toLowerCase() + "\"}";
+			return "        \"rdf:value\": {\"@id\"" + ":\"" + this.type.toString().toLowerCase() + "\"}";
 		}
 		return "";
 	}
@@ -124,6 +128,7 @@ public class Action {
 	}
 	
 	private String getOdrlPXPBlock() {
+		if (this.type.getAbstractIdsAction().equals("DUTY") && !this.type.getIdsAction().equals("idsc:ANONYMIZE") &&  !this.type.getIdsAction().equals("idsc:DELETE") && !this.type.getIdsAction().equals("idsc:DROP") && !this.type.getIdsAction().equals("idsc:REPLACE")) {
 			return ", \n" + "        \"ids:pxpEndpoint\":[{\n" + "          \"@type\":\"ids:PXP\", \n"
 					+ "          \"ids:interfaceDescription\":{\n"
 					+ "            \"@value\":\"https://example.com/ids/PXP/interfaceDescription/"
@@ -132,6 +137,7 @@ public class Action {
 					+ "            \"@value\":\"https://example.com/ids/PXPendpoint/"
 					+ this.type.toString().toLowerCase() + "\", \n" + "            \"@type\":\"anyURI\"\n"
 					+ "          } \n" + "        }]";
+		}
+		return "";
 	}
-
 }

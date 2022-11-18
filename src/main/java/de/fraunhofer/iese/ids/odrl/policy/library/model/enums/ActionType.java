@@ -16,6 +16,9 @@ public enum ActionType {
 
     DELETE("idsc:DELETE", Action.DELETE.getId().toString(), "DUTY", "MISSING"), // TODO Check  operand
 
+    //TODO Action.DELETE should be Action.DROP!!
+    DROP("idsc:DROP", Action.DELETE.getId().toString(), "DUTY", "MISSING"), // TODO Check  operand
+   
     INFORM("idsc:INFORM", "http://www.w3.org/ns/odrl/2/inform", "DUTY", "MISSING"), // TODO Check  operand
 
     NOTIFY("idsc:NOTIFY", Action.NOTIFY.getId().toString(), "DUTY", "MISSING"), // TODO Check  operand

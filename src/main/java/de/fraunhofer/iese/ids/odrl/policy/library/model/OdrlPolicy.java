@@ -40,6 +40,23 @@ public class OdrlPolicy implements IPolicy {
  @Override
  public String toString() {
 	 return  " {    \r\n" +
+	          "   \"@context\": {\n" +
+	          "      \"ids\":\"https://w3id.org/idsa/core/\",\n" +
+	          "      \"idsc\" : \"https://w3id.org/idsa/code/\"\n" +
+	          "   },    \r\n" +
+	          "  \"@type\": \"" + this.type.getIdsRepresentation() +"\",    \r\n" +
+	          "  \"@id\": \"" + this.policyId.toString() +"\",    \r\n" +
+	          "  \"profile\": \""+ this.profile.toString() +"\",    \r\n" +
+	          getProviderBlock() +
+	          getConsumerBlock() +
+	          getRulesBlock() +
+	          "} ";
+ } 
+
+ 
+@Override
+ public String toOdrlString() {
+	 return  " {    \r\n" +
 	          "   \"@context\":[\n" +
 	          " \"http://www.w3.org/ns/odrl.jsonld\",\n" +
 	          "      { \"dc\": \"http://purl.org/dc/terms/\",\n" +
@@ -49,12 +66,23 @@ public class OdrlPolicy implements IPolicy {
 	          "  \"@type\": \"" + this.type.getOdrlRepresentation() +"\",    \r\n" +
 	          "  \"uid\": \"" + this.policyId.toString() +"\",    \r\n" +
 	          "  \"profile\": \""+ this.profile.toString() +"\",    \r\n" +
-	          //getProviderBlock() +
-	          //getConsumerBlock() +
-	          getRulesBlock() +
+	          getOdrRulesBlock() +
 	          "} ";
  } 
  
+ private String getConsumerBlock() {
+  if(null != this.consumer && !this.type.equals(PolicyType.OFFER)) {
+   return this.consumer.toString();
+  }
+  return "";
+ }
+
+ private String getProviderBlock() {
+  if(null != this.provider && !this.type.equals(PolicyType.REQUEST)) {
+   return this.provider.toString();
+  }
+  return "";
+ }
 
  private String getRulesBlock() {
   String rulesBlock = "";
@@ -83,24 +111,15 @@ public class OdrlPolicy implements IPolicy {
   if(!permissionList.isEmpty())
   {
    String temp= "";
-
-   temp = permissionList.get(0).toOdrlString();
-
+   temp = permissionList.get(0).toString();
    if(permissionList.size() > 1)
    {
     for (int i = 1; i < permissionList.size(); i++)
     {
-     temp = temp.concat(", \n" + permissionList.get(i).toOdrlString());
+     temp = temp.concat(", \n" + permissionList.get(i).toString());
     }
    }
-   // Add Assigner and Assigner
-   String assigner = String.format("      \n\"assigner\": \"%s\", \n" , this.provider.getUri());
-   String assignee = String.format("      \"assignee\": \"%s\", \n" , this.consumer.getUri());
-   
-   temp = temp.replaceFirst("(?:\\{)+", "{" + assigner + assignee);
-   
-   permissionBlock = String.format("  \"permission\": [%s] \n" , temp);
-   //permissionBlock += Action.getOdrlPXPBlock();
+   permissionBlock = String.format("  \"ids:permission\": [%s] \n" , temp);
    rulesBlock = rulesBlock.concat(permissionBlock);
    if(!prohibitionList.isEmpty())
    {
@@ -108,7 +127,7 @@ public class OdrlPolicy implements IPolicy {
    }
   }
 
-  /*if(!prohibitionList.isEmpty())
+  if(!prohibitionList.isEmpty())
   {
    String temp= "";
    temp = prohibitionList.get(0).toString();
@@ -140,9 +159,79 @@ public class OdrlPolicy implements IPolicy {
    }
    obligationBlock = String.format("\"ids:obligation\": [%s] \n" , temp);
    rulesBlock = rulesBlock.concat(obligationBlock);
-  }*/
+  }
 
   return rulesBlock;
  }
+ 
+ private String getOdrRulesBlock() {
+	  String rulesBlock = "";
+	  String permissionBlock = "";
+	  String prohibitionBlock = "";
+	  String obligationBlock = "";
+
+	  List<Rule> permissionList = new ArrayList<>();
+	  List<Rule> prohibitionList = new ArrayList<>();
+	  List<Rule> obligationList = new ArrayList<>();
+
+	  for(Rule rule: this.rules)
+	  {
+	   if(RuleType.PERMISSION.equals(rule.getRuleType()))
+	   {
+	    permissionList.add(rule);
+	   }else if(RuleType.PROHIBITION.equals(rule.getRuleType()))
+	   {
+	    prohibitionList.add(rule);
+	   }else{
+	    //assume it is obligation
+	    obligationList.add(rule);
+	   }
+	  }
+
+	  if(!permissionList.isEmpty())
+	  {
+	   String temp= "";
+
+	   temp = permissionList.get(0).toOdrlString();
+
+	   if(permissionList.size() > 1)
+	   {
+	    for (int i = 1; i < permissionList.size(); i++)
+	    {
+	     temp = temp.concat(", \n" + permissionList.get(i).toOdrlString());
+	    }
+	   }
+	   
+	   permissionBlock = String.format("  \"permission\": [%s] \n" , temp);
+
+	   rulesBlock = rulesBlock.concat(permissionBlock);
+	   if(!prohibitionList.isEmpty())
+	   {
+	    rulesBlock = rulesBlock.concat(", \n");
+	   }
+	  }
+	  if(!obligationList.isEmpty())
+	  {
+	   String temp= "";
+	   temp = obligationList.get(0).toOdrlDutyString();
+	   if(obligationList.size() > 1)
+	   {
+	    for (int i = 1; i < obligationList.size(); i++)
+	    {
+	     temp = temp.concat(", \n" + obligationList.get(i).toOdrlDutyString());
+	    }
+	   }
+	   obligationBlock = String.format("\"obligation\": [%s] \n" , temp);
+	   rulesBlock = rulesBlock.concat(obligationBlock);
+	  }
+	  
+	   // Add Assigner and Assigner
+	   String assigner = String.format("      \n\"assigner\": \"%s\", \n" , this.provider.getUri());
+	   String assignee = String.format("      \"assignee\": \"%s\", \n" , this.consumer.getUri());
+	   
+	   rulesBlock = rulesBlock.replaceFirst("(?:\\{)+", "{" + assigner + assignee);
+	  return rulesBlock;
+	 }
+
 
 }
