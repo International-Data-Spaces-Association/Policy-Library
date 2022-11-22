@@ -27,4 +27,7 @@ public interface ITranslator {
 	ITranslateDuty translateAnonymizeDuty(OdrlPolicy odrlPolicy);
 	ITranslateDuty translateDeleteDuty(OdrlPolicy odrlPolicy);
 	ITranslateDuty translateCountDuty(OdrlPolicy odrlPolicy);
+
+	ITranslateCondition translateConstraint(Condition odrlConstraint);
+	ITranslateDuty translateDuty(OdrlPolicy odrlPolicy);
 	}
