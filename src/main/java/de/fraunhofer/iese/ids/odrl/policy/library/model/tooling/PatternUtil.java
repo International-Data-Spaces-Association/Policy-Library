@@ -239,14 +239,16 @@ public class PatternUtil{
 		if(isNotNull(odrlDutyMaps))
 		{
 			dutyMaps.addAll(odrlDutyMaps);
-		}else if (isNotNull(preDutyMaps) || isNotNull(postDutyMaps))
+		}else if (isNotNull(preDutyMaps))
 		{
 			dutyMaps.addAll(preDutyMaps);
+		}else if (isNotNull(postDutyMaps))
+		{
 			dutyMaps.addAll(postDutyMaps);
 		}
 
 		if (isNotNull(dutyMaps) && !dutyMaps.isEmpty()) {
-			List<Rule> dutyRules = buildDuties(odrlDutyMaps);
+			List<Rule> dutyRules = buildDuties(dutyMaps);
 			rule.setDuties(dutyRules);
 		}
 		return rule;
@@ -439,10 +441,12 @@ public class PatternUtil{
 					Condition replaceWithRefinement = new Condition(conditionType, LeftOperand.REPLACE_WITH, operator,
 							rightOperands);
 					ruleConstraint.add(replaceWithRefinement);
+					break;
 				case JSON_PATH:
 					Condition subsetSpecificationRefinement = new Condition(conditionType, LeftOperand.JSON_PATH,
 							operator, rightOperands);
 					ruleConstraint.add(subsetSpecificationRefinement);
+					break;
 				case PAY_AMOUNT:
 					Condition paymentConstraint = new Condition(conditionType, LeftOperand.PAY_AMOUNT, operator,
 							rightOperands);

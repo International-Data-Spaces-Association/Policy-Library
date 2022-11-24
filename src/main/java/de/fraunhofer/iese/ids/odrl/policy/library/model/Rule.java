@@ -158,11 +158,4 @@ private List<Rule> duties;
         return new Condition(ConditionType.CONSTRAINT, LeftOperand.EVENT, operator, rightOperands);
     }
 
-    private String getPolicyUsageConstraint() {
-
-        return ", \n" + "            \"constraint\": [{\n" + "               \"leftOperand\": \"event\",\n"
-                + "               \"operator\": \"lt\",\n"
-                + "               \"rightOperand\": { \"@id\": \"odrl:policyUsage\" }\n" + "           }]";
-    }
-
 }

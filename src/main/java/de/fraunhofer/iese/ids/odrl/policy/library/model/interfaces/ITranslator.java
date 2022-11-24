@@ -2,6 +2,7 @@ package de.fraunhofer.iese.ids.odrl.policy.library.model.interfaces;
 
 import de.fraunhofer.iese.ids.odrl.policy.library.model.Condition;
 import de.fraunhofer.iese.ids.odrl.policy.library.model.OdrlPolicy;
+import de.fraunhofer.iese.ids.odrl.policy.library.model.Rule;
 
 public interface ITranslator {
 
@@ -21,13 +22,13 @@ public interface ITranslator {
 	ITranslateCondition translateRoleConstraint(Condition odrlConstraint);
 	ITranslateCondition translatePaymentConstraint(Condition odrlConstraint);
 	ITranslateCondition translateEventConstraint(Condition odrlConstraint);
-	ITranslateDuty translateNextPolicyDuty(OdrlPolicy odrlPolicy);
-	ITranslateDuty translateInformDuty(OdrlPolicy odrlPolicy);
-	ITranslateDuty translateLogDuty(OdrlPolicy odrlPolicy);
-	ITranslateDuty translateAnonymizeDuty(OdrlPolicy odrlPolicy);
-	ITranslateDuty translateDeleteDuty(OdrlPolicy odrlPolicy);
-	ITranslateDuty translateCountDuty(OdrlPolicy odrlPolicy);
+	ITranslateDuty translateNextPolicyDuty(Rule odrlDuty);
+	ITranslateDuty translateInformDuty(Rule odrlDuty);
+	ITranslateDuty translateLogDuty(Rule odrlDuty);
+	ITranslateDuty translateAnonymizeDuty(Rule odrlDuty);
+	ITranslateDuty translateDeleteDuty(Rule odrlDuty);
+	ITranslateDuty translateCountDuty(Rule odrlDuty);
 
 	ITranslateCondition translateConstraint(Condition odrlConstraint);
-	ITranslateDuty translateDuty(OdrlPolicy odrlPolicy);
+	ITranslateDuty translateDuty(Rule odrlDuty);
 	}

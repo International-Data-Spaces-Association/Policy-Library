@@ -68,8 +68,8 @@ public class Action {
 	}
 
 	private String getRDFValue(String language) {
-		return language.equals("ids")? "\"rdf:value\": { \"@id\": \""+ type.getIdsAction() +"\" },"
-				: "\"rdf:value\": { \"@id\": \""+ type.getOdrlAction() +"\" },";
+		return language.equals("ids")? "\"rdf:value\": { \"@id\": \""+ type.getIdsAction() +"\" }"
+				: "\"rdf:value\": { \"@id\": \""+ type.getOdrlAction() +"\" }";
 	}
 
 	private String getPXPBlock() {
