@@ -193,7 +193,10 @@ public class OdrlPolicy implements IPolicy {
   String assigner = String.format("      \n\"assigner\": \"%s\", \n" , this.provider.getUri());
   String assignee = String.format("      \"assignee\": \"%s\", \n" , this.consumer.getUri());
 
-  return temp.replaceFirst("(?:\\{)+", "{" + assigner + assignee);
+  String regex = "(?:\\{)+";
+  String replacement = "{" + assigner + assignee;
+
+  return temp.replaceFirst(regex, replacement);
  }
 
 }

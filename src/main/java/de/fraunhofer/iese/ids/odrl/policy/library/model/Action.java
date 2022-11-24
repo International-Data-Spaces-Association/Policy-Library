@@ -86,16 +86,4 @@ public class Action {
 		}
 		return "";
 	}
-	
-	private String getOdrlPXPBlock() {
-			return ", \n" + "        \"ids:pxpEndpoint\":[{\n" + "          \"@type\":\"ids:PXP\", \n"
-					+ "          \"ids:interfaceDescription\":{\n"
-					+ "            \"@value\":\"https://example.com/ids/PXP/interfaceDescription/"
-					+ this.type.toString().toLowerCase() + "\", \n" + "            \"@type\":\"anyURI\"\n"
-					+ "          }, \n" + "          \"ids:endpointURI\":{\n"
-					+ "            \"@value\":\"https://example.com/ids/PXPendpoint/"
-					+ this.type.toString().toLowerCase() + "\", \n" + "            \"@type\":\"anyURI\"\n"
-					+ "          } \n" + "        }]";
-	}
-
 }
