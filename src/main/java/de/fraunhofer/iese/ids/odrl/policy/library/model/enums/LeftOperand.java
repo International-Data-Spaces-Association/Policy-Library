@@ -4,7 +4,7 @@ public enum LeftOperand {
 
     ELAPSED_TIME("elapsedTime", "idsc:ELAPSED_TIME", de.fraunhofer.iais.eis.LeftOperand.ELAPSED_TIME.getId().toString(), "elapsedTime"),
 
-    DELAY("delay","idsc:DELAY", de.fraunhofer.iais.eis.LeftOperand.DELAY.getId().toString(), "delayPeriod"),
+    DELAY_PERIOD("delayPeriod","idsc:DELAY_PERIOD", de.fraunhofer.iais.eis.LeftOperand.DELAY.getId().toString(), "delayPeriod"),
 
     DATE_TIME("dateTime", "idsc:DATE_TIME", de.fraunhofer.iais.eis.LeftOperand.DATE_TIME.getId().toString(), "dateTime"),
 

@@ -422,8 +422,8 @@ public class PatternUtil{
 							operator, rightOperands);
 					ruleConstraint.add(evaluationTimeCondition);
 					break;
-				case DELAY:
-					Condition delayPeriodConstraint = new Condition(conditionType, LeftOperand.DELAY, operator,
+					case DELAY_PERIOD:
+					Condition delayPeriodConstraint = new Condition(conditionType, LeftOperand.DELAY_PERIOD, operator,
 							rightOperands);
 					ruleConstraint.add(delayPeriodConstraint);
 					break;
