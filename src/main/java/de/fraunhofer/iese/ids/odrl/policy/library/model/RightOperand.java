@@ -12,10 +12,9 @@ public class RightOperand {
 	private RightOperandId id;
 	private String value;
 	private RightOperandType type;
-
 	private List<RightOperandEntity> rightOperandEntities;
 
-//	Constructors 
+//	Constructors
 	//Empty Constructor
 	public RightOperand() {
 	}
@@ -53,6 +52,22 @@ public class RightOperand {
 	@Override
 	public String toString() {
 		if (null == this.id) {
+			if (null == this.value) {
+				return "";
+			} else {
+				return "{\"@value\": \"" + value + "\", \"@type\": \"" + type.getType() + "\"}";
+			}
+		} else {
+			if (null == this.value) {
+				return "{\"@id\": \"" + id.getOdrlRepresentation() + "\"}";
+			}
+		}
+		return "{\"@id\": \"" + id.getOdrlRepresentation() + "\"@value\": \"" + value + "\", \"@type\": \""
+				+ type.getType() + "\"}";
+	}
+
+	public String toIdsString() {
+		if (null == this.id) {
 			if (PatternUtil.isEmpty(rightOperandEntities)) {
 				if (null == this.value) {
 					return "";
@@ -67,32 +82,12 @@ public class RightOperand {
 		} else {
 			if (null == this.rightOperandEntities) {
 				if (null == this.value) {
-					return "{\"@id\": \"" + id.getIdsRightOperand() + "\"}";
+					return "{\"@id\": \"" + id.getIdsRepresentation() + "\"}";
 				}
 			}
 		}
-		return "{\"@id\": \"" + id.getIdsRightOperand() + "\"@value\": \"" + value + "\", \"@type\": \""
+		return "{\"@id\": \"" + id.getIdsRepresentation() + "\"@value\": \"" + value + "\", \"@type\": \""
 				+ type.getType() + "\"}";
-		/*
-		 * if(this.id == null && this.value == null && this.entities == null &&
-		 * this.type != null) { //done return ""; } else if(this.id != null &&
-		 * this.entities == null && this.value == null && this.type == null) { //done
-		 * return "{\"@id\": \""+ id.getIdsRightOperand() +"\"}"; }else if(this.id ==
-		 * null && this.value == null && this.type != null && this.entities != null &&
-		 * !this.entities.isEmpty()) { //done return getEntitiesBlock(); }else
-		 * if(this.id == null && this.entities == null && this.value != null &&
-		 * this.type != null && this.type.equals(RightOperandType.DATETIMESTAMP)) {
-		 * //removed return "{\"@value\": \""+ value +"\", \"@type\": \""+
-		 * type.getType() +"\"}"; }else if(this.id == null && this.entities == null &&
-		 * this.value != null && this.type != null) { //done return "{\"@value\": \""+
-		 * value +"\", \"@type\": \""+ type.getType() +"\"}"; }else if(this.id != null
-		 * && this.entities == null && this.value != null && this.type != null &&
-		 * this.type.equals(RightOperandType.DATETIMESTAMP)) { //removed return
-		 * "{\"@id\": \""+ id.getIdsRightOperand() + "\"@value\": \""+ value
-		 * +"\", \"@type\": \""+ type.getType() +"\"}"; }else { return "{\"@id\": \""+
-		 * id.getIdsRightOperand() + "\"@value\": \""+ value +"\", \"@type\": \""+
-		 * type.getType() +"\"}"; }
-		 */
 	}
 
 	private String getEntitiesBlock() {		
@@ -118,25 +113,6 @@ public class RightOperand {
 			}
 		}
 		return entitiesBlock;
-	}
-	
-	
-	public String toOdrlString() {
-		if (null == this.id) {
-			if (null == this.value) {
-				return "";
-			} else {
-				return "{\"@value\": \"" + value + "\", \"@type\": \"" + type.getType() + "\"}";
-			}
-		} else {
-			if (null == this.rightOperandEntities) {
-				if (null == this.value) {
-					return "{\"@id\": \"" + id.getIdsRightOperand() + "\"}";
-				}
-			}
-		}
-		return "{\"@id\": \"" + id.getIdsRightOperand() + "\"@value\": \"" + value + "\", \"@type\": \""
-				+ type.getType() + "\"}";
 	}
 	
 

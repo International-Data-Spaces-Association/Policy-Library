@@ -38,7 +38,7 @@ public enum LeftOperand {
 
     SYSTEM_DEVICE("systemDevice", "idsc:SYSTEM_DEVICE", de.fraunhofer.iais.eis.LeftOperand.SYSTEM_DEVICE.getId().toString(), "systemDevice"),
 
-    PAY_AMOUNT("payamount", "idsc:PAY_AMOUNT", de.fraunhofer.iais.eis.LeftOperand.PAY_AMOUNT.getId().toString(), "pay"),
+    PAY_AMOUNT("payamount", "idsc:PAY_AMOUNT", de.fraunhofer.iais.eis.LeftOperand.PAY_AMOUNT.getId().toString(), "payAmount"),
 
     LOG_LEVEL("logLevel", "idsc:LOG_LEVEL", de.fraunhofer.iais.eis.LeftOperand.LOG_LEVEL.getId().toString(), "idsc:LOG_LEVEL"), // TODO Check operand
 

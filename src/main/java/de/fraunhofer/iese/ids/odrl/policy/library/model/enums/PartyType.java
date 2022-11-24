@@ -6,7 +6,7 @@ public enum PartyType {
 
     CONSUMER("ids:consumer"),
 
-    INFORMEDPARTY("informedParty");
+    INFORMED_PARTY("informedParty");
 
 
     private final String type;
