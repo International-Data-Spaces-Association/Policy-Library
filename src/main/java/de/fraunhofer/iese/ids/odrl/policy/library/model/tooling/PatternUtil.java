@@ -10,13 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.github.jsonldjava.utils.Obj;
-import de.fraunhofer.iese.ids.odrl.policy.library.model.Action;
-import de.fraunhofer.iese.ids.odrl.policy.library.model.Condition;
-import de.fraunhofer.iese.ids.odrl.policy.library.model.OdrlPolicy;
-import de.fraunhofer.iese.ids.odrl.policy.library.model.Party;
-import de.fraunhofer.iese.ids.odrl.policy.library.model.RightOperand;
-import de.fraunhofer.iese.ids.odrl.policy.library.model.RightOperandEntity;
-import de.fraunhofer.iese.ids.odrl.policy.library.model.Rule;
+import de.fraunhofer.iese.ids.odrl.policy.library.model.*;
 import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.ActionType;
 import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.ConditionType;
 import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.EntityType;
@@ -114,10 +108,12 @@ public class PatternUtil{
 			if (attributeObject instanceof List) {
 				// TODO: unchecked cast
 				Map attributeMap = (Map) ((List) attributeObject).get(0);
-				return attributeMap.get("@id").toString();
+				String v = attributeMap.get("@id").toString();
+				return isNullOrEmpty(v)? attributeMap.get("uid").toString(): v;
 			} else if (attributeObject instanceof Map) {
 				Map attributeMap = (Map) attributeObject;
-				return attributeMap.get("@id").toString();
+				String v = attributeMap.get("@id").toString();
+				return isNullOrEmpty(v)? attributeMap.get("uid").toString():v;
 			} else {
 				return map.get(attribute).toString();
 			}
@@ -127,13 +123,13 @@ public class PatternUtil{
 
 	@SuppressWarnings("unchecked")
 	public static Map getRuleMap(Map map, RuleType ruleType) {
-		List<Map> maps = (List) map.get(ruleType.getType());
-		return isNotNull(maps) ? (Map) ((List) map.get(ruleType.getType())).get(0) : null;
+		List<Map> idsMaps = (List) map.get(ruleType.getIdsRepresentation());
+		return isNotNull(idsMaps) ? idsMaps.get(0) : (Map) ((List) map.get(ruleType.getOdrlRepresentation())).get(0);
 	}
 
 	public static List getRuleMaps(Map map, RuleType ruleType) {
-		List list = (List) map.get(ruleType.getType());
-		return isNotNull(list) ? list: (List) map.get(ruleType.name().toLowerCase());
+		List idsList = (List) map.get(ruleType.getIdsRepresentation());
+		return isNotNull(idsList)? idsList: (List) map.get(ruleType.getOdrlRepresentation());
 	}
 
 	public static ActionType getAction(Map map)  {
@@ -218,10 +214,8 @@ public class PatternUtil{
 
 		// get target
 //		Map target = getFirstMap(ruleMap, "ids:target");
-		String idsTargetId = getValue(ruleMap, "ids:target");
-		String targetId = isNotNull(idsTargetId)? idsTargetId: getValue(ruleMap, "target");
-		URI targetURI = URI.create(targetId);
-		rule.setTarget(targetURI);
+		Target target = buildTarget(ruleMap);
+		rule.setTarget(target);
 
 		ActionType action = getAction(ruleMap);
 		Map idsRuleActionMap = getFirstMap(ruleMap, "ids:action");
@@ -230,170 +224,119 @@ public class PatternUtil{
 		Action ruleAction = new Action(action);
 
 		// build the rule constraints
-		if(isNotNull(ruleMap))
-		{
-			List<Map> idsConstraintList = getList(ruleMap, ConditionType.CONSTRAINT.getOdrlConditionType());
-			List<Map> constraintList = isNotNull(idsConstraintList)? idsConstraintList: getList(ruleMap, ConditionType.CONSTRAINT.name().toLowerCase());
-			if ( isNotNull(constraintList)) {
-				List<Condition> ruleConstraint = buildConditions(constraintList, ConditionType.CONSTRAINT);
-				rule.setConstraints(ruleConstraint);
-			}
-		}
+		List<Condition> ruleConstraints = getConditions(ruleMap, ConditionType.CONSTRAINT);
+		rule.setConstraints(ruleConstraints);
 
 		// build the rule action refinements
-		if(isNotNull(ruleActionMap))
-		{
-			List<Map> idsRefinementList = getList(ruleActionMap, ConditionType.REFINEMENT.getOdrlConditionType());
-			List<Map> refinementList = isNotNull(idsRefinementList)?idsRefinementList:getList(ruleActionMap, ConditionType.REFINEMENT.name().toLowerCase());
-			if (isNotNull(refinementList)) {
-				List<Condition> ruleActionRefinements = buildConditions(refinementList, ConditionType.REFINEMENT);
-				ruleAction.setRefinements(ruleActionRefinements);
-			}
-		}
+		List<Condition> ruleActionRefinements = getConditions(ruleMap, ConditionType.REFINEMENT);
+		ruleAction.setRefinements(ruleActionRefinements);
 
 		rule.setAction(ruleAction);
-
+		List<Map> odrlDutyMaps = getList(ruleMap, "duty");
 		List<Map> preDutyMaps = getList(ruleMap, "ids:preDuty");
 		List<Map> postDutyMaps = getList(ruleMap, "ids:postDuty");
-
-		List<Rule> preDutyRules = new ArrayList<>();
-		if (preDutyMaps != null) {
-			buildPreDuties(preDutyMaps, preDutyRules);
-			rule.setPreduties(preDutyRules);
+		List<Map> dutyMaps = new ArrayList<>();
+		if(isNotNull(odrlDutyMaps))
+		{
+			dutyMaps.addAll(odrlDutyMaps);
+		}else if (isNotNull(preDutyMaps))
+		{
+			dutyMaps.addAll(preDutyMaps);
+		}else if (isNotNull(postDutyMaps))
+		{
+			dutyMaps.addAll(postDutyMaps);
 		}
 
-		List<Rule> postDutyRules = new ArrayList<>();
-		if (postDutyMaps != null) {
-			buildPostDuties(postDutyMaps, postDutyRules);
-			rule.setPostduties(postDutyRules);
+		if (isNotNull(dutyMaps) && !dutyMaps.isEmpty()) {
+			List<Rule> dutyRules = buildDuties(dutyMaps);
+			rule.setDuties(dutyRules);
 		}
 		return rule;
 	}
 
-	private static void buildPreDuties(List<Map> preDutyMaps, List<Rule> dutyRules)  {
-		Map dutyActionMap = null;
-		ActionType dutyMethod = null;
-		for (Map dutyMap : preDutyMaps) {
+	private static Target buildTarget(Map ruleMap) {
+		String idsTargetId = getValue(ruleMap, "ids:target");
+		String targetId = isNotNull(idsTargetId)? idsTargetId: getValue(ruleMap, "target");
+		return new Target(URI.create(targetId));
+	}
+
+	private static List<Rule> buildDuties(List<Map> dutyMaps)  {
+		List<Rule> rules = new ArrayList<>();
+		for (Map dutyMap : dutyMaps) {
+			Map dutyActionMap = null;
+			ActionType dutyMethod = null;
 			if (isNotNull(dutyMap)) {
 				dutyMethod = getAction(dutyMap);
-				dutyActionMap = getFirstMap(dutyMap, "ids:action");
-
-				Rule preobligationRule = new Rule();
+				Map idsDutyActionMap = getFirstMap(dutyMap, "ids:action");
+				dutyActionMap = isNotNull(idsDutyActionMap)?idsDutyActionMap: getFirstMap(dutyMap, "action");
 
 				Action dutyAction = new Action();
 
+				Rule rule = new Rule();
+
 				// build the duty action refinements
-				List<Map> dutyActionRefinementList = new ArrayList<>();
-				if (isNotNull(dutyActionMap)
-						&& isNotNull(getList(dutyActionMap, ConditionType.REFINEMENT.getOdrlConditionType()))) {
-					dutyActionRefinementList
-							.addAll(getList(dutyActionMap, ConditionType.REFINEMENT.getOdrlConditionType()));
-					List<Condition> dutyActionRefinements = buildConditions(dutyActionRefinementList,
-							ConditionType.REFINEMENT);
-					dutyAction.setRefinements(dutyActionRefinements);
-				}
+				List<Condition> ruleActionRefinements = getConditions(dutyActionMap, ConditionType.REFINEMENT);
+				dutyAction.setRefinements(ruleActionRefinements);
 
 				if (null != dutyMethod) {
 					switch (dutyMethod) {
-					case DELETE:
-						dutyAction.setType(ActionType.DELETE);
-						preobligationRule = new Rule(RuleType.PREDUTY, dutyAction);
-						addConstraintsToDutyRule(dutyMap, preobligationRule);
-						dutyRules.add(preobligationRule);
-						break;
-					case ANONYMIZE:
-						dutyAction.setType(ActionType.ANONYMIZE);
-						preobligationRule = new Rule(RuleType.PREDUTY, dutyAction);
-						addConstraintsToDutyRule(dutyMap, preobligationRule);
-						dutyRules.add(preobligationRule);
-						break;
-					case REPLACE:
-						dutyAction.setType(ActionType.REPLACE);
-						preobligationRule = new Rule(RuleType.PREDUTY, dutyAction);
-						addConstraintsToDutyRule(dutyMap, preobligationRule);
-						dutyRules.add(preobligationRule);
-						break;
-					case NEXT_POLICY:
-						dutyAction.setType(ActionType.NEXT_POLICY);
-						preobligationRule = new Rule(RuleType.PREDUTY, dutyAction);
-						addConstraintsToDutyRule(dutyMap, preobligationRule);
-						dutyRules.add(preobligationRule);
-						break;
+						case DELETE:
+							dutyAction.setType(ActionType.DELETE);
+							rule = new Rule(RuleType.POST_DUTY, dutyAction);
+							break;
+						case INCREMENT_COUNTER:
+							dutyAction.setType(ActionType.INCREMENT_COUNTER);
+							rule = new Rule(RuleType.POST_DUTY, dutyAction);
+							break;
+						case LOG:
+							dutyAction.setType(ActionType.LOG);
+							rule = new Rule(RuleType.PRE_DUTY, dutyAction);
+							break;
+						case INFORM:
+							dutyAction.setType(ActionType.INFORM);
+							rule = new Rule(RuleType.PRE_DUTY, dutyAction);
+							break;
+						case NOTIFY:
+							dutyAction.setType(ActionType.NOTIFY);
+							rule = new Rule(RuleType.PRE_DUTY, dutyAction);
+							break;
+						case DROP:
+							dutyAction.setType(ActionType.DROP);
+							rule = new Rule(RuleType.PRE_DUTY, dutyAction);
+							break;
+						case ANONYMIZE:
+							dutyAction.setType(ActionType.ANONYMIZE);
+							rule = new Rule(RuleType.PRE_DUTY, dutyAction);
+							break;
+						case REPLACE:
+							dutyAction.setType(ActionType.REPLACE);
+							rule = new Rule(RuleType.PRE_DUTY, dutyAction);
+							break;
+						case NEXT_POLICY:
+							dutyAction.setType(ActionType.NEXT_POLICY);
+							rule = new Rule(RuleType.PRE_DUTY, dutyAction);
+							break;
 					}
+					List<Condition> dutyConstraints = getConditions(dutyMap, ConditionType.CONSTRAINT);
+					rule.setConstraints(dutyConstraints);
+					rules.add(rule);
 				}
 			}
 		}
+		return rules;
 	}
 
-	private static void buildPostDuties(List<Map> preDutyMaps, List<Rule> dutyRules)  {
-		Map dutyActionMap = null;
-		ActionType dutyMethod = null;
-		for (Map dutyMap : preDutyMaps) {
-			if (isNotNull(dutyMap)) {
-				dutyMethod = getAction(dutyMap);
-				dutyActionMap = getFirstMap(dutyMap, "ids:action");
-
-				Rule postobligationRule = new Rule();
-				Action dutyAction = new Action();
-
-				// build the duty action refinements
-				if (isNotNull(dutyActionMap)
-						&& isNotNull(getList(dutyActionMap, ConditionType.REFINEMENT.getOdrlConditionType()))) {
-					List<Map> dutyActionRefinementList = getList(dutyActionMap,
-							ConditionType.REFINEMENT.getOdrlConditionType());
-					List<Condition> dutyActionRefinements = buildConditions(dutyActionRefinementList,
-							ConditionType.REFINEMENT);
-					dutyAction.setRefinements(dutyActionRefinements);
-				}
-
-				if (null != dutyMethod) {
-					switch (dutyMethod) {
-					case DELETE:
-						dutyAction.setType(ActionType.DELETE);
-						postobligationRule = new Rule(RuleType.POSTDUTY, dutyAction);
-						addConstraintsToDutyRule(dutyMap, postobligationRule);
-						dutyRules.add(postobligationRule);
-						break;
-					case INCREMENT_COUNTER:
-						dutyAction.setType(ActionType.INCREMENT_COUNTER);
-						postobligationRule = new Rule(RuleType.POSTDUTY, dutyAction);
-						addConstraintsToDutyRule(dutyMap, postobligationRule);
-						dutyRules.add(postobligationRule);
-						break;
-					case LOG:
-						dutyAction.setType(ActionType.LOG);
-						postobligationRule = new Rule(RuleType.PREDUTY, dutyAction);
-						addConstraintsToDutyRule(dutyMap, postobligationRule);
-						dutyRules.add(postobligationRule);
-						break;
-					case INFORM:
-						dutyAction.setType(ActionType.INFORM);
-						postobligationRule = new Rule(RuleType.PREDUTY, dutyAction);
-						addConstraintsToDutyRule(dutyMap, postobligationRule);
-						dutyRules.add(postobligationRule);
-						break;
-					case NOTIFY:
-						dutyAction.setType(ActionType.NOTIFY);
-						postobligationRule = new Rule(RuleType.PREDUTY, dutyAction);
-						addConstraintsToDutyRule(dutyMap, postobligationRule);
-						dutyRules.add(postobligationRule);
-						break;
-					}
-				}
+	private static List<Condition> getConditions(Map ruleMap, ConditionType conditionType)  {
+		// build the rule or duty constraints
+		if(isNotNull(ruleMap))
+		{
+			List<Map> idsConstraintList = getList(ruleMap, conditionType.getIdsRepresentation());
+			List<Map> constraintList = isNotNull(idsConstraintList)? idsConstraintList: getList(ruleMap, conditionType.getOdrlRepresentation());
+			if ( isNotNull(constraintList)) {
+				return buildConditions(constraintList, conditionType);
 			}
 		}
-	}
-
-	private static void addConstraintsToDutyRule(Map postobligationMap, Rule dutyRule)  {
-		// build the postobligation constraints
-		if (isNotNull(postobligationMap)
-				&& isNotNull(getList(postobligationMap, ConditionType.CONSTRAINT.getOdrlConditionType()))) {
-			List<Map> postobligationConstraintList = getList(postobligationMap,
-					ConditionType.CONSTRAINT.getOdrlConditionType());
-			List<Condition> postobligationConstraints = buildConditions(postobligationConstraintList,
-					ConditionType.CONSTRAINT);
-			dutyRule.setConstraints(postobligationConstraints);
-		}
+		return null;
 	}
 
 	private static List<Condition> buildConditions(List<Map> ruleConstraintList, ConditionType conditionType)  {
@@ -479,8 +422,8 @@ public class PatternUtil{
 							operator, rightOperands);
 					ruleConstraint.add(evaluationTimeCondition);
 					break;
-				case DELAY:
-					Condition delayPeriodConstraint = new Condition(conditionType, LeftOperand.DELAY, operator,
+					case DELAY_PERIOD:
+					Condition delayPeriodConstraint = new Condition(conditionType, LeftOperand.DELAY_PERIOD, operator,
 							rightOperands);
 					ruleConstraint.add(delayPeriodConstraint);
 					break;
@@ -498,15 +441,19 @@ public class PatternUtil{
 					Condition replaceWithRefinement = new Condition(conditionType, LeftOperand.REPLACE_WITH, operator,
 							rightOperands);
 					ruleConstraint.add(replaceWithRefinement);
+					break;
 				case JSON_PATH:
 					Condition subsetSpecificationRefinement = new Condition(conditionType, LeftOperand.JSON_PATH,
 							operator, rightOperands);
 					ruleConstraint.add(subsetSpecificationRefinement);
+					break;
 				case PAY_AMOUNT:
 					Condition paymentConstraint = new Condition(conditionType, LeftOperand.PAY_AMOUNT, operator,
 							rightOperands);
 					paymentConstraint.setContract(getValue(conditionMap, "ids:contract"));
-					paymentConstraint.setUnit(getValue(conditionMap, "ids:unit"));
+					String idsUnit = getValue(conditionMap, "ids:unit");
+					String unit = isNullOrEmpty(idsUnit)?getValue(conditionMap, "unit"):idsUnit;
+					paymentConstraint.setUnit(unit);
 					ruleConstraint.add(paymentConstraint);
 					break;
 				case ABSOLUTE_SPATIAL_POSITION:
@@ -547,7 +494,7 @@ public class PatternUtil{
 			RightOperandEntitiesType rightOperandEntitiesType = getRightOperandEntity(rightOperandMap);
 
 			if (hasRightOperandEntities(rightOperandEntitiesType)) {
-				if (RightOperandEntitiesType.INTERVALL.equals(rightOperandEntitiesType)) {
+				if (RightOperandEntitiesType.INTERVAL.equals(rightOperandEntitiesType)) {
 					Map beginEntityMap = (Map) rightOperandMap.get(EntityType.BEGIN.getType());
 					if (isNotNull(beginEntityMap)) {
 						String beginTimeEntityValue = getRightOperandValueEntity(beginEntityMap, EntityType.DATETIME);
@@ -604,7 +551,7 @@ public class PatternUtil{
 				&& keySet.contains(EntityType.END.getType())) {
 			if (RightOperandType.INTERVAL.getType().equalsIgnoreCase(rightOperandMap.get("@type").toString()))
 				;
-			return RightOperandEntitiesType.INTERVALL;
+			return RightOperandEntitiesType.INTERVAL;
 		}
 		if (keySet.contains(EntityType.DATETIME.getType())) {
 			return RightOperandEntitiesType.TIMEBORDER;
@@ -623,12 +570,6 @@ public class PatternUtil{
 	
 	public static boolean isNotEmpty(Collection<?> collection) {
 		return ! isEmpty(collection);
-	}
-
-	public static RuleType getRuleType(Map map) {
-		return isNotNull(map.get(RuleType.PERMISSION.getType())) ? RuleType.PERMISSION
-				: (isNotNull(map.get(RuleType.PROHIBITION.getType())) ? RuleType.PROHIBITION
-						: (isNotNull(map.get(RuleType.OBLIGATION.getType())) ? RuleType.OBLIGATION : null));
 	}
 
 	public static LeftOperand getLeftOperand(Map conditionMap)  {
@@ -773,8 +714,8 @@ public class PatternUtil{
 		// TODO: find a better solution
 		for(int i=1; i < value.length(); i++) {
 			if(Character.isUpperCase(value.charAt(i))) {
-				value = value.replace(value.substring(i,i+1), "_" + value.charAt(i));
-				break;
+				String s = String.valueOf(value.charAt(i));
+				value = value.replace(value.substring(i,i+1), "_" + s.toLowerCase());
 			}
 		}
 		return value;
