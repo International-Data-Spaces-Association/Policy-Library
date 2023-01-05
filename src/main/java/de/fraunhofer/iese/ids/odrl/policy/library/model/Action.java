@@ -20,46 +20,35 @@ public class Action {
 
 	@Override
 	public String toString() {
-		String PXPBlock = getPXPBlock();
-		String refinementBlock = this.getRefinementBlock();
-		return "      \"ids:action\": [{\n" + "        \"@id\":\"" + type.getIdsAction() + "\"" + refinementBlock
-				+ PXPBlock + "\r\n" + "      }]";
-	}
-
-	public String toOdrlString() {
-		String refinementBlock = this.getRefinementBlock();
-		return "      \"action\": \n" + "       \"" + type.getOdrlAction() + "\"" + refinementBlock  + "\n"
-				+ "      ";
-	}
-
-	public String toOdrlDutyString() {
-		String rdfValue = getRDFValue();
-		String PXPBlock = getOdrlPXPBlock();
-		String refinementBlock = this.getDutyRefinementBlock();
-		String constraint = getDutyConstraint();
-		if ( this.type.getIdsAction().equals("idsc:DELETE") || this.type.getIdsAction().equals("idsc:DROP") ||this.type.getIdsAction().equals("idsc:REPLACE")) {
-			return "      \"action\": [{ \n" + rdfValue + refinementBlock  +"}]\n" + constraint + PXPBlock + "\n" + "      ";
-		} else {
-			return "      \"action\": [{ \n" + rdfValue + refinementBlock  +"}]\n"  + PXPBlock + "\n" + "      ";
+		String odrl = "odrl";
+		if(null != this.refinements)
+		{
+			return "      \"action\": [{ \n" + getRDFValue(odrl) + getRefinementBlock(odrl)  +"}]\n" + "\n" + "      ";
+		}else{
+			return "\"action\": \""+ type.getOdrlAction() + "\" \r\n";
 		}
 	}
 
-	private String getDutyConstraint() {
-
-		return ", \n" + "            \"constraint\": [{\n" + "               \"leftOperand\": \"event\",\n"
-				+ "               \"operator\": \"lt\",\n"
-				+ "               \"rightOperand\": { \"@id\": \"odrl:policyUsage\" }\n" + "           }]";
+	public String toIdsString() {
+		String ids = "ids";
+		if(null != this.refinements)
+		{
+			return "      \"ids:action\": [{ \n" + getRDFValue(ids) + getRefinementBlock(ids)  +"}]\n" + getPXPBlock() + "\n" + "      ";
+		}else{
+			return "      \"ids:action\": [{\n" + "        \"@id\":\"" + type.getIdsAction() + "\""
+					+ "\r\n" + "      }]";
+		}
 	}
 
-	private String getDutyRefinementBlock() {
+	private String getRefinementBlock(String language) {
 
 		String conditionInnerBlock = "";
-
+		String conditionElement = language.equals("ids")? "ids:refinement": "refinement";
 		if (this.refinements != null) {
 
 			String conditions = "";
 			for (int i = 0; i < this.refinements.size(); i++) {
-				String tempString = this.refinements.get(i).toOdrlString();
+				String tempString = language.equals("ids")? this.refinements.get(i).toIdsString() : this.refinements.get(i).toString() ;
 				if (!tempString.isEmpty()) {
 					if (conditions.isEmpty() && !tempString.isEmpty()) {
 						conditions = conditions.concat(tempString);
@@ -71,45 +60,16 @@ public class Action {
 			}
 
 			if (!conditions.isEmpty()) {
-				conditionInnerBlock = String.format(",     \r\n" + "        \"refinement\": [%s] ", conditions);
+				conditionInnerBlock = String.format(",     \r\n" + "        \"%s\": [%s] ", conditionElement, conditions);
 			}
 		}
 
 		return conditionInnerBlock;
 	}
 
-	private String getRefinementBlock() {
-
-		String conditionInnerBlock = "";
-
-		if (this.refinements != null) {
-
-			String conditions = "";
-			for (int i = 0; i < this.refinements.size(); i++) {
-				String tempString = this.refinements.get(i).toString();
-				if (!tempString.isEmpty()) {
-					if (conditions.isEmpty() && !tempString.isEmpty()) {
-						conditions = conditions.concat(tempString);
-
-					} else {
-						conditions = conditions.concat("," + tempString);
-					}
-				}
-			}
-
-			if (!conditions.isEmpty()) {
-				conditionInnerBlock = String.format(",     \r\n" + "        \"ids:refinement\": [%s] ", conditions);
-			}
-		}
-
-		return conditionInnerBlock;
-	}
-
-	private String getRDFValue() {
-		if (this.type.getAbstractIdsAction().equals("DUTY")) {
-			return "        \"rdf:value\": {\"@id\"" + ":\"" + this.type.toString().toLowerCase() + "\"}";
-		}
-		return "";
+	private String getRDFValue(String language) {
+		return language.equals("ids")? "\"rdf:value\": { \"@id\": \""+ type.getIdsAction() +"\" }"
+				: "\"rdf:value\": { \"@id\": \""+ type.getOdrlAction() +"\" }";
 	}
 
 	private String getPXPBlock() {
@@ -123,20 +83,6 @@ public class Action {
 					+ this.type.toString().toLowerCase() + "\", \n" + "            \"@type\":\"anyURI\"\n"
 					+ "          } \n" + "        }";
 
-		}
-		return "";
-	}
-	
-	private String getOdrlPXPBlock() {
-		if (this.type.getAbstractIdsAction().equals("DUTY") && !this.type.getIdsAction().equals("idsc:ANONYMIZE") &&  !this.type.getIdsAction().equals("idsc:DELETE") && !this.type.getIdsAction().equals("idsc:DROP") && !this.type.getIdsAction().equals("idsc:REPLACE")) {
-			return ", \n" + "        \"ids:pxpEndpoint\":[{\n" + "          \"@type\":\"ids:PXP\", \n"
-					+ "          \"ids:interfaceDescription\":{\n"
-					+ "            \"@value\":\"https://example.com/ids/PXP/interfaceDescription/"
-					+ this.type.toString().toLowerCase() + "\", \n" + "            \"@type\":\"anyURI\"\n"
-					+ "          }, \n" + "          \"ids:endpointURI\":{\n"
-					+ "            \"@value\":\"https://example.com/ids/PXPendpoint/"
-					+ this.type.toString().toLowerCase() + "\", \n" + "            \"@type\":\"anyURI\"\n"
-					+ "          } \n" + "        }]";
 		}
 		return "";
 	}

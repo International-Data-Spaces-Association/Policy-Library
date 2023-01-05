@@ -2,23 +2,22 @@ package de.fraunhofer.iese.ids.odrl.policy.library.model.enums;
 
 public enum RightOperandId {
 
-    POLICYUSAGE("policyUsage", "ids:policyUsage");
+    POLICY_USAGE("ids:policyUsage", "policyUsage");
 
+    String idsRepresentation;
+    String odrlRepresentation;
 
-    private final String mydataRightOperand;
-    private final String idsRightOperand;
-
-    RightOperandId(String op1, String op2) {
-        mydataRightOperand = op1;
-        idsRightOperand = op2;
+    RightOperandId(String idsRepresentation, String odrlRepresentation) {
+        this.idsRepresentation = idsRepresentation;
+        this.odrlRepresentation = odrlRepresentation;
     }
 
-    public String getMydataRightOperand() {
-        return mydataRightOperand;
+    public String getIdsRepresentation() {
+        return this.idsRepresentation;
     }
 
-    public String getIdsRightOperand() {
-        return idsRightOperand;
+    public String getOdrlRepresentation() {
+        return this.odrlRepresentation;
     }
 }
 

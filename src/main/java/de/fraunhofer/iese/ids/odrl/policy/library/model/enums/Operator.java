@@ -49,11 +49,11 @@ HAS_MEMBERSHIP("equals", "idsc:HAS_MEMBERSHIP", "eq"),
 
  SHORTER("less", "idsc:SHORTER", "lt"),
 
- SHORTER_EQ("lessEqual", "idsc:SHORTER_EQ", "le"),
+ SHORTER_EQ("lessEqual", "idsc:SHORTER_EQ", "lteq"),
 
  LONGER("greater", "idsc:LONGER", "gt"),
 
- LONGER_EQ("greaterEqual", "idsc:LONGER_EQ", "ge"),
+ LONGER_EQ("greaterEqual", "idsc:LONGER_EQ", "gteq"),
 
  // # Binary Operators comparing spatial entities
  INSIDE("equals", "idsc:INSIDE", "eq");

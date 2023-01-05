@@ -9,7 +9,7 @@ package de.fraunhofer.iese.ids.odrl.policy.library.model.enums;
  */
 public enum RightOperandEntitiesType {
 
-	INTERVALL,
+	INTERVAL,
 	TIMEBORDER,
 	DURATION
 }
