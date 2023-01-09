@@ -33,9 +33,9 @@ public class Action {
 		String ids = "ids";
 		if(null != this.refinements)
 		{
-			return "      \"ids:action\": [{ \n" + getRDFValue(ids) + getRefinementBlock(ids)  +"}]\n" + getPXPBlock() + "\n" + "      ";
+			return "      \"ids:action\": [{ \n" + getRDFValue(ids) + getRefinementBlock(ids) + getPXPBlock() +"}]\n" + "      ";
 		}else{
-			return "      \"ids:action\": [{\n" + "        \"@id\":\"" + type.getIdsAction() + "\""
+			return "      \"ids:action\": [{\n" + "        \"@id\":\"" + type.getIdsAction()  + "\"" + getPXPBlock()
 					+ "\r\n" + "      }]";
 		}
 	}

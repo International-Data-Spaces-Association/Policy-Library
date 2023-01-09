@@ -96,7 +96,7 @@ public class PatternUtil{
 	public static PolicyType getPolicyType(Map map)  {
 		try{
 			return PolicyType.valueOf(removeIdsOrXsdTag(map.get("@type").toString()).substring(8));
-		}catch (IllegalArgumentException exception){
+		}catch (Exception exception){
 			return PolicyType.valueOf(removeIdsOrXsdTag(map.get("@type").toString()));
 		}
 	}
@@ -350,130 +350,40 @@ public class PatternUtil{
 
 				switch (leftOperand) {
 				case PURPOSE:
-					Condition purposeConstraint = new Condition(conditionType, LeftOperand.PURPOSE, operator,
-							rightOperands);
-					ruleConstraint.add(purposeConstraint);
-					break;
 				case SYSTEM:
-					Condition systemConstraint = new Condition(conditionType, LeftOperand.SYSTEM, operator,
-							rightOperands);
-					ruleConstraint.add(systemConstraint);
-					break;
 				case APPLICATION:
-					Condition applicationConstraint = new Condition(conditionType, LeftOperand.APPLICATION, operator,
-							rightOperands);
-					ruleConstraint.add(applicationConstraint);
-					break;
 				case CONNECTOR:
-					Condition connectorConstraint = new Condition(conditionType, LeftOperand.CONNECTOR, operator,
-							rightOperands);
-					ruleConstraint.add(connectorConstraint);
-					break;
 				case STATE:
-					Condition stateConstraint = new Condition(conditionType, LeftOperand.STATE, operator,
-							rightOperands);
-					ruleConstraint.add(stateConstraint);
-					break;
 				case SECURITY_LEVEL:
-					Condition securityLevelConstraint = new Condition(conditionType, LeftOperand.SECURITY_LEVEL,
-							operator, rightOperands);
-					ruleConstraint.add(securityLevelConstraint);
-					break;
 				case ROLE:
-					Condition roleConstraint = new Condition(conditionType, LeftOperand.ROLE, operator, rightOperands);
-					ruleConstraint.add(roleConstraint);
-					break;
 				case EVENT:
-					Condition eventConstraint = new Condition(conditionType, LeftOperand.EVENT, operator,
-							rightOperands);
-					ruleConstraint.add(eventConstraint);
-					break;
 				case COUNT:
-					Condition countConstraint = new Condition(conditionType, LeftOperand.COUNT, operator,
-							rightOperands);
-					ruleConstraint.add(countConstraint);
-					break;
-//					case ENCODING:
-//						Condition encodingConstraint = new Condition(conditionType, LeftOperand.ENCODING, op, rightOperands);
-//						ruleConstraint.add(encodingConstraint);
-//						break;
 				case LOG_LEVEL:
-					Condition logLevelConstraint = new Condition(conditionType, LeftOperand.LOG_LEVEL, operator,
-							rightOperands);
-					ruleConstraint.add(logLevelConstraint);
-					break;
 				case NOTIFICATION_LEVEL:
-					Condition notificationLevelConstraint = new Condition(conditionType, LeftOperand.NOTIFICATION_LEVEL,
-							operator, rightOperands);
-					ruleConstraint.add(notificationLevelConstraint);
-					break;
 				case ARTIFACT_STATE:
-					Condition artifactStateConstraint = new Condition(conditionType, LeftOperand.ARTIFACT_STATE,
-							operator, rightOperands);
-					ruleConstraint.add(artifactStateConstraint);
-					break;
 				case DATE_TIME:
-					Condition timeIntervalCondition = new Condition(conditionType, LeftOperand.DATE_TIME, operator,
-							rightOperands);
-					ruleConstraint.add(timeIntervalCondition);
-					break;
 				case POLICY_EVALUATION_TIME:
-					Condition evaluationTimeCondition = new Condition(conditionType, LeftOperand.POLICY_EVALUATION_TIME,
-							operator, rightOperands);
-					ruleConstraint.add(evaluationTimeCondition);
-					break;
-					case DELAY_PERIOD:
-					Condition delayPeriodConstraint = new Condition(conditionType, LeftOperand.DELAY_PERIOD, operator,
-							rightOperands);
-					ruleConstraint.add(delayPeriodConstraint);
-					break;
+				case DELAY_PERIOD:
 				case ELAPSED_TIME:
-					Condition elapsedTimeConstraint = new Condition(conditionType, LeftOperand.ELAPSED_TIME, operator,
-							rightOperands);
-					ruleConstraint.add(elapsedTimeConstraint);
-					break;
 				case RECIPIENT:
-					Condition recipientConstraint = new Condition(conditionType, LeftOperand.RECIPIENT, operator,
-							rightOperands);
-					ruleConstraint.add(recipientConstraint);
-					break;
 				case REPLACE_WITH:
-					Condition replaceWithRefinement = new Condition(conditionType, LeftOperand.REPLACE_WITH, operator,
-							rightOperands);
-					ruleConstraint.add(replaceWithRefinement);
-					break;
 				case JSON_PATH:
-					Condition subsetSpecificationRefinement = new Condition(conditionType, LeftOperand.JSON_PATH,
-							operator, rightOperands);
-					ruleConstraint.add(subsetSpecificationRefinement);
+				case ABSOLUTE_SPATIAL_POSITION:
+				case SPATIAL:
+				case SYSTEM_DEVICE:
+				case TARGET_POLICY:
+					Condition constraint = new Condition(conditionType, leftOperand, operator,
+							rightOperands);
+					ruleConstraint.add(constraint);
 					break;
 				case PAY_AMOUNT:
-					Condition paymentConstraint = new Condition(conditionType, LeftOperand.PAY_AMOUNT, operator,
+					Condition paymentConstraint = new Condition(conditionType, leftOperand, operator,
 							rightOperands);
 					paymentConstraint.setContract(getValue(conditionMap, "ids:contract"));
 					String idsUnit = getValue(conditionMap, "ids:unit");
 					String unit = isNullOrEmpty(idsUnit)?getValue(conditionMap, "unit"):idsUnit;
 					paymentConstraint.setUnit(unit);
 					ruleConstraint.add(paymentConstraint);
-					break;
-				case ABSOLUTE_SPATIAL_POSITION:
-					Condition absoluteSpatialPositionConstraint = new Condition(conditionType,
-							LeftOperand.ABSOLUTE_SPATIAL_POSITION, operator, rightOperands);
-					ruleConstraint.add(absoluteSpatialPositionConstraint);
-					break;
-				case SYSTEM_DEVICE:
-					Condition systemDeviceRefinement = new Condition(conditionType, LeftOperand.SYSTEM_DEVICE, operator,
-							rightOperands);
-					ruleConstraint.add(systemDeviceRefinement);
-					break;
-//					case INFORMEDPARTY:
-//						Condition informedPartyRefinement = new Condition(conditionType, LeftOperand.INFORMEDPARTY, op, rightOperands);
-//						ruleConstraint.add(informedPartyRefinement);
-//						break;
-				case TARGET_POLICY:
-					Condition thirdPartyRefinement = new Condition(conditionType, LeftOperand.TARGET_POLICY, operator,
-							rightOperands);
-					ruleConstraint.add(thirdPartyRefinement);
 					break;
 				default:
 					break;

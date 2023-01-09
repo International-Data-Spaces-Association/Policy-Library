@@ -75,16 +75,16 @@ private List<Rule> duties;
  private String getDutyBlock(String language) {
     String dutyBlock = "";
 
-     String dutyElement = "";
-     if(language.equals("ids"))
-    {
-        dutyElement = this.ruleType.equals(RuleType.POST_DUTY)? "ids:postDuty": "ids:preDuty";
-    }else{
-         dutyElement = "duty";
-    }
-
     if(this.duties != null && this.duties.size() > 0)
     {
+        String dutyElement = "";
+        if(language.equals("ids"))
+        {
+            dutyElement = this.duties.get(0).ruleType.equals(RuleType.POST_DUTY)? "ids:postDuty": "ids:preDuty";
+        }else{
+            dutyElement = "duty";
+        }
+
         String temp = language.equals("ids")? this.duties.get(0).toIdsString():this.duties.get(0).toString();
         if(this.duties.size() > 1)
         {

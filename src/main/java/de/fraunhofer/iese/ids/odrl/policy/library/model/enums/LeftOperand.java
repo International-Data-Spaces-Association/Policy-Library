@@ -34,7 +34,7 @@ public enum LeftOperand {
 
 //    INFORMEDPARTY("informedParty", "idsc:informedParty", de.fraunhofer.iais.eis.LeftOperand.INFORMED_PARTY.getId().toString()),
 
-    TARGET_POLICY("targetPolicy", "idsc:TARGET_POLICY", de.fraunhofer.iais.eis.LeftOperand.TARGET_POLICY.getId().toString(), "hasPolicy"),
+    TARGET_POLICY("targetPolicy", "idsc:TARGET_POLICY", de.fraunhofer.iais.eis.LeftOperand.TARGET_POLICY.getId().toString(), "targetPolicy"),
 
     SYSTEM_DEVICE("systemDevice", "idsc:SYSTEM_DEVICE", de.fraunhofer.iais.eis.LeftOperand.SYSTEM_DEVICE.getId().toString(), "systemDevice"),
 
@@ -54,6 +54,8 @@ public enum LeftOperand {
 //    DIGIT("digit","ids:digit", de.fraunhofer.iais.eis.LeftOperand.DIGIT.getId().toString()),
 
     ABSOLUTE_SPATIAL_POSITION("absoluteSpatialPosition","idsc:ABSOLUTE_SPATIAL_POSITION", de.fraunhofer.iais.eis.LeftOperand.ABSOLUTE_SPATIAL_POSITION.getId().toString(), "absoluteSpatialPosition"),
+
+    SPATIAL("spatial", "idsc:SPATIAL", de.fraunhofer.iais.eis.LeftOperand.ABSOLUTE_SPATIAL_POSITION.getId().toString(), "spatial"),
 
     PURPOSE("purpose", "https://w3id.org/idsa/core/purpose", de.fraunhofer.iais.eis.LeftOperand.PURPOSE.getId().toString(), "purpose");
 
