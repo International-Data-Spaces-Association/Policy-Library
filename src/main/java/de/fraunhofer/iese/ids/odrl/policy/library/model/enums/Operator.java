@@ -6,11 +6,13 @@ public enum Operator {
 // TODO Check Odrl Operators
 	
  // set
- IS_ANY_OF("isAnyOf", "idsc:IS_ANY_OF", "isAnyOf"),
+ IS_ANY_OF("isAnyOf", "idsc:IN", "isAnyOf"),
 
- IS_ALL_OF("isAllOf", "idsc:IS_ALL_OF","isAllOf"),
+ IS_ALL_OF("isAllOf", "idsc:EQUALS","isAllOf"),
 
- IS_NONE_OF("isNoneOf", "idsc:IS_NONE_OF", "isNoneOf"),
+ IS_NONE_OF("isNoneOf", "idsc:IN", "isNoneOf"),
+
+ IS_PART_OF("isPartOf", "idsc:IN", "isPartOf"),
 
  // TODO: what is the equivalent MYDATA operator for idsc:IN
  IN("subsetOf", "idsc:IN", "subsetOf"),
