@@ -16,7 +16,7 @@
 	<repositories>
 		<repository>
 			<id>snapshots</id>
-			<name>maven-snapshots</name>
+			<name>eis-ids-public</name>
 			<url>https://maven.iais.fraunhofer.de/artifactory/eis-ids-public</url>
 		</repository>
 	</repositories>
@@ -36,7 +36,7 @@
 		<dependency>
 			<groupId>com.github.jsonld-java</groupId>
 			<artifactId>jsonld-java</artifactId>
-			<version>0.12.3</version>
+			<version>0.12.5</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine -->
 		<dependency>
@@ -91,10 +91,7 @@
 			<plugin>
 				<groupId>com.amashchenko.maven.plugin</groupId>
 				<artifactId>gitflow-maven-plugin</artifactId>
-				<version>1.17.0</version>
-				<configuration>
-					<goalPrefix>gitflow</goalPrefix>
-				</configuration>
+				<version>1.19.0</version>
 			</plugin>
 		</plugins>
 	</build>
