@@ -1,15 +1,15 @@
 package de.fraunhofer.iese.ids.odrl.policy.library.model.interfaces;
 
 import java.net.URI;
-import java.util.ArrayList;
+import java.util.List;
 
 import de.fraunhofer.iese.ids.odrl.policy.library.model.Party;
 import de.fraunhofer.iese.ids.odrl.policy.library.model.Rule;
 import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.PolicyType;
 
 public interface IPolicy {
-	ArrayList<Rule> getRules();
-	void setRules(ArrayList<Rule> rules);
+	List<Rule> getRules();
+	void setRules(List<Rule> rules);
 
 	public URI getProfile();
 	public void setProfile(URI profile);

@@ -1,84 +1,100 @@
 package de.fraunhofer.iese.ids.odrl.policy.library.model;
 
 
+import java.util.List;
+
 import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.ConditionType;
 import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.LeftOperand;
 import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.Operator;
-import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.TimeUnit;
 import lombok.Data;
-
-import java.util.ArrayList;
 
 @Data
 public class Condition {
  ConditionType type;
  Operator operator;
  LeftOperand leftOperand;
- ArrayList<RightOperand> rightOperands;
+ List<RightOperand> rightOperands;
  String comment;
  String unit;
  String contract;
  String jsonPath;
  //ModificationMethodParameter replaceWith;
 
+ 
+ //Constructors
  public Condition()
  {
 
  }
 
- public Condition(ConditionType conditionType, String comment) {
-  this.type = conditionType;
-  this.comment = comment;
- }
-
- public Condition(ConditionType conditionType, LeftOperand leftOperand, Operator operator, ArrayList<RightOperand> rightOperands, String comment) {
+ public Condition(ConditionType conditionType, LeftOperand leftOperand, Operator operator, List<RightOperand> rightOperands, String comment) {
   this.type = conditionType;
   this.operator = operator;
   this.leftOperand = leftOperand;
   this.rightOperands= rightOperands;
   this.comment = comment;
  }
+ 
+ public Condition(ConditionType conditionType, LeftOperand leftOperand, Operator operator, List<RightOperand> rightOperands) {
+	 this(conditionType, leftOperand, operator, rightOperands, "");
+ }
+ 
+ public Condition(ConditionType conditionType, String comment) {
+	 this(conditionType, null, null, null, comment);
+ }
 
+ //End of constructors
+ 
  @Override
  public String toString() {
-  String rightOperandBlock = getRightOperandBlock();
-  String contractBlock = getContractBlock();
-  String unitBlock = getUnitBlock();
-  String commentBlock = getCommentBlock();
-  String PIPBlock = getPIPBlock();
-  String jsonPathBlock = getJsonPathBlock();
-  //String replaceWithBlock = getReplaceWithBlock();
-
+    String odrl = "odrl";
   return  !rightOperands.isEmpty() ?"{    \r\n" +
-          "        \"@type\":\"ids:Constraint\",  \n" +
-          "        \"ids:leftOperand\": { \"@id\": \""+ leftOperand.getIdsLeftOperand() +"\"},  \n" +
-          "        \"ids:operator\": { \"@id\": \""+ operator.getOdrlOp()  +"\"}" +
-          rightOperandBlock +
-          jsonPathBlock +
-          contractBlock +
-          unitBlock +
-          commentBlock +
-          PIPBlock +
+          "        \"leftOperand\": \""+ leftOperand.getOdrlLeftOperand() +"\"," +
+          "        \"operator\": \""+ operator.getOdrlOp() +"\"" +
+          getRightOperandBlock(odrl) +
+          getJsonPathBlock() +
+          getUnitBlock(odrl) +
           " \n"+
           "      }     \r\n":"";
 
  }
 
- private String getRightOperandBlock() {
-  String rightOperandBlock = "";
+    public String toIdsString() {
+     String ids = "ids";
+        return  !rightOperands.isEmpty() ?"{    \r\n" +
+                "        \"@type\":\"ids:Constraint\",  \n" +
+                "        \"ids:leftOperand\": { \"@id\": \""+ leftOperand.getIdsLeftOperand() +"\"},  \n" +
+                "        \"ids:operator\": { \"@id\": \""+ operator.getIdsOp()  +"\"}" +
+                getRightOperandBlock(ids) +
+                getJsonPathBlock() +
+                getContractBlock() +
+                getUnitBlock(ids) +
+                getCommentBlock() +
+                getPIPBlock() +
+                " \n"+
+                "      }     \r\n":"";
 
+    }
+
+ private String getRightOperandBlock(String language) {
+  String rightOperandBlock = "";
+  String rightOperandElement = language.equals("ids")? "ids:rightOperand": "rightOperand";
   if(this.rightOperands != null && this.rightOperands.size() > 0)
   {
-   String temp= "";
-   temp = this.rightOperands.get(0).toString();
+   String temp = language.equals("ids")? this.rightOperands.get(0).toIdsString():this.rightOperands.get(0).toString();
    if(this.rightOperands.size() > 1)
    {
     for (int i = 1; i < this.rightOperands.size(); i++)
     {
-     temp = temp.concat(", \n" + this.rightOperands.get(i).toString());
+        if(language.equals("ids"))
+        {
+            temp = temp.concat(", \n" + this.rightOperands.get(i).toIdsString());
+        }else{
+            temp = temp.concat(", \n" + this.rightOperands.get(i).toString());
+        }
     }
    }
-   rightOperandBlock = String.format(", \r\n" + "      \"ids:rightOperand\": [%s] \n" , temp);
+   rightOperandBlock = String.format(", \r\n" + "      \"%s\": [%s] \n" , rightOperandElement, temp);
   }
 
   return rightOperandBlock;
@@ -102,7 +118,7 @@ public class Condition {
   }
   return "";
  }
-
+ 
  private String getCommentBlock() {
   if(this.comment != null)
   {
@@ -130,20 +146,12 @@ public class Condition {
   return "";
  }
 
-/* private String getReplaceWithBlock() {
-  if(this.replaceWith != null && this.replaceWith.getValue() != null && !this.replaceWith.getValue().isEmpty())
-  {
-   return ", \n"+
-           "        \"ids:replaceWith\" : { " + replaceWith.toString() +"}";
-  }
-  return "";
- }*/
-
- private String getUnitBlock() {
+ private String getUnitBlock(String language) {
+     String unitElement = language.equals("ids")? "ids:unit":"unit";
   if(this.unit != null)
   {
    return ", \n"+
-           "        \"ids:unit\": \""+ unit +"\"";
+           "        \""+ unitElement +"\": \""+ unit +"\"";
   }
   return "";
  }

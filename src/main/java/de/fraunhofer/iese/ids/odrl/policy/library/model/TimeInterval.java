@@ -7,8 +7,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
-import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.IntervalCondition;
-
 /**
  * @author Robin Brandstaedter <Robin.Brandstaedter@iese.fraunhofer.de>
  *
@@ -31,15 +29,15 @@ public class TimeInterval {
 		end = ZonedDateTime.parse(endTime, DateTimeFormatter.ISO_INSTANT);
 	}
 	
-	public void setInterval(IntervalCondition intervalCondition, String startTime, String endTime) {
-		if(IntervalCondition.LT.equals(intervalCondition)) {
-			setBefore(endTime);
-		}
-		else if(IntervalCondition.GT.equals(intervalCondition)) {
-			setAfter(startTime);
-		}
-		else if(IntervalCondition.EQ.equals(intervalCondition)){
-			setExactly(startTime, endTime);
-		}
-	}
+//	public void setInterval(IntervalCondition intervalCondition, String startTime, String endTime) {
+//		if(IntervalCondition.LT.equals(intervalCondition)) {
+//			setBefore(endTime);
+//		}
+//		else if(IntervalCondition.GT.equals(intervalCondition)) {
+//			setAfter(startTime);
+//		}
+//		else if(IntervalCondition.EQ.equals(intervalCondition)){
+//			setExactly(startTime, endTime);
+//		}
+//	}
 }

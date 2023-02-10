@@ -3,74 +3,83 @@ package de.fraunhofer.iese.ids.odrl.policy.library.model.enums;
 
 public enum Operator {
 
-
+// TODO Check Odrl Operators
+	
  // set
- IS_ANY_OF("isAnyOf", "idsc:IS_ANY_OF"),
+ IS_ANY_OF("isAnyOf", "idsc:IN", "isAnyOf"),
 
- IS_ALL_OF("isAllOf", "idsc:IS_ALL_OF"),
+ IS_ALL_OF("isAllOf", "idsc:EQUALS","isAllOf"),
 
- IS_NONE_OF("isNoneOf", "idsc:IS_NONE_OF"),
+ IS_NONE_OF("isNoneOf", "idsc:IN", "isNoneOf"),
+
+ IS_PART_OF("isPartOf", "idsc:IN", "isPartOf"),
 
  // TODO: what is the equivalent MYDATA operator for idsc:IN
- IN("subsetOf", "idsc:IN"),
+ IN("subsetOf", "idsc:IN", "subsetOf"),
 
  // Logical operators
- EQUALS("equals", "idsc:EQUALS"),
+ EQUALS("equals", "idsc:EQUALS", "eq"),
 
- SAME_AS("equals", "idsc:SAME_AS"),
+ SAME_AS("equals", "idsc:SAME_AS", "eq"),
 
- DEFINES_AS("equals", "idsc:DEFINES_AS"),
+ DEFINES_AS("equals", "idsc:DEFINES_AS", "eq"),
 
-HAS_MEMBERSHIP("equals", "idsc:HAS_MEMBERSHIP"),
+HAS_MEMBERSHIP("equals", "idsc:HAS_MEMBERSHIP", "eq"),
 
  // Arithmetic operators
- EQ("equals", "idsc:EQ"),
+ EQ("equals", "idsc:EQ", "eq"),
 
- LT("less", "idsc:LT"),
+ LT("less", "idsc:LT", "lt"),
 
- LTEQ("lessEqual", "idsc:LTEQ"),
+ LTEQ("lessEqual", "idsc:LTEQ", "lteq"),
 
- GT("greater", "idsc:GT"),
+ GT("greater", "idsc:GT", "gt"),
 
- GTEQ("greaterEqual", "idsc:GTEQ"),
+ GTEQ("greaterEqual", "idsc:GTEQ", "gteq"),
 
  // Temporal operators
 
- AFTER("greater", "idsc:AFTER"),
+ AFTER("greater", "idsc:AFTER", "gt"),
 
- BEFORE("less", "idsc:BEFORE"),
+ BEFORE("less", "idsc:BEFORE", "lt"),
 
- TEMPORAL_EQUALS("equals", "idsc:TEMPORAL_EQUALS"),
+ TEMPORAL_EQUALS("equals", "idsc:TEMPORAL_EQUALS", "eq"),
 
- DURING("equals", "idsc:DURING"),
+ DURING("equals", "idsc:DURING", "eq"),
 
- DURATION_EQ("equals", "idsc:DURATION_EQ"),
+ DURATION_EQ("equals", "idsc:DURATION_EQ", "eq"),
 
- SHORTER("less", "idsc:SHORTER"),
+ SHORTER("less", "idsc:SHORTER", "lt"),
 
- SHORTER_EQ("lessEqual", "idsc:SHORTER_EQ"),
+ SHORTER_EQ("lessEqual", "idsc:SHORTER_EQ", "lteq"),
 
- LONGER("greater", "idsc:LONGER"),
+ LONGER("greater", "idsc:LONGER", "gt"),
 
- LONGER_EQ("greaterEqual", "idsc:LONGER_EQ"),
+ LONGER_EQ("greaterEqual", "idsc:LONGER_EQ", "gteq"),
 
  // # Binary Operators comparing spatial entities
- INSIDE("equals", "idsc:INSIDE");
+ INSIDE("equals", "idsc:INSIDE", "eq");
 
  private final String mydataOp;
- private final String odrlOp;
+ private final String idsOP;
+ private final String odrlOP;
 
- Operator(String op1, String op2) {
+ Operator(String op1, String op2, String op3) {
   mydataOp = op1;
-  odrlOp = op2;
+  idsOP = op2;
+  odrlOP = op3;
  }
 
  public String getMydataOp() {
   return mydataOp;
  }
 
+ public String getIdsOp() {
+  return idsOP;
+ }
+ 
  public String getOdrlOp() {
-  return odrlOp;
+	 return odrlOP;
  }
 
 }

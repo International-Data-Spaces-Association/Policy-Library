@@ -2,18 +2,16 @@ package de.fraunhofer.iese.ids.odrl.policy.library.model;
 
 
 import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.EntityType;
-import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.RightOperandId;
 import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.RightOperandType;
-import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.TimeUnit;
 import lombok.Data;
 
 
 @Data
 public class RightOperandEntity {
- EntityType entityType;
- String value;
- RightOperandType dataType;
- RightOperandEntity innerEntity;
+ private EntityType entityType;
+ private String value;
+ private RightOperandType dataType;
+ private RightOperandEntity innerEntity;
 
  public RightOperandEntity()
  {
@@ -38,13 +36,13 @@ public class RightOperandEntity {
 
   if(null != this.innerEntity)
     {
-        return "            \""+ entityType.getOdrlRuleType() +"\": {\n" +
+        return "            \""+ entityType.getType() +"\": {\n" +
                "               \"@type\": \""+ this.dataType.getType() + "\",\n" +
                 innerEntity.toString() + "\n" +
             "            }";
 
     }else {
-        return "            \""+ entityType.getOdrlRuleType() +"\": {\n" +
+        return "            \""+ entityType.getType() +"\": {\n" +
               "               \"@type\": \""+ this.dataType.getType() + "\",\n" +
               "               \"@value\": \""+ this.value +"\"\n" +
               "            }";

@@ -3,28 +3,29 @@ package de.fraunhofer.iese.ids.odrl.policy.library.model;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.List;
 
-import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.RuleType;
+import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.*;
+import de.fraunhofer.iese.ids.odrl.policy.library.model.tooling.PatternUtil;
 import lombok.Data;
 
 
 @Data
 public class Rule {
- RuleType type;
- URI target;
- Action action;
- ArrayList<Condition> constraints;
- ArrayList<Rule> preduties;
- ArrayList<Rule> postduties;
+private RuleType ruleType;
+private Target target;
+private Action action;
+private List<Condition> constraints;
+private List<Rule> duties;
 
  public Rule()
  {
 
  }
 
- public Rule(RuleType type,URI target, Action action)
+ public Rule(RuleType type, Target target, Action action)
  {
-  this.type = type;
+  this.ruleType = type;
   this.target = target;
   this.action = action;
  }
@@ -32,66 +33,88 @@ public class Rule {
  // to create a duty rule
  public Rule(RuleType type, Action action)
  {
-  this.type = type;
+  this.ruleType = type;
   this.action = action;
  }
 
  @Override
  public String toString() {
+     String odrl = "odrl";
   return  "{    \r\n" +
-          getIdsType() +
+          addDutyOrTarget(odrl) +
           action.toString() +
-          getPreobligationBlock() +
-          getConstraintBlock() +
-          getPostobligationBlock() +
+          getDutyBlock("odrl") +
+          getConstraintBlock(odrl) +
           "\r\n" +
           "  }";
  }
-
- private String getIdsType() {
-  if(this.type.equals(RuleType.POSTDUTY) || this.type.equals(RuleType.PREDUTY))
+ 
+ public String toIdsString() {
+     String ids = "ids";
+	  return  "{    \r\n" +
+              addDutyOrTarget(ids) +
+	          action.toIdsString() +
+              getDutyBlock("ids") +
+              getConstraintBlock(ids) +
+	          "\r\n" +
+	          "  }";
+	 }
+ 
+	
+ private String addDutyOrTarget(String language) {
+  if(this.ruleType.equals(RuleType.POST_DUTY) || this.ruleType.equals(RuleType.PRE_DUTY))
   {
-   return           "      \"@type\":\"ids:Duty\",  \n" ;
+   return language.equals("ids")? "      \"@type\":\"ids:Duty\",  \n": "";
   }else if(target != null){
    //only return the target
-   return  "      \"ids:target\": {\n" +
-           "          \"@id\":\"" + this.target.toString() + "\"\n" +
-           "       },    \r\n";
+   return language.equals("ids")? target.toIdsString():target.toString();
   }
   return "";
  }
 
- private String getPreobligationBlock() {
-  String preobligationBlock = "";
+ private String getDutyBlock(String language) {
+    String dutyBlock = "";
 
-  if(this.preduties != null && this.preduties.size() > 0)
-  {
-   String temp= "";
-   temp = this.preduties.get(0).toString();
-   if(this.preduties.size() > 1)
-   {
-    for (int i = 1; i < this.preduties.size(); i++)
+    if(this.duties != null && this.duties.size() > 0)
     {
-     temp = temp.concat(", \n" + this.preduties.get(i).toString());
-    }
-   }
-   preobligationBlock = String.format(", \r\n" + "    \"ids:preDuty\": [%s] \n" , temp);
-  }
+        String dutyElement = "";
+        if(language.equals("ids"))
+        {
+            dutyElement = this.duties.get(0).ruleType.equals(RuleType.POST_DUTY)? "ids:postDuty": "ids:preDuty";
+        }else{
+            dutyElement = "duty";
+        }
 
-  return preobligationBlock;
+        String temp = language.equals("ids")? this.duties.get(0).toIdsString():this.duties.get(0).toString();
+        if(this.duties.size() > 1)
+        {
+            for (int i = 1; i < this.duties.size(); i++)
+            {
+                if(language.equals("ids"))
+                {
+                    temp = temp.concat(", \n" + this.duties.get(i).toIdsString());
+                }else{
+                    temp = temp.concat(", \n" + this.duties.get(i).toString());
+                }
+            }
+        }
+        dutyBlock = dutyBlock.concat(String.format(", \r\n" +"    \"%s\": [%s] \n" , dutyElement, temp));
+    }
+
+    return dutyBlock;
  }
 
- private String getConstraintBlock() {
+ private String getConstraintBlock(String language) {
 
   String conditionInnerBlock = "";
-
+  String conditionElement = language.equals("ids")? "ids:constraint": "constraint";
   if (this.constraints != null)
   {
 
    String conditions = "";
    for(int i=0 ; i< this.constraints.size(); i++)
    {
-    String tempString = this.constraints.get(i).toString();
+       String tempString = language.equals("ids")? this.constraints.get(i).toIdsString():this.constraints.get(i).toString();
     if(!tempString.isEmpty())
     {
      if(conditions.isEmpty() && !tempString.isEmpty())
@@ -104,9 +127,22 @@ public class Rule {
     }
    }
 
+   if(language.equals("odrl"))
+   {
+       if(ruleType.equals(RuleType.PRE_DUTY))
+       {
+           Condition policyUsageCondition = getPolicyUsageCondition(Operator.LT);
+           conditions = conditions.concat(policyUsageCondition.toString());
+       }else if(ruleType.equals(RuleType.POST_DUTY))
+       {
+           Condition policyUsageCondition = getPolicyUsageCondition(Operator.GT);
+           conditions = conditions.concat(policyUsageCondition.toString());
+       }
+   }
+
   if(!conditions.isEmpty()){
    conditionInnerBlock = String.format(",     \r\n" +
-           "      \"ids:constraint\": [%s] " , conditions);
+           "      \"%s\": [%s] " , conditionElement, conditions);
   }
 
   }
@@ -114,24 +150,12 @@ public class Rule {
   return conditionInnerBlock;
  }
 
- private String getPostobligationBlock() {
-  String postobligationBlock = "";
+    private Condition getPolicyUsageCondition(Operator operator) {
+        RightOperand policyUsageRightOperand = new RightOperand(RightOperandId.POLICY_USAGE);
+        ArrayList<RightOperand> rightOperands = new ArrayList<>();
+        rightOperands.add(policyUsageRightOperand);
 
-  if(this.postduties != null && this.postduties.size() > 0)
-  {
-   String temp= "";
-   temp = this.postduties.get(0).toString();
-   if(this.postduties.size() > 1)
-   {
-    for (int i = 1; i < this.postduties.size(); i++)
-    {
-     temp = temp.concat(", \n" + this.postduties.get(i).toString());
+        return new Condition(ConditionType.CONSTRAINT, LeftOperand.EVENT, operator, rightOperands);
     }
-   }
-   postobligationBlock = postobligationBlock.concat(String.format(", \r\n" +"    \"ids:postDuty\": [%s] \n" , temp));
-  }
-
-  return postobligationBlock;
- }
 
 }

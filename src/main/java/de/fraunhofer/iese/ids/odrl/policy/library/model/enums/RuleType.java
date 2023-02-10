@@ -2,30 +2,39 @@ package de.fraunhofer.iese.ids.odrl.policy.library.model.enums;
 
 public enum RuleType {
 
-    PERMISSION("allow","ids:permission"),
+    PERMISSION("ids:permission", "permission"), //"allow",
 
-    PROHIBITION("inhibit", "ids:prohibition"),
+    PROHIBITION("ids:prohibition", "prohibition"),//"inhibit"
 
-    OBLIGATION("allow", "ids:obligation"),
+    OBLIGATION("ids:obligation", "obligation"), //"allow"
 
-    PREDUTY("allow", "ids:preDuty"),
+    PRE_DUTY("ids:preDuty", "duty"),//"allow"
 
-    POSTDUTY("allow", "ids:postDuty");
+    POST_DUTY("ids:postDuty", "duty");//"allow"
 
-    private final String mydataDecision;
-    private final String odrlRuleType;
+    String idsRepresentation;
+    String odrlRepresentation;
 
-    RuleType(String op1, String op2) {
-        mydataDecision = op1;
-        odrlRuleType = op2;
+    RuleType(String idsRepresentation, String odrlRepresentation) {
+        this.idsRepresentation = idsRepresentation;
+        this.odrlRepresentation = odrlRepresentation;
     }
 
-    public String getMydataDecision() {
-        return mydataDecision;
+    public String getIdsRepresentation() {
+        return this.idsRepresentation;
     }
 
-    public String getOdrlRuleType() {
-        return odrlRuleType;
+    public String getOdrlRepresentation() {
+        return this.odrlRepresentation;
+    }
+
+    public static RuleType getFromString(String stringRepresentation) {
+        for( RuleType ruleType : values()) {
+            if(ruleType.getIdsRepresentation().equals(stringRepresentation) || ruleType.getOdrlRepresentation().equals(stringRepresentation)) {
+                return ruleType;
+            }
+        }
+        return null;
     }
 }
 

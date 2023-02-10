@@ -2,22 +2,22 @@ package de.fraunhofer.iese.ids.odrl.policy.library.model.enums;
 
 public enum PartyFunction {
 
-    INFORMEDPARTY("informedParty", "ids:informedParty");
+    INFORMED_PARTY("ids:informedParty", "informedParty");
 
-    private final String mydataPartyFunction;
-    private final String idsPartyFunction;
+    String idsRepresentation;
+    String odrlRepresentation;
 
-    PartyFunction(String op1, String op2) {
-        mydataPartyFunction = op1;
-        idsPartyFunction = op2;
+    PartyFunction(String idsRepresentation, String odrlRepresentation) {
+        this.idsRepresentation = idsRepresentation;
+        this.odrlRepresentation = odrlRepresentation;
     }
 
-    public String getMydataPartyFunction() {
-        return mydataPartyFunction;
+    public String getIdsRepresentation() {
+        return this.idsRepresentation;
     }
 
-    public String getIdsPartyFunction() {
-        return idsPartyFunction;
+    public String getOdrlRepresentation() {
+        return this.odrlRepresentation;
     }
 }
 

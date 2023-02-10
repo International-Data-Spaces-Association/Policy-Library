@@ -1,88 +1,89 @@
 package de.fraunhofer.iese.ids.odrl.policy.library.model;
 
-
-import java.util.ArrayList;
+import java.util.List;
 
 import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.ActionType;
-import de.fraunhofer.iese.ids.odrl.policy.library.model.enums.RuleType;
 import lombok.Data;
-
 
 @Data
 public class Action {
-    ActionType type;
-    ArrayList<Condition> refinements;
+	ActionType type;
+	List<Condition> refinements;
 
-    public Action()
-    {
+	public Action() {
 
-    }
-    public Action(ActionType type) {
-        this.type = type;
-    }
+	}
 
-    @Override
-    public String toString() {
-        String PXPBlock = getPXPBlock();
-        String refinementBlock = this.getRefinementBlock();
-        return  "      \"ids:action\": [{\n" +
-                "        \"@id\":\"" + type.getIdsAction() +"\"" +
-                refinementBlock +
-                PXPBlock +
-                "\r\n" +
-                "      }]";
-    }
+	public Action(ActionType type) {
+		this.type = type;
+	}
 
-    private String getRefinementBlock() {
+	@Override
+	public String toString() {
+		String odrl = "odrl";
+		if(null != this.refinements)
+		{
+			return "      \"action\": [{ \n" + getRDFValue(odrl) + getRefinementBlock(odrl)  +"}]\n" + "\n" + "      ";
+		}else{
+			return "\"action\": \""+ type.getOdrlAction() + "\" \r\n";
+		}
+	}
 
-        String conditionInnerBlock = "";
+	public String toIdsString() {
+		String ids = "ids";
+		if(null != this.refinements)
+		{
+			return "      \"ids:action\": [{ \n" + getRDFValue(ids) + getRefinementBlock(ids) + getPXPBlock() +"}]\n" + "      ";
+		}else{
+			return "      \"ids:action\": [{\n" + "        \"@id\":\"" + type.getIdsAction()  + "\"" + getPXPBlock()
+					+ "\r\n" + "      }]";
+		}
+	}
 
-        if (this.refinements != null)
-        {
+	private String getRefinementBlock(String language) {
 
-            String conditions = "";
-            for(int i=0 ; i< this.refinements.size(); i++)
-            {
-                String tempString = this.refinements.get(i).toString();
-                if(!tempString.isEmpty())
-                {
-                    if(conditions.isEmpty() && !tempString.isEmpty())
-                    {
-                        conditions = conditions.concat(tempString);
+		String conditionInnerBlock = "";
+		String conditionElement = language.equals("ids")? "ids:refinement": "refinement";
+		if (this.refinements != null) {
 
-                    }else {
-                        conditions = conditions.concat("," + tempString);
-                    }
-                }
-            }
+			String conditions = "";
+			for (int i = 0; i < this.refinements.size(); i++) {
+				String tempString = language.equals("ids")? this.refinements.get(i).toIdsString() : this.refinements.get(i).toString() ;
+				if (!tempString.isEmpty()) {
+					if (conditions.isEmpty() && !tempString.isEmpty()) {
+						conditions = conditions.concat(tempString);
 
-            if(!conditions.isEmpty()) {
-                conditionInnerBlock = String.format(",     \r\n" +
-                        "        \"ids:refinement\": [%s] ", conditions);
-            }
-        }
+					} else {
+						conditions = conditions.concat("," + tempString);
+					}
+				}
+			}
 
-        return conditionInnerBlock;
-    }
+			if (!conditions.isEmpty()) {
+				conditionInnerBlock = String.format(",     \r\n" + "        \"%s\": [%s] ", conditionElement, conditions);
+			}
+		}
 
-    private String getPXPBlock() {
-        if(this.type.getAbstractIdsAction().equals("DUTY"))
-        {
-            return  ", \n"+
-                    "        \"ids:pxpEndpoint\":{\n" +
-                    "          \"@type\":\"ids:PXP\", \n" +
-                    "          \"ids:interfaceDescription\":{\n" +
-                    "            \"@value\":\"https://example.com/ids/PXP/interfaceDescription/"+ this.type.toString().toLowerCase() + "\", \n" +
-                    "            \"@type\":\"anyURI\"\n" +
-                    "          }, \n" +
-                    "          \"ids:endpointURI\":{\n" +
-                    "            \"@value\":\"https://example.com/ids/PXPendpoint/"+ this.type.toString().toLowerCase() + "\", \n" +
-                    "            \"@type\":\"anyURI\"\n" +
-                    "          } \n" +
-                    "        }";
+		return conditionInnerBlock;
+	}
 
-        }
-        return "";
-    }
+	private String getRDFValue(String language) {
+		return language.equals("ids")? "\"rdf:value\": { \"@id\": \""+ type.getIdsAction() +"\" }"
+				: "\"rdf:value\": { \"@id\": \""+ type.getOdrlAction() +"\" }";
+	}
 
+	private String getPXPBlock() {
+		if (this.type.getAbstractIdsAction().equals("DUTY")) {
+			return ", \n" + "        \"ids:pxpEndpoint\":{\n" + "          \"@type\":\"ids:PXP\", \n"
+					+ "          \"ids:interfaceDescription\":{\n"
+					+ "            \"@value\":\"https://example.com/ids/PXP/interfaceDescription/"
+					+ this.type.toString().toLowerCase() + "\", \n" + "            \"@type\":\"anyURI\"\n"
+					+ "          }, \n" + "          \"ids:endpointURI\":{\n"
+					+ "            \"@value\":\"https://example.com/ids/PXPendpoint/"
+					+ this.type.toString().toLowerCase() + "\", \n" + "            \"@type\":\"anyURI\"\n"
+					+ "          } \n" + "        }";
+
+		}
+		return "";
+	}
 }
